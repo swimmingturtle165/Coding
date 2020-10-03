@@ -1,0 +1,8 @@
+pointed out.
+If you followed the previous tutorial you can uninstall Brave running
+
+sudo rpm -e brave-browser brave-keyring
+and delete the /etc/environment file (if you don’t need it for other purposes) running
+
+sudo rm -f /etc/environment
+Now you can re-follow the updated installation procedure. :grin:

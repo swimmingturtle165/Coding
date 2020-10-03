@@ -1,0 +1,13 @@
+sudo -s
+and type your admin password.
+
+Run the following commands, one by one:
+
+swupd bundle-add package-utils
+rpm -e brave-browser
+Now if you don’t need it you can delete the package-utils bundle by running:
+
+swupd bundle-remove package-utils
+Done! 
+
+brave-browser   

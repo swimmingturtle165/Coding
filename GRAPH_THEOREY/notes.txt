@@ -1,0 +1,36 @@
+💻 Code: https://github.com/williamfiset/algor...
+🔗 Slides: https://github.com/williamfiset/Algor...
+https://www.youtube.com/watch?v=09_LlHjoEiY
+
+*************************TYPE OF PROBLEMS***************************
+
+1=>SHORTEST PATH PROBlEM
+    UNWEIGHTED - BFS
+    WEIGHTED-Dijkstra,Bellman Ford,Floyd Warshal,A*
+
+2=> Connectivity
+ *USE a union find datastructure 
+ *use a search algorithm (DFS,BFS)
+
+3=>Negative Cycles
+ BELLMAN FORD AND FLOYD Warshal
+
+4=>STRONGLY Connected compenents
+
+
+5=>Travelling Salesman PROBlEM
+
+6=>Bridges /Articulation pts
+Bridges are edges whose removal incresaes the number of connected compenents of a graph
+Articulation pts are pts whose removal incresaes the number of connected compenents of a graph
+
+7=>Minimum Spanning tree
+Kruskal prim 
+
+8=> Network Flow
+
+**********DFS**********
+Count connected Components
+Determine Connectivity
+Bridges or articulation point
+
