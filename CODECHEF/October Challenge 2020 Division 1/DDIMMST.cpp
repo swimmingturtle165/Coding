@@ -247,8 +247,26 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
 
+bool mycmp(vector<int>&a,vector<int>&b)
+{
+    int as=0,bs=0;
+    FOR(i,0,5)
+    {
+        as+=a[i];
+        bs+=b[i];
+    }
+    return as<bs;
+}   
+ll helper(vector<int>&a,vector<int>&b)
+{
+    int as=0;
+    FOR(i,0,5)
+    {
+        as+=abs(a[i]-b[i]);
+    }
+    return as;
+}
 
 signed main(int argc, char** argv)
 {
@@ -258,95 +276,51 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        ll n,x,p,k;
-        cin>>n>>x>>p>>k;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-
-        sort(inp.begin(),inp.end());
-
-        if(inp[p-1]==x)
+        ll n,d;
+        cin >> n>>d;
+        vector<vector<int>> arr(n,vector<int>(5,0));
+        FOR(i,0,n)
         {
-            // 5 4 3 1
-            // 2 3 4 5 6
-            cout<<0<<endl;
-        }
-        else if(p==k)
-        {
-            // 2 cases arise
-            
-           
-
-            if(inp[p-1]>=x)
+            FOR(j,0,d)
             {
-                 // 5 4 3 3
-                 // 1 1 1 1 1
-                 int v=(upper_bound(inp.begin(),inp.end(),x)-inp.begin());
-                 
-                 
-                 cout<<p-(upper_bound(inp.begin(),inp.end(),x)-inp.begin())<<endl;
-           
-           
+                cin>>arr[i][j];
             }
-            else
-            {
-                // 5 4 3 3
-                // 5 5 5 5 5
-                cout<<1+(lower_bound(inp.begin(),inp.end(),x)-inp.begin()) - p <<endl;
-            }
-            
-        }
-        else if(p<k)
-        { 
-            
-            if(x<=inp[p-1])
-            {
-                // 6 4 2 3
-                // 1 5 6 7 8 8
-                    int v1=0;
-                  int v=(upper_bound(inp.begin(),inp.end(),x)-inp.begin());
-                 
-                 
-                 cout<<p-(upper_bound(inp.begin(),inp.end(),x)-inp.begin())<<endl;
-           
-            }
-            else
-            {
-                // 6 4 2 3
-                // 1 1 1 1 1 1
-                cout<<-1<<endl;
-            }
-            
-            
-
-
-
-        }
-        else if(p>k)
-        {
-            
-           
-
-            if(x>=inp[p-1])
-            {
-                 // 6 4 3 2
-                // 1 1 2 4 4 4
-                cout<<1+(lower_bound(inp.begin(),inp.end(),x)-inp.begin()) - p <<endl;
-            }
-            else 
-            {
-                cout<<-1<<endl;
-            }
-            
-            
-
-
         }
         
-
+        sort(arr.begin(),arr.end(),mycmp);
+        ll ans=0;
+        vector<bool> strg(n,false);
+        FOR(i,0,n)
+        {
+            if(strg[i]==true)
+            {
+                continue;
+                
+            }
+            ll tmp=INT_MAX;
+            ll dst=0;
+            FOR(j,0,n)
+            {
+                if(j==i)
+                {
+                    continue;
+                }
+                ll v=helper(arr[i],arr[j]);
+                if(v<tmp)
+                {
+                dst=j;
+                tmp=v;
+                }
+                
+            }
+            // cout<< arr[i][0]<<" "<<arr[i][1]<<" => "<<arr[dst][0]<<" "<<arr[dst][1]<<" "<<tmp<<endl;
+            ans+=tmp;
+        }
+        cout<<ans<<endl;
+        
     }
     return 0;
 }

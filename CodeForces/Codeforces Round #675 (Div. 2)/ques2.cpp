@@ -249,6 +249,19 @@ bool find(vector<ll>&Arr,int A,int B)
 }
    
 
+ll helper(int a,int b,int c,int d)
+{
+    vector<ll> strg;
+    strg.pb(a);
+    strg.pb(b);
+    strg.pb(c);
+    strg.pb(d);
+    sort(strg.begin(),strg.end());
+    ll med=(strg[1]+strg[2])/2;
+    return (abs(med-a)+abs(med-b)+abs(med-c)+abs(med-d));
+
+
+}
 
 signed main(int argc, char** argv)
 {
@@ -261,91 +274,122 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n,x,p,k;
-        cin>>n>>x>>p>>k;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-
-        sort(inp.begin(),inp.end());
-
-        if(inp[p-1]==x)
+        ll n,m;
+        cin>>n>>m;
+        vector<vector<ll>> inp(n,vector<ll>(m));
+        FOR(i,0,n)
         {
-            // 5 4 3 1
-            // 2 3 4 5 6
-            cout<<0<<endl;
+            FOR(j,0,m)
+            {
+                cin>>inp[i][j];
+            }
         }
-        else if(p==k)
+        ll ans=0;
+        FOR(i,0,n/2)
         {
-            // 2 cases arise
-            
-           
-
-            if(inp[p-1]>=x)
+            FOR(j,0,m/2)
             {
-                 // 5 4 3 3
-                 // 1 1 1 1 1
-                 int v=(upper_bound(inp.begin(),inp.end(),x)-inp.begin());
-                 
-                 
-                 cout<<p-(upper_bound(inp.begin(),inp.end(),x)-inp.begin())<<endl;
-           
-           
-            }
-            else
-            {
-                // 5 4 3 3
-                // 5 5 5 5 5
-                cout<<1+(lower_bound(inp.begin(),inp.end(),x)-inp.begin()) - p <<endl;
-            }
-            
-        }
-        else if(p<k)
-        { 
-            
-            if(x<=inp[p-1])
-            {
-                // 6 4 2 3
-                // 1 5 6 7 8 8
-                    int v1=0;
-                  int v=(upper_bound(inp.begin(),inp.end(),x)-inp.begin());
-                 
-                 
-                 cout<<p-(upper_bound(inp.begin(),inp.end(),x)-inp.begin())<<endl;
-           
-            }
-            else
-            {
-                // 6 4 2 3
-                // 1 1 1 1 1 1
-                cout<<-1<<endl;
-            }
-            
-            
+                
+                ll x=inp[i][j];
+                
+                ll y=inp[n-1-i][j];
+                
+                ll z=inp[i][m-1-j];
+                
+                ll w=inp[n-1-i][m-1-j];
+
+                ll v1=helper(x,y,z,w);
+                ll v2=helper(y,x,z,w);
+                ll v3=helper(z,x,y,w);
+                ll v4=helper(w,x,y,z);
+                
+                vector<ll> arr;
+                
+                arr.pb(v1);
+                arr.pb(v2);
+                arr.pb(v3);
+                arr.pb(v4);
+
+                sort(arr.begin(),arr.end());
+
+                if(v1==arr[0])
+                {
+                ans+=arr[0];
+                inp[i][j]=x;
+                inp[n-1-i][j]=x;
+                inp[i][m-1-j]=x;
+                inp[n-1-i][m-1-j]=x;
+                }
+                else if(v2==arr[0])
+                {
+                    ans+=arr[0];
+                inp[i][j]=y;
+                inp[n-1-i][j]=y;
+                inp[i][m-1-j]=y;
+                inp[n-1-i][m-1-j]=y;
+                }
+                else if(v3==arr[0])
+                {
+                    ans+=arr[0];
+                inp[i][j]=z;
+                inp[n-1-i][j]=z;
+                inp[i][m-1-j]=z;
+                inp[n-1-i][m-1-j]=z;
+                }
+                else
+                {
+                ans+=arr[0];
+                inp[i][j]=w;
+                inp[n-1-i][j]=w;
+                inp[i][m-1-j]=w;
+                inp[n-1-i][m-1-j]=w;
+                }
+                
+            //  cout<<ans<<" "<<arr[0]<<endl;
 
 
-
-        }
-        else if(p>k)
-        {
-            
-           
-
-            if(x>=inp[p-1])
-            {
-                 // 6 4 3 2
-                // 1 1 2 4 4 4
-                cout<<1+(lower_bound(inp.begin(),inp.end(),x)-inp.begin()) - p <<endl;
             }
-            else 
-            {
-                cout<<-1<<endl;
-            }
-            
-            
-
-
         }
         
+            FOR(i,0,m/2)
+            {
+            
+                
+                if(inp[n/2][i]!=inp[n/2][m-1-i])
+                {
+                    ans+=(abs(inp[n/2][i]-inp[n/2][m-1-i]));
+                    inp[n/2][i]=inp[n/2][m-1-i];
+
+                }
+            
+                
+            }
+        
+        
+            FOR(i,0,n/2)
+            {
+                
+            
+                if(inp[i][m/2]!=inp[n-1-i][m/2])
+                {
+                    ans+=(abs(inp[i][m/2]-inp[n-1-i][m/2]));
+                    inp[i][m/2]=inp[n-1-i][m/2];
+                }
+                
+            
+            }
+        
+        
+        // FOR(i,0,n)
+        // {
+        //     FOR(j,0,m) cout<<inp[i][j]<<" ";
+
+        //     cout<<endl;
+        // }
+        cout<<ans<<endl;
+
+
+
 
     }
     return 0;

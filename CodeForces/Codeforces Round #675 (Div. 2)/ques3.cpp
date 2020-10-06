@@ -110,6 +110,10 @@ void factorial(ll p=MOD)
 ll Binomial(ll N, ll R, ll p=MOD) 
 { 
     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+    if(R==0 || N==R)
+    {
+        return 1;
+    }
     ll ans = ((fact[N] * factorialNumInverse[R]) 
               % p * factorialNumInverse[N - R]) 
              % p; 
@@ -248,7 +252,17 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-
+ll modv(string num, ll a=MOD) 
+{ 
+    // Initialize result 
+    ll res = 0; 
+  
+    // One by one process all digits of 'num' 
+    for (int i = 0; i < num.length(); i++) 
+         res = (res*(ll)10 + (ll)num[i] - '0') %a; 
+  
+    return res; 
+}
 
 signed main(int argc, char** argv)
 {
@@ -258,95 +272,43 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
+    InverseofFactorial();
+    InverseofNumber();
+    factorial();
     while(t--)
     {
-        ll n,x,p,k;
-        cin>>n>>x>>p>>k;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-
-        sort(inp.begin(),inp.end());
-
-        if(inp[p-1]==x)
+        string str;
+        cin>>str; 
+        ll ans=0;
+        FOR(i,0,str.size())
         {
-            // 5 4 3 1
-            // 2 3 4 5 6
-            cout<<0<<endl;
-        }
-        else if(p==k)
-        {
-            // 2 cases arise
-            
-           
+            ll left=(i*(i+1))/2;
+            ll val=str[i]-'0';
+            FOR(j,i,str.size())
+            {
+                
+                
+                ll f=Binomial(str.size()-1-i,j-i);
+                ll g=val*f* power((ll)10,j-i,MOD);
+                f=g%MOD;
+                ans+=f;
+                ans%=MOD;
 
-            if(inp[p-1]>=x)
-            {
-                 // 5 4 3 3
-                 // 1 1 1 1 1
-                 int v=(upper_bound(inp.begin(),inp.end(),x)-inp.begin());
-                 
-                 
-                 cout<<p-(upper_bound(inp.begin(),inp.end(),x)-inp.begin())<<endl;
-           
-           
             }
-            else
-            {
-                // 5 4 3 3
-                // 5 5 5 5 5
-                cout<<1+(lower_bound(inp.begin(),inp.end(),x)-inp.begin()) - p <<endl;
-            }
-            
-        }
-        else if(p<k)
-        { 
-            
-            if(x<=inp[p-1])
-            {
-                // 6 4 2 3
-                // 1 5 6 7 8 8
-                    int v1=0;
-                  int v=(upper_bound(inp.begin(),inp.end(),x)-inp.begin());
-                 
-                 
-                 cout<<p-(upper_bound(inp.begin(),inp.end(),x)-inp.begin())<<endl;
-           
-            }
-            else
-            {
-                // 6 4 2 3
-                // 1 1 1 1 1 1
-                cout<<-1<<endl;
-            }
-            
-            
-
-
+            ans+=(val*(left));
+            ans%=MOD;
 
         }
-        else if(p>k)
-        {
-            
-           
+        cout<<ans<<endl;
+        ll b=modv(str);
+        cout<<b<<endl;
+        ans-=b;
 
-            if(x>=inp[p-1])
-            {
-                 // 6 4 3 2
-                // 1 1 2 4 4 4
-                cout<<1+(lower_bound(inp.begin(),inp.end(),x)-inp.begin()) - p <<endl;
-            }
-            else 
-            {
-                cout<<-1<<endl;
-            }
-            
-            
-
-
-        }
-        
-
+        ans+=MOD;
+        ans%=MOD;
+        cout<<ans<<endl;
     }
+    
     return 0;
 }
