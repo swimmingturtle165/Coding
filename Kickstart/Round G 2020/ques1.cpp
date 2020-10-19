@@ -259,26 +259,36 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    ll v=0;
+    ll v = 0;
     while(t--)
     {
         v++;
-        cout<<"Case #"<<v<<": ";
-        ll n,x;
-        cin>>n>>x;
-        vector<pair<ll,ll>> inp(n);
-        FOR(i,0,n) {
-            cin>>inp[i].first;
-            inp[i].second=i+1;
-            inp[i].first=inp[i].first+x-1;
-            inp[i].first/=x;
-        }
-        sort(inp.begin(),inp.end());
+        cout << "Case #" << v << ": ";
+        string str;
+        cin >> str;
+        ll cnt = 0;
+        ll ans = 0;
+        ll n = str.size();
+        string str1 = "KICK", str2 = "START";
         FOR(i,0,n)
         {
-            cout<<inp[i].second<<" ";
+            if(i+str1.size()<=n)
+            {
+                if(str[i]=='K' && str[i+1]=='I' && str[i+2]=='C' &&str[i+3]=='K')
+                {
+                    cnt++;
+                }
+            }
+            if(i+str2.size()<=n)
+            {
+                if(str[i]=='S' && str[i+1]=='T' && str[i+2]=='A' &&str[i+3]=='R' && str[i+4]=='T')
+                {
+                    ans += cnt;
+                }
+
+            }
         }
-        cout<<endl;
-        }
+        cout << ans << endl;
+    }
     return 0;
 }

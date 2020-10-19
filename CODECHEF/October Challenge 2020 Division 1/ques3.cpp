@@ -22,8 +22,7 @@ typedef     pair<ll,ll>      pll;
 #define     ub               upper_bound
 #define     mp               make_pair
 #define     in               insert
-#define     s                second
-#define     f                first
+
 #define     nn               cout<<"\n"
 #define     pb               push_back
 #define     testcase         int t;cin>>t;while(t--)
@@ -37,278 +36,114 @@ typedef     pair<ll,ll>      pll;
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
-// A structure to represent a node in adjacency list 
-struct AdjListNode { 
-	int dest; 
-	int weight; 
-	struct AdjListNode* next; 
-}; 
+const int N=200005;
+const int S=450;
+const int P=1000000007;
 
-// A structure to represent an adjacency list 
-struct AdjList { 
-	struct AdjListNode* head; // pointer to head node of list 
-}; 
+inline void add(int &a,int b){a+=b;if(a>=P)a-=P;}
 
-// A structure to represent a graph. A graph is an array of adjacency lists. 
-// Size of array will be V (number of vertices in graph) 
-struct Graph { 
-	int V; 
-	struct AdjList* array; 
-}; 
+inline void dec(int &a,int b){a-=b;if(a<0)a+=P;}
 
-// A utility function to create a new adjacency list node 
-struct AdjListNode* newAdjListNode(int dest, int weight) 
+inline int  Pow(ll x, ll y, ll p=MOD) 
 { 
-	struct AdjListNode* newNode = (struct AdjListNode*)malloc(sizeof(struct AdjListNode)); 
-	newNode->dest = dest; 
-	newNode->weight = weight; 
-	newNode->next = NULL; 
-	return newNode; 
-} 
-
-// A utility function that creates a graph of V vertices 
-struct Graph* createGraph(int V) 
-{ 
-	struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph)); 
-	graph->V = V; 
-
-	// Create an array of adjacency lists. Size of array will be V 
-	graph->array = (struct AdjList*)malloc(V * sizeof(struct AdjList)); 
-
-	// Initialize each adjacency list as empty by making head as NULL 
-	for (int i = 0; i < V; ++i) 
-		graph->array[i].head = NULL; 
-
-	return graph; 
-} 
-
-// Adds an edge to an undirected graph 
-void addEdge(struct Graph* graph, int src, int dest, int weight) 
-{ 
-	// Add an edge from src to dest. A new node is added to the adjacency 
-	// list of src. The node is added at the beginning 
-	struct AdjListNode* newNode = newAdjListNode(dest, weight); 
-	newNode->next = graph->array[src].head; 
-	graph->array[src].head = newNode; 
-
-	// Since graph is undirected, add an edge from dest to src also 
-	newNode = newAdjListNode(src, weight); 
-	newNode->next = graph->array[dest].head; 
-	graph->array[dest].head = newNode; 
-} 
-
-// Structure to represent a min heap node 
-struct MinHeapNode { 
-	int v; 
-	int key; 
-}; 
-
-// Structure to represent a min heap 
-struct MinHeap { 
-	int size; // Number of heap nodes present currently 
-	int capacity; // Capacity of min heap 
-	int* pos; // This is needed for decreaseKey() 
-	struct MinHeapNode** array; 
-}; 
-
-// A utility function to create a new Min Heap Node 
-struct MinHeapNode* newMinHeapNode(int v, int key) 
-{ 
-	struct MinHeapNode* minHeapNode = (struct MinHeapNode*)malloc(sizeof(struct MinHeapNode)); 
-	minHeapNode->v = v; 
-	minHeapNode->key = key; 
-	return minHeapNode; 
-} 
-
-// A utilit function to create a Min Heap 
-struct MinHeap* createMinHeap(int capacity) 
-{ 
-	struct MinHeap* minHeap = (struct MinHeap*)malloc(sizeof(struct MinHeap)); 
-	minHeap->pos = (int*)malloc(capacity * sizeof(int)); 
-	minHeap->size = 0; 
-	minHeap->capacity = capacity; 
-	minHeap->array = (struct MinHeapNode**)malloc(capacity * sizeof(struct MinHeapNode*)); 
-	return minHeap; 
-} 
-
-// A utility function to swap two nodes of min heap. Needed for min heapify 
-void swapMinHeapNode(struct MinHeapNode** a, struct MinHeapNode** b) 
-{ 
-	struct MinHeapNode* t = *a; 
-	*a = *b; 
-	*b = t; 
-} 
-
-// A standard function to heapify at given idx 
-// This function also updates position of nodes when they are swapped. 
-// Position is needed for decreaseKey() 
-void minHeapify(struct MinHeap* minHeap, int idx) 
-{ 
-	int smallest, left, right; 
-	smallest = idx; 
-	left = 2 * idx + 1; 
-	right = 2 * idx + 2; 
-
-	if (left < minHeap->size && minHeap->array[left]->key < minHeap->array[smallest]->key) 
-		smallest = left; 
-
-	if (right < minHeap->size && minHeap->array[right]->key < minHeap->array[smallest]->key) 
-		smallest = right; 
-
-	if (smallest != idx) { 
-		// The nodes to be swapped in min heap 
-		MinHeapNode* smallestNode = minHeap->array[smallest]; 
-		MinHeapNode* idxNode = minHeap->array[idx]; 
-
-		// Swap positions 
-		minHeap->pos[smallestNode->v] = idx; 
-		minHeap->pos[idxNode->v] = smallest; 
-
-		// Swap nodes 
-		swapMinHeapNode(&minHeap->array[smallest], &minHeap->array[idx]); 
-
-		minHeapify(minHeap, smallest); 
-	} 
-} 
-
-// A utility function to check if the given minHeap is ampty or not 
-int isEmpty(struct MinHeap* minHeap) 
-{ 
-	return minHeap->size == 0; 
-} 
-
-// Standard function to extract minimum node from heap 
-struct MinHeapNode* extractMin(struct MinHeap* minHeap) 
-{ 
-	if (isEmpty(minHeap)) 
-		return NULL; 
-
-	// Store the root node 
-	struct MinHeapNode* root = minHeap->array[0]; 
-
-	// Replace root node with last node 
-	struct MinHeapNode* lastNode = minHeap->array[minHeap->size - 1]; 
-	minHeap->array[0] = lastNode; 
-
-	// Update position of last node 
-	minHeap->pos[root->v] = minHeap->size - 1; 
-	minHeap->pos[lastNode->v] = 0; 
-
-	// Reduce heap size and heapify root 
-	--minHeap->size; 
-	minHeapify(minHeap, 0); 
-
-	return root; 
-} 
-
-// Function to decrease key value of a given vertex v. This function 
-// uses pos[] of min heap to get the current index of node in min heap 
-void decreaseKey(struct MinHeap* minHeap, int v, int key) 
-{ 
-	// Get the index of v in heap array 
-	int i = minHeap->pos[v]; 
-
-	// Get the node and update its key value 
-	minHeap->array[i]->key = key; 
-
-	// Travel up while the complete tree is not hepified. 
-	// This is a O(Logn) loop 
-	while (i && minHeap->array[i]->key < minHeap->array[(i - 1) / 2]->key) { 
-		// Swap this node with its parent 
-		minHeap->pos[minHeap->array[i]->v] = (i - 1) / 2; 
-		minHeap->pos[minHeap->array[(i - 1) / 2]->v] = i; 
-		swapMinHeapNode(&minHeap->array[i], &minHeap->array[(i - 1) / 2]); 
-
-		// move to parent index 
-		i = (i - 1) / 2; 
-	} 
-} 
-
-// A utility function to check if a given vertex 
-// 'v' is in min heap or not 
-bool isInMinHeap(struct MinHeap* minHeap, int v) 
-{ 
-	if (minHeap->pos[v] < minHeap->size) 
-		return true; 
-	return false; 
-} 
-
-// A utility function used to print the constructed MST 
-void printArr(int arr[], int n) 
-{ 
-	for (int i = 1; i < n; ++i) 
-		printf("%d - %d\n", arr[i], i); 
-} 
-
-// The main function that constructs Minimum Spanning Tree (MST) 
-int cst(vector<int>& a,vector<int>& b)
-{
-  return abs(a[0]-b[0])+abs(a[1]-b[1])+abs(a[2]-b[2])+abs(a[3]-b[3])+abs(a[4]-b[4]);
-} 
-// using Prim's algorithm 
-void PrimMST(struct Graph* graph,vector<vector<int>>& arr) 
-{ 
-	int V = graph->V; // Get the number of vertices in graph 
-	int parent[V]; // Array to store constructed MST 
-	int key[V]; // Key values used to pick minimum weight edge in cut 
-
-	// minHeap represents set E 
-	struct MinHeap* minHeap = createMinHeap(V); 
-
-	// Initialize min heap with all vertices. Key value of 
-	// all vertices (except 0th vertex) is initially infinite 
-	for (int v = 1; v < V; ++v) { 
-		parent[v] = -1; 
-		key[v] = INT_MAX; 
-		minHeap->array[v] = newMinHeapNode(v, key[v]); 
-		minHeap->pos[v] = v; 
-	} 
-
-	// Make key value of 0th vertex as 0 so that it 
-	// is extracted first 
-	key[0] = 0; 
-	minHeap->array[0] = newMinHeapNode(0, key[0]); 
-	minHeap->pos[0] = 0; 
-
-	// Initially size of min heap is equal to V 
-	minHeap->size = V; 
-
-	// In the following loop, min heap contains all nodes 
-	// not yet added to MST. 
-	while (!isEmpty(minHeap)) { 
-		// Extract the vertex with minimum key value 
-		struct MinHeapNode* minHeapNode = extractMin(minHeap); 
-		int u = minHeapNode->v; // Store the extracted vertex number 
-
-		// Traverse through all adjacent vertices of u (the extracted 
-		// vertex) and update their key values 
-		struct AdjListNode* pCrawl = graph->array[u].head; 
-		while (pCrawl != NULL) { 
-			int v = pCrawl->dest; 
-
-			// If v is not yet included in MST and weight of u-v is 
-			// less than key value of v, then update key value and 
-			// parent of v 
-			if (isInMinHeap(minHeap, v) && pCrawl->weight < key[v]) { 
-				key[v] = pCrawl->weight; 
-				parent[v] = u; 
-				decreaseKey(minHeap, v, key[v]); 
-			} 
-			pCrawl = pCrawl->next; 
-		} 
-	} 
-
-	// print edges of MST 
-	// printArr(parent, V);
-    
-    ll ans=0;
-    FOR(i,0,V)
-    {
-        ans+=(key[i]);
+    ll res = 1;      // Initialize result 
+  
+    x = x % p;  // Update x if it is more than or 
+                // equal to p 
+  
+    while (y > 0) 
+    { 
+        // If y is odd, multiply x with result 
+        if (y & 1) 
+            res = (res*x) % p; 
+  
+        // y must be even now 
+        y = y>>1; // y = y/2 
+        x = (x*x) % p; 
     } 
-    cout<<ans<<endl;
+    return res; 
 } 
-// Driver program to test above functions 
+  
+ll modInverse(ll n, ll p) 
+{ 
+    return Pow(n, p-2, p); 
+} 
+  
+int fac[N<<1],inv[N<<1];
+
+int C(int &a,int &b)
+{
+	int rgt=fac[a]*1ll*inv[b]%P;
+
+	 rgt=rgt*1ll*inv[a-b]%P;
+
+	 return rgt;
+}
+int n,k;
+int f[N],g[N];
+int res[N];
+void dp()
+{
+	f[0]=1;
+	FORE(i,0,S){
+		memset(g,0,sizeof g);
+		FORE(j,0,k)if(f[j])
+		{
+			if(i+j+1<=k)
+			{
+				dec(g[i+j+1],f[j]);
+				// g[i + j + 1] %= 2;
+				// f[j] %= 2;
+			}
+			if(i&&(i+j<=k)){
+			add(f[j+i],f[j]);
+			// f[j] %= 2;
+			// f[j+i] %= 2;
+			}
+		}
+		FORE(j,0,k)
+		{
+			add(res[j], f[j]);
+			f[j] = g[j];
+			// f[j] %= 2;
+			// g[j] %= 2;
+		}
+	}
+	
+	memset(f,0,sizeof f);
+	FORE(i,0,k)f[i]=res[i];
+	memset(res,0,sizeof res);
+	FORE(i,0,k/n){
+		memset(g,0,sizeof g);
+		FORE(j,0,k)if(f[j])
+		{
+			if(i&&(i+j<=k))add(f[i+j],f[j]);
+			if(j+n+1<=k)add(g[j+n+1],f[j]);
+		}
+		FORE(j,0,k)
+		{
+			add(res[j],f[j]);
+		}
+		FORE(j,0,k) {
+		
+			f[j]=g[j];
+			
+		}
+		
+	}
+	ll ans=0;
+	FORE(j,0,k)
+	{
+		res[j] % 2;
+		int v1 = k - j + n - 1;
+		int v2 = n - 1;
+		ll ret=res[j]*1ll*C(v1,v2)%P;
+		
+		ans+=ret;
+	}
+	cout << ans%2<< endl;
+}
+
 int main() 
 { 
     #ifndef ONLINE_JUDGE
@@ -316,29 +151,45 @@ int main()
     freopen("output.txt", "w", stdout);
     #endif
     FastIO;
-	// Let us create the graph given in above fugure 
-	int n,d;
-    cin>>n>>d;
-    vector<vector<int>> arr(n,vector<int>(5,0));
-    FOR(i,0,n)
+	ll t;
+	cin >> t;
+	while (t--)
+	{
+		
+    ll n, k;
+    cin >> n >> k;
+
+    ll total = n * (n - 1) / 2;
+    if (k < 0 || k > total) /// k is out of range
     {
-        FOR(j,0,d) cin>>arr[i][j];
+        cout << 0<<endl;
+       
     }
-        struct Graph* graph = createGraph(n);
-        FOR(i,0,n)
+
+    k=max(k,n);
+    int f[n + 1][k + 1];
+    f[0][0] = 1; /// base case f[n][0] = 1
+    for (int i = 1; i <= n; ++i) f[0][i] = 0; /// base case f[0][k] = 0
+    for (int i = 1; i <= n; ++i)
+    {
+        bool cur = i & 1; /// current
+        bool pre = !cur;  /// previous
+
+        f[cur][0] = 1; /// base case f[n][0] = 1
+        for (int j = 1; j <= k; ++j)
         {
-            FOR(j,0,n)
-            {
-                if(i!=j)
-                addEdge(graph,i,j,cst(arr[i],arr[j])); 
-
-            }
+            f[cur][j] = (f[cur][j - 1] + f[pre][j]) % MOD;
+            if (j >= i)
+                f[cur][j] = (f[cur][j] - f[pre][j - i] + MOD) % MOD;
         }
+    }
 
-
+	cout << f[n][k] << endl;
+	}
+	
+	
+	
+	return 0;
+}
+	
     
-
-	PrimMST(graph,arr); 
-
-	// return 0; 
-} 

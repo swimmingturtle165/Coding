@@ -70,51 +70,57 @@ ll modInverse(ll n, ll p)
 } 
   
  
-ll factorialNumInverse[300000 + 1]; 
+// ll factorialNumInverse[300000 + 1]; 
+       
+// // array to precompute inverse of 1! to N! 
+
+// ll naturalNumInverse[300000 + 1]; 
   
-// array to precompute inverse of 1! to N! 
-ll naturalNumInverse[300000 + 1]; 
+// // array to store factorial of first N numbers 
+
+// ll fact[300000 + 1]; 
   
-// array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// // Function to precompute inverse of numbers 
+
+// void InverseofNumber(ll p=MOD) 
+// { 
+//     naturalNumInverse[0] = naturalNumInverse[1] = 1; 
+//     for (int i = 2; i <= 300000; i++) 
+//         naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
+// } 
+// // Function to precompute inverse of factorials 
+
+// void InverseofFactorial(ll p=MOD) 
+// { 
+//     factorialNumInverse[0] = factorialNumInverse[1] = 1; 
   
-// Function to precompute inverse of numbers 
-void InverseofNumber(ll p=MOD) 
-{ 
-    naturalNumInverse[0] = naturalNumInverse[1] = 1; 
-    for (int i = 2; i <= 300000; i++) 
-        naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
-} 
-// Function to precompute inverse of factorials 
-void InverseofFactorial(ll p=MOD) 
-{ 
-    factorialNumInverse[0] = factorialNumInverse[1] = 1; 
+//     // precompute inverse of natural numbers 
+//     for (int i = 2; i <= 300000; i++) 
+//         factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
+// } 
   
-    // precompute inverse of natural numbers 
-    for (int i = 2; i <= 300000; i++) 
-        factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
-} 
+// // Function to calculate factorial of 1 to N 
+
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-// Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
-  
-// Function to return nCr % p in O(1) time 
-ll Binomial(ll N, ll R, ll p=MOD) 
-{ 
-    // n C r = n!*inverse(r!)*inverse((n-r)!) 
-    ll ans = ((fact[N] * factorialNumInverse[R]) 
-              % p * factorialNumInverse[N - R]) 
-             % p; 
-    return ans; 
-} 
+// // Function to return nCr % p in O(1) time 
+
+// ll Binomial(ll N, ll R, ll p=MOD) 
+// { 
+//     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+//     ll ans = ((fact[N] * factorialNumInverse[R]) 
+//               % p * factorialNumInverse[N - R]) 
+//              % p; 
+//     return ans; 
+// } 
    
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -229,14 +235,13 @@ int root (vector<ll>&Arr ,int i)
     {
         Arr[ root_A ] = Arr[root_B];
         size[root_B] += size[root_A];
-    
-        
+        size[root_A] = 0;
     }
     else
     {
         Arr[ root_B ] = Arr[root_A];
         size[root_A] += size[root_B];
-        // size[root_B]=size[root_A];
+        size[root_B] = 0;
     }
 }
 
@@ -282,6 +287,8 @@ signed main(int argc, char** argv)
         ll n,d;
         cin >> n>>d;
         vector<vector<int>> arr(n,vector<int>(5,0));
+        vector<ll> parent(n), size(n);
+        initialize(parent, size, n);
         FOR(i,0,n)
         {
             FOR(j,0,d)
@@ -290,36 +297,70 @@ signed main(int argc, char** argv)
             }
         }
         
-        sort(arr.begin(),arr.end(),mycmp);
+        // sort(arr.begin(),arr.end(),mycmp);
         ll ans=0;
         vector<bool> strg(n,false);
-        FOR(i,0,n)
+        strg[0] = true;
+        ll cnt = 1;
+
+        
+       
+        FOR(i, 0, n)
         {
-            if(strg[i]==true)
-            {
-                continue;
-                
-            }
-            ll tmp=INT_MAX;
-            ll dst=0;
-            FOR(j,0,n)
+           
+            
+            ll dst = 0;
+            ll tmp = INT_MAX;
+            
+            FOR(j, 0, n)
             {
                 if(j==i)
                 {
                     continue;
                 }
-                ll v=helper(arr[i],arr[j]);
-                if(v<tmp)
+                ll v = helper(arr[i], arr[j]);
+                if(v<tmp && find(parent,i,j)==false)
                 {
-                dst=j;
-                tmp=v;
+                    dst = j;
+                    tmp = v;
                 }
+
                 
             }
-            // cout<< arr[i][0]<<" "<<arr[i][1]<<" => "<<arr[dst][0]<<" "<<arr[dst][1]<<" "<<tmp<<endl;
-            ans+=tmp;
-        }
+            if(tmp!=INT_MAX && i!=n-2)
+            {
+                // cout << tmp << endl;
+                ans += tmp;
+                weighted_union(parent, size, i, dst);
+            }
+            else if(i==n-2)
+            {
+                ll tmp = INT_MAX;
+                int r = 0;
+                FOR(i,0,n)
+                {
+                    if(size[i]==1 && parent[i]==i)
+                    {
+                        r = i;
+                        break;
+                    }
+                }
+                
+                    FOR(k,0,n)
+                    {
+                        if(k==r)
+                        {
+                            continue;
+                        }
+                        tmp = min(tmp, helper(arr[r], arr[k]));
+                    }
+                }
+                
+                ans += tmp;
+            }
+          
         cout<<ans<<endl;
+           
         
     }
     return 0;

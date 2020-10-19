@@ -247,110 +247,8 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-ll ans=INT_MAX;
+   
 
-void solve(ll xa,ll ya,ll xb,ll yb,bool mov,vector<vector<ll>> arr,ll s1,ll s2,ll no1 ,ll no2)
-{
-    cout<<xa<<" "<<ya<<" "<<xb<<" "<<yb<<" "<<s1<<" "<<s2<<" "<<mov<<" "<<no1 <<" "<<no2<< endl;
-    if(no1==1 && no2==1)
-    {
-        cout<<" ** "<<s1<<" "<<s2<<endl;
-        if(ans!=INT_MAX)
-        ans=max(ans,s1-s2);
-        else
-        {
-            ans=s1-s2;
-        }
-        
-        return ;
-    }
-       
-
-
-    if(mov==true)
-    {
-        bool flg1=false;
-        // A's turn to move
-            arr[xb][yb]=0;
-        if(arr[xa][ya-1]!=0)
-        {
-            flg1=true;
-            solve(xa,ya-1,xb,yb,!mov,arr,s1+1,s2,0,no2);
-
-        
-        }
-        if(arr[xa][ya+1]!=0)
-        {
-            flg1=true;
-            solve(xa,ya+1,xb,yb,!mov,arr,s1+1,s2,0,no2);
-
-
-        }
-        if(ya%2==1 && arr[xa+1][ya+1]!=0)
-        {
-
-            flg1=true;
-            solve(xa+1,ya+1,xb,yb,!mov,arr,s1+1,s2,0,no2);
-
-        }
-        else if(arr[xa-1][ya-1]!=0)
-        {
-            flg1=true;
-            solve(xa-1,ya-1,xb,yb,!mov,arr,s1+1,s2,0,no2);
-
-
-        }
-        if(flg1==false)
-        {
-            solve(xa,ya,xb,yb,!mov,arr,s1,s2,1,no2);
-        }
-            arr[xa][ya]=1;
-
-
-
-    }
-    else
-    {
-        
-        bool flg1=false;
-            arr[xa][ya]=0;
-
-        if(arr[xb][yb-1]!=0)
-        {
-            flg1=true;
-            solve(xa,ya,xb,yb-1,!mov,arr,s1,s2+1,no1,0);
-
-        
-        }
-        if(arr[xb][yb+1]!=0)
-        {
-            flg1=true;
-            solve(xa,ya,xb,yb+1,!mov,arr,s1,s2+1,no1,0);
-
-
-        }
-        if(yb%2==1 && arr[xb+1][yb+1]!=0)
-        {
-
-            flg1=true;
-            solve(xa,ya,xb+1,yb+1,!mov,arr,s1,s2+1,no1,0);
-
-        }
-        else if(arr[xb-1][yb-1]!=0)
-        {
-            flg1=true;
-            solve(xa,ya,xb-1,yb-1,!mov,arr,s1,s2+1,no1,0);
-
-
-        }
-        if(flg1==false)
-        {
-            solve(xa,ya,xb,yb,!mov,arr,s1,s2,no1,1);
-        }
-            arr[xb][yb]=1;
-    }
-    
-}
 
 signed main(int argc, char** argv)
 {
@@ -361,47 +259,38 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    ll v=0;
+    ll v = 0;
     while(t--)
     {
         v++;
-        cout<<"Case #"<<v<<": ";
-        ans=INT_MAX;
-        
-        ll n,xa,ya,xb,yb,c;
-        cin>>n>>xa>>ya>>xb>>yb>>c;
-        vector<vector<ll>> arr(n+3,vector<ll>(2*n+2,1));
-
-        FOR(i,0,2*n+1) arr[0][i]=0;
-        FOR(i,0,2*n+1) arr[n+1][i]=0;
-        FOR(i,0,n+2) arr[i][0]=0;
-        FOR(i,0,n+2) arr[i][2*n]=0;
-
-
-        FOR(i,0,c)
+        cout << "Case #" << v << ": ";
+        ll w;
+        ll n;
+        cin >> w >> n;
+        vector<ll> inp(w);
+        FOR(i,0,w)
         {
-            ll a,b;
-            cin>>a>>b;
-            arr[a][b]=0;
+            cin >> inp[i];
+
         }
-        FOR(i,1,n+1)
+        ll ans = INT64_MAX;
+        sort(inp.begin(), inp.end());
+        FOR(i,0,w+1)
         {
-            FOR(j,2*i,2*n+1)
+            ll curr = 0;
+            ll md = inp[(w-1) / 2];
+            FOR(j,0,w)
             {
-                arr[i][j]=0;
+                curr += min(abs(inp[j] - md), min(n + inp[j] - md, md + n - inp[j]));
             }
+            ans = min(ans, curr);
+            inp[0] += n;
+            sort(inp.begin(), inp.end());
+            
         }
-        bool flg=true;
-        ll s1=0,s2=0;
-        arr[xa][ya]=0;
-        arr[ya][yb]=0;
-        solve(xa,ya,xb,yb,flg,arr,s1,s2,0,0);
-        cout<<ans<<endl;
+        cout << ans << endl;
 
 
-
-
-        // cout<<endl;
-        }
+    }
     return 0;
 }

@@ -283,49 +283,64 @@ signed main(int argc, char** argv)
         }
         
         sort(tmp.begin(), tmp.end());
-        dispvector<int>(tmp);
-        dispvector<int>(inp);
+        
+            // dispvector<int>(inp);   
+            // dispvector<int>(tmp);                 
+
 
 
         vector<pair<ll, ll>> strg;
-        bool flg = false;
-        flg = (inp[0] != 1);
+        bool flg = inp[0]==1;
+        
         FOR(i,0,n)
         {
-            if(inp[i]!=tmp[i])
-            {
-                flg = !flg;
-                ll j = i;
-                while(j<n && inp[j]!=tmp[i])
-                {
-                    j++;
-                }
-                swp(inp, i, j);
-                dispvector<int>(inp);
+            
+                if(flg && inp[i]!=tmp[i])
+               {
+                    ll j = i;
+                    while(j<n && inp[j]!=tmp[i])
+                    {
+                        j++;
+                    }
+                    // dispvector<int>(inp);
 
-                tmp = inp;
-                if(flg)
-                {
-                    reverse(tmp.begin(), tmp.end());
-                }
+                    swp(inp, i, j);
+                    
+                    
 
-                // cout << "$$ " << i<<" "<<j<<endl;
-                strg.pb({i, j});
-            }
+                    flg = !flg;
+                    reverse(inp.begin(), inp.end());
+                    // cout << i << " ** " << j << endl;
+                    // dispvector<int>(inp);
+                    strg.pb({i, j});
+               }
+               else if(!flg && inp[n-1-i]!=tmp[i])
+               {
+                   ll j = n-1-i;
+                    while(j>=0 && inp[j]!=tmp[i])
+                    {
+                        j--;
+                    }
+                    // dispvector<int>(inp);
+                    swp(inp, j, n-1-i);
+
+                    strg.pb({j, n-1-i}); 
+                    flg = !flg;
+                    reverse(inp.begin(), inp.end());
+                    // cout << j << " && " << n-1-i << endl;
+                    // dispvector<int>(inp);
+
+               }
+               
+                
+            
         }
-        // flg = false;
-        // FOR(i,0,tmp.size())
-        // {
-        //     flg == (tmp[i] != i + 1);
-        // }
-        // if(flg)
-        // {
-        //     strg.pb({0, n - 1});
-        // }
-        cout << strg.size()  << endl;
+
+        flg = !flg;
+        cout << strg.size() +flg  << endl;
         FOR(i, 0, strg.size())
         {
-            cout << " && " << strg[i].first << " " << strg[i].second << endl;
+            // cout << " && " << strg[i].first << " " << strg[i].second << endl;
             // if(strg[i].first!=0 && strg[i].second!=n-1)
             // {
             if (strg[i].first == 0 && strg[i].second == n - 1)
@@ -337,7 +352,7 @@ signed main(int argc, char** argv)
                 }
                 cout << endl;
             }
-            else if(i%2==0)
+            else 
             {
                 cout << n - (strg[i].second - strg[i].first) << " ";
                 FOR(j, 0, strg[i].first)
@@ -353,44 +368,19 @@ signed main(int argc, char** argv)
                 }
                 cout << endl;
             }
-            else
-            {
-                cout << n - (strg[i].second - strg[i].first) << " ";
-                FOR(j,strg[i].second+1,n)
-                {
-                    cout << 1 << " ";
-                }
+                    
 
-                cout << strg[i].second + 1 - strg[i].first << " ";
+        }
+        if(flg)
+        {
+            cout << n << " ";
+            FOR(i, 0, n)
+                cout << 1 << " ";
 
-                FOR(j, 0,strg[i].first)
-                {
-                    cout << 1 << " ";
-                }
                 cout << endl;
-            }
+        }
             
-
-            // }
-            // else if(strg[i].first==0 )
-            // {
-            //     cout << 2 << " " << strg[i].second+1 << " "<< n -1- strg[i].second << endl;
-            // }
-            // else if( strg[i].second==n-1)
-            // {
-            //     cout << 2 << " " << strg[i].first << " " << n -1- strg[i].first << endl;
-            // }
-            // else
-            // {
-            //     cout << 1 << " " << n << endl;
-            // }                
-
-            }
-            // if(flg)
-            // {
-            //     cout << n << " " << n << endl;
-        
-            // }
-    }
+    
     return 0;
+    }
 }

@@ -248,41 +248,7 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
- vector<pair<ll,ll>> merge_intervals(vector<pair<ll,ll>> &inp)
-{
-    sort(inp.begin(),inp.end());
-    stack<pair<ll,ll>> s;
-    s.push(inp[0]);
-    FOR(i,1,inp.size())
-    {
-        pair<ll,ll> top=s.top();
 
-        if (top.second < inp[i].first)
-            s.push(inp[i]);
- 
-        
-        else if (top.second < inp[i].second)
-        {
-            top.second = inp[i].second;
-            s.pop();
-            s.push(top);
-        }
-    }
-    vector<pair<ll,ll>> strg(s.size());
-    while(s.size()>0)
-    {
-        pair<ll,ll> tmp=s.top();
-        strg[s.size()-1]=tmp;
-        s.pop();
-    }
-    sort(strg.begin(),strg.end());
-    FOR(i,0,strg.size())
-    {
-        cout<<strg[i].first<<" "<<strg[i].second<<endl;
-    }
-    return strg;
-
-}
 
 signed main(int argc, char** argv)
 {
@@ -293,37 +259,44 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    ll v=0;
+    ll v = 0;
     while(t--)
     {
         v++;
-        cout<<"Case #"<<v<<": ";
-        
-        ll n,k;
-        cin>>n>>k;
-        vector<pair<ll,ll>> arr(n);
+        cout << "Case #" << v << ": ";
+        ll n;
+        cin >> n;
+        vector<vector<ll>> strg(n, vector<ll>(n));
+        vector<vector<ll>> arr(n, vector<ll>(n));
         FOR(i,0,n)
         {
-            cin>>arr[i].first>>arr[i].second;
-        }
-        ll ans=0;
-        ll curr=-10;        
-        sort(arr.begin(),arr.end());
-        FOR(i,0,arr.size())
-        {
-            if(curr>=arr[i].second)
+            FOR(j,0,n)
             {
-                continue;
-            }
-            curr=max(arr[i].first,curr);
-            ll dur=(arr[i].second-curr)+k-1;
-            dur/=k;
-            ans+=dur;
-            curr+=(dur*k);
-            
-        }
+                cin >> arr[i][j];
 
-        cout<<ans<<endl;
+            }
+        }
+        ll ans = 0;
+        for (int i = 0; i < n;i++)
+        {
+            ll curr = 0;
+            for(int j = 0; i + j < n;j++)
+            {
+                curr += arr[i+j][j];
+            }
+            ans = max(ans, curr);
+        }
+        for (int i = 0; i < n;i++)
+        {
+            ll curr = 0;
+            for(int j = 0; i + j < n;j++)
+            {
+                curr += arr[j][i+j];
+            }
+            ans = max(ans, curr);
+        }
+        cout <<ans << endl;
+
     }
     return 0;
 }
