@@ -258,7 +258,7 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
         ll n;
@@ -268,61 +268,89 @@ signed main(int argc, char** argv)
         bool flg = true;
         FOR(i,0,n)
         {
-            cin >> inp[i];
-            
-            
+            cin >> inp[i]; 
+        }
+        // dispvector<int>(inp);
 
-        }
-        FORDE(i,n-1,0)
-        {
-            if(inp[i]==1)
-            {
-            strg[inp[i]]++;
-            }
-            else
-            {
-                if(strg[1]==0)
-                {
-                    flg = false;
-                }
-                else
-                {
-                    strg[1]--;
-                }
-                
-            }
-        }
-        if(flg==false)
-        {
-            cout << -1 << endl;
-        }
-        else
-        {
-            ll ans = 0;
+        
+        
             vector<ll> where_at(n, -1);
             vector<ll> rows(n, 0),columns(n,0);
-            vector<pair<ll, ll>> strg;
             vector<pair<ll, ll>> pairs_srt;
-            ll i = n - 1, j = n - 1;
+            vector<pair<ll, pair<ll, ll>>> tuple_srt;
+
+            ll i = n - 1, j = n - 1,k=n-1;
+            vector<pair<ll, ll>> answ;
             while(i>=0)
             {
-                if(inp[i]<=1)
+                if(inp[i]==3)
                 {
-                    i--;
-                }
-                else
-                {
-                    while(j>i && inp[j]!=1)
+                    while(j>i && inp[j]<=1)
                     {
                         j--;
                     }
-                    pairs_srt.pb({i, j});
-                    
+                    if(j==i)
+                    {
+                        // 3 1
+                        while(k>i && inp[k]!=1)
+                        {
+                            k--;
+                        }
+                        if(k==i)
+                        {
+                            cout << -1 << endl;
+                            return 0;
+                        }
+                         answ.pb({i, i});
+                         answ.pb({i, k});
+                         answ.pb({k, k});
+                         rows[k] = true;
+                         k--;
+                    } 
+                    else
+                    {
+                        //  3 3 or 3 2
+                        answ.pb({i, i});
+                        answ.pb({i, j});
+                        j--;
+                    }
                 }
-                
+                else if(inp[i]==2)
+                {
+                    while(k>i && inp[k]!=1)
+                        {
+                            k--;
+                        }
+                        if(k==i)
+                        {
+                            cout << -1 << endl;
+                            return 0;
+                        }
+                        answ.pb({i, i});
+                        answ.pb({i, k});
+                        rows[k] = true;
+                        k--;
+                }    
+                    
+                   
+                   
+                i--;
+            }
+            FOR(i,0,n)
+            {
+                if(inp[i]==1 && rows[i]==false)
+                {
+                    answ.pb({i, i});
+                }
+            }
+           
+            cout << answ.size() << endl;
+            FOR(i,0,answ.size())
+            {
+                cout << answ[i].first + 1 << " " << answ[i].second + 1 << endl;
             }
 
-        }
+        
         
     }
     return 0;
