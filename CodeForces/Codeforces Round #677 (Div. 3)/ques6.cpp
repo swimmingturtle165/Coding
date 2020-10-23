@@ -64,57 +64,57 @@ ll power(ll x, ll y, ll p)
     return res; 
 } 
   
-ll modInverse(ll n, ll p) 
-{ 
-    return power(n, p-2, p); 
-} 
+// ll modInverse(ll n, ll p) 
+// { 
+//     return power(n, p-2, p); 
+// } 
   
  
-ll factorialNumInverse[300000 + 1]; 
+// ll factorialNumInverse[300000 + 1]; 
   
-// array to precompute inverse of 1! to N! 
-ll naturalNumInverse[300000 + 1]; 
+// // array to precompute inverse of 1! to N! 
+// ll naturalNumInverse[300000 + 1]; 
   
-// array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// // array to store factorial of first N numbers 
+// ll fact[300000 + 1]; 
   
-// Function to precompute inverse of numbers 
-void InverseofNumber(ll p=MOD) 
-{ 
-    naturalNumInverse[0] = naturalNumInverse[1] = 1; 
-    for (int i = 2; i <= 300000; i++) 
-        naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
-} 
-// Function to precompute inverse of factorials 
-void InverseofFactorial(ll p=MOD) 
-{ 
-    factorialNumInverse[0] = factorialNumInverse[1] = 1; 
+// // Function to precompute inverse of numbers 
+// void InverseofNumber(ll p=MOD) 
+// { 
+//     naturalNumInverse[0] = naturalNumInverse[1] = 1; 
+//     for (int i = 2; i <= 300000; i++) 
+//         naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
+// } 
+// // Function to precompute inverse of factorials 
+// void InverseofFactorial(ll p=MOD) 
+// { 
+//     factorialNumInverse[0] = factorialNumInverse[1] = 1; 
   
-    // precompute inverse of natural numbers 
-    for (int i = 2; i <= 300000; i++) 
-        factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
-} 
+//     // precompute inverse of natural numbers 
+//     for (int i = 2; i <= 300000; i++) 
+//         factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
+// } 
   
-// Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+// // Function to calculate factorial of 1 to N 
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
-// Function to return nCr % p in O(1) time 
-ll Binomial(ll N, ll R, ll p=MOD) 
-{ 
-    // n C r = n!*inverse(r!)*inverse((n-r)!) 
-    ll ans = ((fact[N] * factorialNumInverse[R]) 
-              % p * factorialNumInverse[N - R]) 
-             % p; 
-    return ans; 
-} 
+// // Function to return nCr % p in O(1) time 
+// ll Binomial(ll N, ll R, ll p=MOD) 
+// { 
+//     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+//     ll ans = ((fact[N] * factorialNumInverse[R]) 
+//               % p * factorialNumInverse[N - R]) 
+//              % p; 
+//     return ans; 
+// } 
    
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -258,10 +258,70 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
+        const int N = 75;
+
+        ll n, m, k;
+        cin >> n >> m >> k;
+        vector<vector<ll>> a(n, vector<ll>(m));
+        FOR(i,0,n)
+        {
+            FOR(j,0,m)
+            {
+                cin >> a[i][j];
+            }
+        }
+        ll v = m / 2;
+        ll dp[n+1][m + 1][v + 1][k];
+         FOR(i,0, n+1) FOR(j,0, m+1) FOR(cnt,0, m / 2 + 1) FOR(rem,0, k) {
+             dp[i][j][cnt][rem] = INT_MIN;
+         }
+        dp[0][0][0][0] = 0;
+
+        FOR(i,0,n)
+        {
+            FOR(j,0,m)
+            {
+                ll v2 = a[i][j] % k;
+
+                ll ni = j == m - 1 ? i + 1 : i;
+                ll nj = j == m - 1 ? 0 : j+1;
+
+                FOR(cnt, 0, v+1)
+                {
+                    FOR(rem, 0, k)
+                    {
+                        if (i != ni) {
+                        dp[ni][nj][0][rem] = max(dp[ni][nj][0][rem], dp[i][j][cnt][rem]);
+                    } else {
+                        dp[ni][nj][cnt][rem] = max(dp[ni][nj][cnt][rem], dp[i][j][cnt][rem]);
+                    }
+                    if (cnt + 1 <= m / 2) {
+                        int nrem = (rem + a[i][j]) % k;
+                        if (i != ni) {
+                            dp[ni][nj][0][nrem] = max(dp[ni][nj][0][nrem], dp[i][j][cnt][rem] + a[i][j]);
+                        } else {
+                            dp[ni][nj][cnt + 1][nrem] = max(dp[ni][nj][cnt + 1][nrem], dp[i][j][cnt][rem] + a[i][j]);
+                        }
+                    }
+                        
+
+                        
+                    }
+
+               }
+              
+            }
+            
+        }
+        ll maxi = dp[n][0][0][0];
         
+        cout << max(0ll, maxi) << endl;
+    
+
+
     }
     return 0;
 }
