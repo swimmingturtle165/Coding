@@ -212,7 +212,10 @@ template<class T> int sizeofarr(T *v){return sizeof(v)/sizeof(T);}
 // modified root function.
 int root (vector<ll>&Arr ,int i)
 {
-    if(i<0 || i>=Arr.size()) return -2;
+   // if(i<0 || i>=Arr.size()) 
+   // {
+	//	return -1;
+	//}
     
     if(Arr[ i ] != i)    //chase parent of current element until it reaches root.
     {
@@ -256,12 +259,20 @@ signed main(int argc, char** argv)
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
     #endif
+    
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        
+        string str;
+        cin>>str;
+        ll n=str.size();
+        cout<<3<<endl;
+        cout<<"R "<<n-1<<endl;
+        cout<<"L "<<n<<endl;
+        cout<<"L "<<2<<endl;
+
     }
     return 0;
 }
