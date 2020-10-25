@@ -311,15 +311,12 @@ signed main(int argc, char** argv)
         cin >> n >> x >> pos;
 
         unordered_set<ll> strg_bigger,strg_smaller;
-        string str = convert(pos);
         ll left = 0, right = n;
-        cout << str << endl;
-        // pos++;
+       
         ll cnt_smaller = 0, cnt_bigger = 0;
         while(left<right)
         {
             ll mid = (left + right) / 2;
-            cout << left << " " << mid << " " << right << endl;
             if(mid==pos)
             {
                 break;
@@ -341,26 +338,17 @@ signed main(int argc, char** argv)
             
         }
 
-        // strg_smaller.insert(pos);
-        // strg_bigger.insert(pos);
         
-        if(cnt_bigger!=strg_bigger.size() || cnt_smaller!=strg_smaller.size())
-        {
-            cout << "**" << endl;
-        }
-            cout << left << " " << pos << " " << right << endl;
+        
         
         ll bigger = n+1 - x;
         ll smaller = x;
         // pos--;
 
         ll lft = (bigger - strg_bigger.size()) + (smaller - strg_smaller.size())-1;
-        cout << bigger << " " << smaller << " " << strg_bigger.size() << " " << strg_smaller.size() << " " << lft << endl;
         ll ans = 1;
-        cout << ans << endl;
 
         ans = ans * nPr(bigger-1, cnt_bigger);
-        cout << ans << endl;
 
         ans = ans % MOD;
         
@@ -368,33 +356,14 @@ signed main(int argc, char** argv)
 
         ans = ans % MOD;
         
-        cout << ans << endl;
-        
-
         FORE(i,1,n-cnt_smaller-cnt_bigger-1)
         {
             ans = ans * i;
             ans = ans % MOD;
-
         }
         
+     
         cout << ans << endl;
-
-        //  FOR(i,1,strg_bigger.size()+1)
-        // {
-        //     ans = ans * i;
-        //     ans = ans % MOD;
-
-        // }
-        // cout << ans << endl;
-
-        //  FOR(i,1,strg_smaller.size()+1)
-        // {
-        //     ans = ans * i;
-        //     ans = ans % MOD;
-
-        // }
-        // cout << ans << endl;
     }
     return 0;
 }
