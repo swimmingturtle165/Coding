@@ -64,10 +64,10 @@ ll power(ll x, ll y, ll p)
     return res; 
 } 
   
-// ll modInverse(ll n, ll p) 
-// { 
-//     return power(n, p-2, p); 
-// } 
+ll modInverse(ll n, ll p) 
+{ 
+    return power(n, p-2, p); 
+} 
   
  
 // ll factorialNumInverse[300000 + 1]; 
@@ -76,7 +76,7 @@ ll power(ll x, ll y, ll p)
 // ll naturalNumInverse[300000 + 1]; 
   
 // // array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// ll fact[300000 + 1]; 
   
 // // Function to precompute inverse of numbers 
 // void InverseofNumber(ll p=MOD) 
@@ -96,15 +96,15 @@ ll fact[300000 + 1];
 // } 
   
 // // Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
 // // Function to return nCr % p in O(1) time 
 // ll Binomial(ll N, ll R, ll p=MOD) 
@@ -248,51 +248,38 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-
-string convert(ll n)
+void dfs(ll curr,vector<ll>& strg,vector<vector<ll>>& graph)
 {
-    string str = "";
-    while(n>0)
+   
+    vector<ll> tmp(graph[curr].size());
+    FOR(i,0,graph[curr].size())
     {
-        str = str + to_string(n % 2);
-        n = n / 2;
+        tmp[i]=strg[graph[curr][i]];
+    }
+    if(tmp.size()==0)
+    {
+            return;
+    }
+    
+    sort(tmp.begin(),tmp.end());
+    
+    ll mini=tmp[0];
+    ll maxi=tmp.back();
+    ll left=strg[curr];
+    FOR(i,0,tmp.size())
+    {
+        left-=(maxi-tmp[i]);
+    }
+    if(left<=0)
+    {
+        strg[curr]=maxi;
+    }
+    else
+    {
+        strg[curr]=maxi+((left+tmp.size()-1)/tmp.size());
     }
 
-    reverse(str.begin(), str.end());
-
-    return str;
-}
-  
-  
-// Returns n^(-1) mod p 
- long long modInverse( long long n, ll p) 
-{ 
-    return power(n, p - 2, p); 
-} 
-  
-// Returns nCr % p using Fermat's little 
-// theorem. 
- long long nCrModPFermat( long long n, 
-                                 ll r, ll p) 
-{ 
-    // Base case 
-    if (r == 0) 
-        return 1; 
-  
-    // Fill factorial array so that we 
-    // can find all factorial of r, n 
-    // and n-r 
-     long long fac[n + 1]; 
-    fac[0] = 1; 
-    for (int i = 1; i <= n; i++) 
-        fac[i] = (fac[i - 1] * i) % p; 
-  
-    return (fac[n] * modInverse(fac[r], p) % p * modInverse(fac[n - r], p) % p) % p; 
-} 
-
-ll nPr (ll n,ll k) 
-{
-	return (fact[n]*modInverse(fact[n-k],MOD))%MOD;
+    return;    
 }
 
 signed main(int argc, char** argv)
@@ -303,70 +290,27 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    factorial();
     // cin>>t;
     while(t--)
     {
-        ll n, x, pos;
-        cin >> n >> x >> pos;
+        ll n;
+        cin>>n;
+        vector<vector<ll>> graph(n+1,vector<ll>());
 
-        unordered_set<ll> strg_bigger,strg_smaller;
-        ll left = 0, right = n;
-       
-        ll cnt_smaller = 0, cnt_bigger = 0;
-        while(left<right)
+        FOR(i,2,n+1)
         {
-            ll mid = (left + right) / 2;
-            if(mid==pos)
-            {
-                left=mid+1;
-            }
-           else  if(mid<pos)
-            {
-                strg_smaller.insert(mid);
-                cnt_smaller++;
-
-                left = mid + 1;
-            }
-            else 
-            {
-                strg_bigger.insert(mid);
-                right = mid;
-                cnt_bigger++;
-            }
-            
-            
-        }
-
-        
-        
-        
-        ll bigger = n - x;
-        ll smaller = x-1;
-        // pos--;
-        if(cnt_bigger>bigger || cnt_smaller>smaller)
-        {
-            cout<<0<<endl;
-            continue;
-        }
-        ll ans = 1;
-
-        ans = ans * nPr(bigger, cnt_bigger);
-
-        ans = ans % MOD;
-        
-        ans = ans * nPr(smaller, cnt_smaller);
-
-        ans = ans % MOD;
-        
-        FORE(i,1,n-cnt_smaller-cnt_bigger-1)
-        {
-            ans = ans * i;
-            ans = ans % MOD;
+            ll tmp;
+            cin>>tmp;
+            graph[tmp].pb(i);
         }
         
-     
-        cout << ans << endl;
+        vector<ll> strg(n+1);
+
+        FOR(i,1,n+1) cin>>strg[i];
+        // dispvector<ll>(strg);
+        dfs(1,strg,graph);
+        // dispvector<ll>(strg);
+        cout<<strg[1]<<endl;
     }
     return 0;
 }
