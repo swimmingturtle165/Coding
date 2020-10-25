@@ -254,6 +254,8 @@ void dfs(ll curr,vector<ll>& strg,vector<vector<ll>>& graph)
     vector<ll> tmp(graph[curr].size());
     FOR(i,0,graph[curr].size())
     {
+        dfs(graph[curr][i],strg,graph);
+        
         tmp[i]=strg[graph[curr][i]];
     }
     if(tmp.size()==0)
@@ -266,10 +268,12 @@ void dfs(ll curr,vector<ll>& strg,vector<vector<ll>>& graph)
     ll mini=tmp[0];
     ll maxi=tmp.back();
     ll left=strg[curr];
+    
     FOR(i,0,tmp.size())
     {
         left-=(maxi-tmp[i]);
     }
+
     if(left<=0)
     {
         strg[curr]=maxi;
