@@ -70,55 +70,55 @@ ll modInverse(ll n, ll p)
 } 
   
  
-ll factorialNumInverse[300000 + 1]; 
+// ll factorialNumInverse[300000 + 1]; 
   
-// array to precompute inverse of 1! to N! 
-ll naturalNumInverse[300000 + 1]; 
+// // array to precompute inverse of 1! to N! 
+// ll naturalNumInverse[300000 + 1]; 
   
-// array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// // array to store factorial of first N numbers 
+// ll fact[300000 + 1]; 
   
-// Function to precompute inverse of numbers 
-void InverseofNumber(ll p=MOD) 
-{ 
-    naturalNumInverse[0] = naturalNumInverse[1] = 1; 
-    for (int i = 2; i <= 300000; i++) 
-        naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
-} 
-// Function to precompute inverse of factorials 
-void InverseofFactorial(ll p=MOD) 
-{ 
-    factorialNumInverse[0] = factorialNumInverse[1] = 1; 
+// // Function to precompute inverse of numbers 
+// void InverseofNumber(ll p=MOD) 
+// { 
+//     naturalNumInverse[0] = naturalNumInverse[1] = 1; 
+//     for (int i = 2; i <= 300000; i++) 
+//         naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
+// } 
+// // Function to precompute inverse of factorials 
+// void InverseofFactorial(ll p=MOD) 
+// { 
+//     factorialNumInverse[0] = factorialNumInverse[1] = 1; 
   
-    // precompute inverse of natural numbers 
-    for (int i = 2; i <= 300000; i++) 
-        factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
-} 
+//     // precompute inverse of natural numbers 
+//     for (int i = 2; i <= 300000; i++) 
+//         factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
+// } 
   
-// Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+// // Function to calculate factorial of 1 to N 
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
-// Function to return nCr % p in O(1) time 
-ll Binomial(ll N, ll R, ll p=MOD) 
-{ 
-    // n C r = n!*inverse(r!)*inverse((n-r)!) 
-    if(R==0 || N==R)
-    {
-        return 1;
-    }
-    ll ans = ((fact[N] * factorialNumInverse[R]) 
-              % p * factorialNumInverse[N - R]) 
-             % p; 
-    return ans; 
-} 
+// // Function to return nCr % p in O(1) time 
+// ll Binomial(ll N, ll R, ll p=MOD) 
+// { 
+//     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+//     if(R==0 || N==R)
+//     {
+//         return 1;
+//     }
+//     ll ans = ((fact[N] * factorialNumInverse[R]) 
+//               % p * factorialNumInverse[N - R]) 
+//              % p; 
+//     return ans; 
+// } 
    
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -273,40 +273,26 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     // cin>>t;
-    InverseofFactorial();
-    InverseofNumber();
-    factorial();
+    // InverseofFactorial();
+    // InverseofNumber();
+    // factorial();
     while(t--)
     {
         string str;
         cin>>str; 
         ll ans=0;
-        FOR(i,0,str.size())
+        ll p = 1;
+        ll sum = 0;
+        ll n = str.size();
+        FORDE(i,n-1,0)
         {
-            ll left=(i*(i+1))/2;
-            ll val=str[i]-'0';
-            FOR(j,i,str.size())
-            {
-                
-                
-                ll f=Binomial(str.size()-1-i,j-i);
-                ll g=val*f* power((ll)10,j-i,MOD);
-                f=g%MOD;
-                ans+=f;
-                ans%=MOD;
-
-            }
-            ans+=(val*(left));
-            ans%=MOD;
-
+            ll v = str[i] - '0';
+            ll tmp=((((i*(i+1)/2)%MOD)*p%MOD)+sum)%MOD;
+            sum = (sum + (n - i) * p)%MOD;
+            p = (p * 10) % MOD;
+            ans=(ans+(tmp*v)%MOD)%MOD;
         }
-        cout<<ans<<endl;
-        ll b=modv(str);
-        cout<<b<<endl;
-        ans-=b;
 
-        ans+=MOD;
-        ans%=MOD;
         cout<<ans<<endl;
     }
     
