@@ -248,40 +248,23 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-void dfs(ll curr,vector<ll>& strg,vector<vector<ll>>& graph)
+void dfs(ll curr,vector<ll>& strg,vector<ll>& cnt,vector<ll>&ans, vector<vector<ll>>& graph)
 {
    
-    vector<ll> tmp(graph[curr].size());
     FOR(i,0,graph[curr].size())
     {
-        dfs(graph[curr][i],strg,graph);
-        
-        tmp[i]=strg[graph[curr][i]];
+        dfs(graph[curr][i],strg,cnt,ans,graph);        
+        strg[curr]+=strg[graph[curr][i]];
+        cnt[curr] += cnt[graph[curr][i]];
+         ans[curr] = max(ans[curr], ans[graph[curr][i]]);
     }
-    if(tmp.size()==0)
+    if(graph[curr].size()==0)
     {
-            return;
+        cnt[curr] = 1;
     }
     
-    sort(tmp.begin(),tmp.end());
+    ans[curr] = max(ans[curr], (strg[curr] + cnt[curr] - 1) / (cnt[curr]));
     
-    ll mini=tmp[0];
-    ll maxi=tmp.back();
-    ll left=strg[curr];
-    
-    FOR(i,0,tmp.size())
-    {
-        left-=(maxi-tmp[i]);
-    }
-
-    if(left<=0)
-    {
-        strg[curr]=maxi;
-    }
-    else
-    {
-        strg[curr]=maxi+((left+tmp.size()-1)/tmp.size());
-    }
 
     return;    
 }
@@ -309,12 +292,21 @@ signed main(int argc, char** argv)
         }
         
         vector<ll> strg(n+1);
+        vector<ll> cnt(n+1,0);
+        vector<ll> ans(n+1,0);
+
+
 
         FOR(i,1,n+1) cin>>strg[i];
+
         // dispvector<ll>(strg);
-        dfs(1,strg,graph);
+        // dispvector<ll>(ans);
+
+        dfs(1,strg,cnt,ans,graph);
         // dispvector<ll>(strg);
-        cout<<strg[1]<<endl;
+
+        // dispvector<ll>(ans);
+        cout<<ans[1]<<endl;
     }
     return 0;
 }
