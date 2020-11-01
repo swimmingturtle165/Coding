@@ -299,7 +299,7 @@ signed main(int argc, char** argv)
                 len++;
 
             }
-            cout << ans<< endl;
+            cout << ans << endl;
     }
     return 0;
 }
