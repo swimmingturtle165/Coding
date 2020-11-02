@@ -70,51 +70,51 @@ ll modInverse(ll n, ll p)
 } 
   
  
-ll factorialNumInverse[300000 + 1]; 
+// ll factorialNumInverse[300000 + 1]; 
   
-// array to precompute inverse of 1! to N! 
-ll naturalNumInverse[300000 + 1]; 
+// // array to precompute inverse of 1! to N! 
+// ll naturalNumInverse[300000 + 1]; 
   
-// array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// // array to store factorial of first N numbers 
+// ll fact[300000 + 1]; 
   
-// Function to precompute inverse of numbers 
-void InverseofNumber(ll p=MOD) 
-{ 
-    naturalNumInverse[0] = naturalNumInverse[1] = 1; 
-    for (int i = 2; i <= 300000; i++) 
-        naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
-} 
-// Function to precompute inverse of factorials 
-void InverseofFactorial(ll p=MOD) 
-{ 
-    factorialNumInverse[0] = factorialNumInverse[1] = 1; 
+// // Function to precompute inverse of numbers 
+// void InverseofNumber(ll p=MOD) 
+// { 
+//     naturalNumInverse[0] = naturalNumInverse[1] = 1; 
+//     for (int i = 2; i <= 300000; i++) 
+//         naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
+// } 
+// // Function to precompute inverse of factorials 
+// void InverseofFactorial(ll p=MOD) 
+// { 
+//     factorialNumInverse[0] = factorialNumInverse[1] = 1; 
   
-    // precompute inverse of natural numbers 
-    for (int i = 2; i <= 300000; i++) 
-        factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
-} 
+//     // precompute inverse of natural numbers 
+//     for (int i = 2; i <= 300000; i++) 
+//         factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
+// } 
   
-// Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+// // Function to calculate factorial of 1 to N 
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
-// Function to return nCr % p in O(1) time 
-ll Binomial(ll N, ll R, ll p=MOD) 
-{ 
-    // n C r = n!*inverse(r!)*inverse((n-r)!) 
-    ll ans = ((fact[N] * factorialNumInverse[R]) 
-              % p * factorialNumInverse[N - R]) 
-             % p; 
-    return ans; 
-} 
+// // Function to return nCr % p in O(1) time 
+// ll Binomial(ll N, ll R, ll p=MOD) 
+// { 
+//     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+//     ll ans = ((fact[N] * factorialNumInverse[R]) 
+//               % p * factorialNumInverse[N - R]) 
+//              % p; 
+//     return ans; 
+// } 
    
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -261,44 +261,36 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
-        
-        string str;
-        cin >> str;
+        ll n,x;
+        cin >> n >> x;
+        vector<ll> a(n), b(n);
+        FOR(i, 0, n)
+            cin >> a[i];
 
-        if(n<=2)
-        {
-            cout << 0 << endl;
-        }
-        else
-        {
-            //
-            ll ans1 = 0,ans2=0;
+        FOR(i,0,n)
+            cin >> b[i];
 
-            for (int i = 0; i < n;i++)
+            sort(a.begin(), a.end());
+            sort(b.begin(), b.end());
+            reverse(b.begin(), b.end());
+            bool flg = true;
+            FOR(i,0,n)
             {
-                ll len = 0;
-                while (i<n-1 && str[i]==str[i+1])
+                if(a[i]+b[i]>x)
                 {
-                    i++;
-                    len++;
+                    flg = false;
                 }
-                if(str[i]=='0')
-                {
-                ans1 +=(len);
-
-                }
-                else
-                {
-                    ans2 += len;
-                }
-                
-
             }
-            cout << max(ans1,ans2) << endl;
-        }
-        
+            if(flg)
+            {
+                cout << "Yes" << endl;
+            }
+            else
+            {
+                cout << "No" << endl;
+            }
+            
+
 
     }
     return 0;

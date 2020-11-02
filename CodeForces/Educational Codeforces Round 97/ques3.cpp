@@ -263,43 +263,19 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin >> n;
+        vector<ll> inp(n);
+        FOR(i, 0, n)
+            cin >> inp[i];
         
-        string str;
-        cin >> str;
-
-        if(n<=2)
+        sort(inp.begin(), inp.end());
+        vector<vector<ll>> dp(n,vector<ll>(2*n+1,INT_MAX));
+        FOR(i,0,n)
         {
-            cout << 0 << endl;
-        }
-        else
-        {
-            //
-            ll ans1 = 0,ans2=0;
-
-            for (int i = 0; i < n;i++)
+            FOR(j,i+1,2*n+1)
             {
-                ll len = 0;
-                while (i<n-1 && str[i]==str[i+1])
-                {
-                    i++;
-                    len++;
-                }
-                if(str[i]=='0')
-                {
-                ans1 +=(len);
-
-                }
-                else
-                {
-                    ans2 += len;
-                }
-                
-
+                    
             }
-            cout << max(ans1,ans2) << endl;
         }
-        
-
     }
     return 0;
 }

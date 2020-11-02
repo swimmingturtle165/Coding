@@ -44,77 +44,78 @@ less<pair<ll,ll>>,
 rb_tree_tag,
 tree_order_statistics_node_update> ordered_set_pair;
 
-ll power(ll x, ll y, ll p) 
+ll power(ll x, ll y) 
 { 
     ll res = 1;      // Initialize result 
   
-    x = x % p;  // Update x if it is more than or 
+    x = x ;  // Update x if it is more than or 
                 // equal to p 
   
     while (y > 0) 
     { 
         // If y is odd, multiply x with result 
         if (y & 1) 
-            res = (res*x) % p; 
+            res = (res*x) ; 
   
         // y must be even now 
         y = y>>1; // y = y/2 
-        x = (x*x) % p; 
+        x = (x*x) ; 
     } 
+
     return res; 
 } 
   
-ll modInverse(ll n, ll p) 
-{ 
-    return power(n, p-2, p); 
-} 
+// ll modInverse(ll n, ll p) 
+// { 
+//     return power(n, p-2, p); 
+// } 
   
  
-ll factorialNumInverse[300000 + 1]; 
+// ll factorialNumInverse[300000 + 1]; 
   
-// array to precompute inverse of 1! to N! 
-ll naturalNumInverse[300000 + 1]; 
+// // array to precompute inverse of 1! to N! 
+// ll naturalNumInverse[300000 + 1]; 
   
-// array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// // array to store factorial of first N numbers 
+// ll fact[300000 + 1]; 
   
-// Function to precompute inverse of numbers 
-void InverseofNumber(ll p=MOD) 
-{ 
-    naturalNumInverse[0] = naturalNumInverse[1] = 1; 
-    for (int i = 2; i <= 300000; i++) 
-        naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
-} 
-// Function to precompute inverse of factorials 
-void InverseofFactorial(ll p=MOD) 
-{ 
-    factorialNumInverse[0] = factorialNumInverse[1] = 1; 
+// // Function to precompute inverse of numbers 
+// void InverseofNumber(ll p=MOD) 
+// { 
+//     naturalNumInverse[0] = naturalNumInverse[1] = 1; 
+//     for (int i = 2; i <= 300000; i++) 
+//         naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
+// } 
+// // Function to precompute inverse of factorials 
+// void InverseofFactorial(ll p=MOD) 
+// { 
+//     factorialNumInverse[0] = factorialNumInverse[1] = 1; 
   
-    // precompute inverse of natural numbers 
-    for (int i = 2; i <= 300000; i++) 
-        factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
-} 
+//     // precompute inverse of natural numbers 
+//     for (int i = 2; i <= 300000; i++) 
+//         factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
+// } 
   
-// Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+// // Function to calculate factorial of 1 to N 
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
-// Function to return nCr % p in O(1) time 
-ll Binomial(ll N, ll R, ll p=MOD) 
-{ 
-    // n C r = n!*inverse(r!)*inverse((n-r)!) 
-    ll ans = ((fact[N] * factorialNumInverse[R]) 
-              % p * factorialNumInverse[N - R]) 
-             % p; 
-    return ans; 
-} 
+// // Function to return nCr % p in O(1) time 
+// ll Binomial(ll N, ll R, ll p=MOD) 
+// { 
+//     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+//     ll ans = ((fact[N] * factorialNumInverse[R]) 
+//               % p * factorialNumInverse[N - R]) 
+//              % p; 
+//     return ans; 
+// } 
    
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -248,7 +249,42 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+vector<pair<ll, ll>> primeFactors(ll n)  
+{
+    vector<pair<ll, ll>> strg;
+    int tm = 0;
+    while (n % 2 == 0)  
+    {
+        tm++;
+        // cout << 2 << " ";  
+        n = n/2;  
+    }  
+    if(tm)
+    {
+        strg.pb({2, tm});
+    }
+  
+    for (ll i = 3; i <= sqrt(n); i = i + 2)  
+    {
+        int po = 0;
+        while (n % i == 0)  
+        {
+            po++;
+            // cout << i << " ";  
+            n = n/i;  
+        }  
+        if(po)
+        {
+            strg.pb({i, po});
+        }
+    }  
+  
+     
+    if (n > 2)
+        strg.pb({n, 1});
 
+    return strg;
+}
 
 signed main(int argc, char** argv)
 {
@@ -261,45 +297,32 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
-        
-        string str;
-        cin >> str;
-
-        if(n<=2)
+        ll a, b;
+        cin >> a >> b;
+        if(a%b!=0)
         {
-            cout << 0 << endl;
+            cout << a << endl;
         }
         else
         {
-            //
-            ll ans1 = 0,ans2=0;
+            vector<pair<ll, ll>> strg = primeFactors(b);
 
-            for (int i = 0; i < n;i++)
+            ll mini = INT64_MAX;
+
+            for (int i = 0; i < strg.size();i++)
             {
-                ll len = 0;
-                while (i<n-1 && str[i]==str[i+1])
+                ll v1 = 0;
+                ll v2 = a;
+                while(v2%strg[i].first==0)
                 {
-                    i++;
-                    len++;
+                    v2 = v2 / strg[i].first;
+                    v1++;
                 }
-                if(str[i]=='0')
-                {
-                ans1 +=(len);
-
-                }
-                else
-                {
-                    ans2 += len;
-                }
-                
-
+                mini = min(power(strg[i].first, v1 + 1 - strg[i].second), mini);
             }
-            cout << max(ans1,ans2) << endl;
+            cout << a / mini << endl;
         }
         
-
     }
     return 0;
 }
