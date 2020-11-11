@@ -348,9 +348,7 @@ signed main(int argc, char** argv)
         {
             cout << "NO" << endl;
         }
-        
-
-        
+              
 
     }
     return 0;
