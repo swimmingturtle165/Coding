@@ -261,85 +261,98 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
+        ll n, m;
+        cin >> n >> m;
+        vector<vector<ll>> arr(n, vector<ll>(m));
+        FOR(i,0,n)
         {
-         cin >> inp[i];
-
-        }   
-            
-        if(n<=2)
-        {
-            cout << "YES" << endl;
-            continue;
-        }
-
-
-        vector<ll> left_mini(n + 2, INT_MAX);
-        vector<ll> right_mini(n + 2, INT_MAX);
-        left_mini[0] = inp[0];
-        right_mini[n - 1] = inp[n - 1];
-        
-        FOR(i,1,n)
-        {
-            left_mini[i] = min(inp[i], left_mini[i-1]);
-        }
-        
-        FORDE(i,n-2,0)
-        {
-            right_mini[i] = min(right_mini[i + 1], inp[i]);
-        }
-        int cnt = 0;
-        bool flg = true;
-        // dispvector<ll>(right_mini);
-        // dispvector<ll>(left_mini);
-
-        FOR(i,1,n-1)
-        {
-            if(inp[i]>right_mini[i+1] && inp[i]>left_mini[i-1])
+            FOR(j,0,m)
             {
-                if(inp[i]<=right_mini[i+1]+left_mini[i-1] && cnt==0)
+                cin >> arr[i][j];
+            }
+        }
+        vector<vector<ll>> arr1=arr;
+        
+        FOR(i,0,n)
+        {
+            FOR(j,0,m)
+            {
+                bool flg = false;
+                bool flg1 = false;
+
+                // if(i!=0)
+                // {
+                //     if(arr[i-1][j]==arr[i][j]+1)
+                //     {
+                //         flg = false;
+                //     }
+                // }
+                // if(j!=0)
+                // {
+                //     if(arr[i][j-1]==arr[i][j]+1)
+                //     {
+                //         flg = false;
+                //     }
+                // }
+                if(i!=0)
                 {
-                    cnt+=1;
-                    // i++;
-                    while (i<n-1 && inp[i]>right_mini[i+1] && inp[i]>left_mini[i-1] && inp[i]>=inp[i+1])
+                    if(arr1[i-1][j]==arr1[i][j])
                     {
-                        i++;
+                        flg = true;
                     }
-                    int j = 0;
-                    while(j<n)
+                     if(arr1[i-1][j]==arr1[i][j]+1)
                     {
-                        left_mini[j] = 0;
-                        j++;
+                        flg1 = true;
+                    }
+                }
+                if(j!=0)
+                {
+                    if(arr1[i][j-1]==arr1[i][j])
+                    {
+                        flg = true;
+                    }
+                    if(arr1[i][j-1]==arr1[i][j]+1)
+                    {
+                        flg1 = true;
+                    }
+                }
+                // cout << flg << " " << flg1 << endl;
+                if(flg1 && flg)
+                {
+                    if(arr[i-1][j]==arr1[i-1][j] && arr1[i-1][j]==arr1[i][j]+1)
+                    {
+                         arr1[i - 1][j]++;
+                    }
+                     if(arr[i][j-1]==arr1[i][j-1] && arr1[i][j-1]==arr1[i][j]+1)
+                    {
+                        arr1[i][j-1]++;
                     }
                     
 
                 }
-                else
+                if(flg)
                 {
-                    // cout << cnt << endl;
-                    flg = false;
-                    break;
+                    arr1[i][j]++;
                 }
                 
+                
+                
+                
+                    
+                
+                
+
             }
-
+            // cout << endl;
         }
-        if(flg)
+        FOR(i,0,n)
         {
-            cout << "YES" << endl;
+            FOR(j,0,m)
+            {
+                cout << arr1[i][j] << " ";
+            }
+            cout << endl;
         }
-        else
-        {
-            cout << "NO" << endl;
-        }
-        
-
-        
-        
-
     }
     return 0;
 }
