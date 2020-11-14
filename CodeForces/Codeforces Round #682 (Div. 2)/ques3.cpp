@@ -271,73 +271,16 @@ signed main(int argc, char** argv)
                 cin >> arr[i][j];
             }
         }
-        vector<vector<ll>> arr1=arr;
         
         FOR(i,0,n)
         {
             FOR(j,0,m)
             {
-                bool flg = false;
-                bool flg1 = false;
-
-                // if(i!=0)
-                // {
-                //     if(arr[i-1][j]==arr[i][j]+1)
-                //     {
-                //         flg = false;
-                //     }
-                // }
-                // if(j!=0)
-                // {
-                //     if(arr[i][j-1]==arr[i][j]+1)
-                //     {
-                //         flg = false;
-                //     }
-                // }
-                if(i!=0)
-                {
-                    if(arr1[i-1][j]==arr1[i][j])
-                    {
-                        flg = true;
-                    }
-                     if(arr1[i-1][j]==arr1[i][j]+1)
-                    {
-                        flg1 = true;
-                    }
-                }
-                if(j!=0)
-                {
-                    if(arr1[i][j-1]==arr1[i][j])
-                    {
-                        flg = true;
-                    }
-                    if(arr1[i][j-1]==arr1[i][j]+1)
-                    {
-                        flg1 = true;
-                    }
-                }
-                // cout << flg << " " << flg1 << endl;
-                if(flg1 && flg)
-                {
-                    if(arr[i-1][j]==arr1[i-1][j] && arr1[i-1][j]==arr1[i][j]+1)
-                    {
-                         arr1[i - 1][j]++;
-                    }
-                     if(arr[i][j-1]==arr1[i][j-1] && arr1[i][j-1]==arr1[i][j]+1)
-                    {
-                        arr1[i][j-1]++;
-                    }
-                    
-
-                }
-                if(flg)
-                {
-                    arr1[i][j]++;
-                }
                 
-                
-                
-                
+                if((i+j)%2!=arr[i][j]%2)
+                {
+                    arr[i][j]++;
+                }
                     
                 
                 
@@ -349,7 +292,7 @@ signed main(int argc, char** argv)
         {
             FOR(j,0,m)
             {
-                cout << arr1[i][j] << " ";
+                cout << arr[i][j] << " ";
             }
             cout << endl;
         }
