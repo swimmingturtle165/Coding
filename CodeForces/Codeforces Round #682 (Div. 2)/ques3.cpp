@@ -280,13 +280,11 @@ signed main(int argc, char** argv)
                 if((i+j)%2!=arr[i][j]%2)
                 {
                     arr[i][j]++;
-                }
-                    
+                }                   
                 
                 
 
             }
-            // cout << endl;
         }
         FOR(i,0,n)
         {
