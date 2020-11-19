@@ -258,44 +258,10 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
     while(t--)
     {
-        int n;
-        cin >> n;
-        int strg = 0;
-        vector<int> inp(n);
-
-        FOR(i, 0, n)
-        {
-            cin >> inp[i];
-
-            strg = (strg ^ inp[i]);
-        }
         
-        if(n%2==0 && strg!=0)
-        {
-            cout << "NO" << endl;
-            
-            continue;
-        }
-
-        cout << "YES" << endl;
-
-        n = (n - (n + 1) % 2);
-
-        cout << n-1 << endl;
-
-        for (int i = 1; i <= n - 2; i += 2)
-        {
-            cout << i << " " << i + 1 << " " << i + 2 << endl;
-        }
-
-        for (int i = 1; i <= n-2;i+=2)
-        {
-            cout << i << " " << i + 1 << " " << n << endl;
-        }     
-
     }
     return 0;
 }

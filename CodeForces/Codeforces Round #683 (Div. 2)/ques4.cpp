@@ -34,7 +34,7 @@ typedef     pair<ll,ll>      pll;
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
 #define     flush            fflush(stdout);
-#define endl '\n'         
+#define     endl             '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
 typedef tree<
