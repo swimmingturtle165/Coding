@@ -34,7 +34,7 @@ typedef     pair<ll,ll>      pll;
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
 #define     flush            fflush(stdout);
-#define endl '\n'         
+#define     endl             '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
 typedef tree<
@@ -46,19 +46,20 @@ tree_order_statistics_node_update> ordered_set_pair;
 
 ll power(ll x, ll y, ll p) 
 { 
-    ll res = 1;      // Initialize result 
+    ll res = 1;
   
-    x = x % p;  // Update x if it is more than or 
-                // equal to p 
+    x = x % p;  
   
     while (y > 0) 
     { 
-        // If y is odd, multiply x with result 
+        
         if (y & 1) 
-            res = (res*x) % p; 
+        {
+         res = (res*x) % p; 
+        }
   
-        // y must be even now 
-        y = y>>1; // y = y/2 
+      
+        y = y>>1; 
         x = (x*x) % p; 
     } 
     return res; 
@@ -128,6 +129,7 @@ struct custom_hash {
         return splitmix64(x + FIXED_RANDOM);
     }
 };
+
 ll ntopowermandMod(ll n,ll m,ll mod_v)
 {
     if(m==0)
@@ -192,6 +194,7 @@ void prefix_function(string s) {
         pi[i] = j;
     }
 }
+
 template<class T> void dispvector(vector<T> v){for(int i=0;i<v.size();i++) cout<<v[i]<<" "; nn;}
 template<class T> void disparray(T *v, int n){for(int i=0;i<n;i++) cout<<v[i]<<" "; nn;}
 template<class T> int sizeofarr(T *v){return sizeof(v)/sizeof(T);}
