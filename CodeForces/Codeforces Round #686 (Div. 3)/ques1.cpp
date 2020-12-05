@@ -261,39 +261,18 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
+        ll n;
+        cin >> n;
+        vector<ll> ans(n);
         FOR(i,0,n)
         {
-            FOR(j,0,m)
+            ans[i] = n - i;
+            if(i+1==n-i)
             {
-                cin >> arr[i][j];
+                swap(ans[i], ans[i - 1]);
             }
         }
-        
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
-
-            }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cout << arr[i][j] << " ";
-            }
-            cout << endl;
-        }
+        dispvector<ll>(ans);
     }
     return 0;
 }

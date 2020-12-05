@@ -247,7 +247,38 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
+
+// ll solve(ll n,unordered_map<ll,ll> &strg)
+// {
+
+//     if(n<=3)
+//     {
+//         return n - 1;
+//     }
+//     if(strg.find(n)!=strg.end())
+//     {
+//         return strg[n];
+//     }
+//     ll mini = n-2;
+//     ll tmp = 0;
+//     FORDE(i,pow(n, 0.5),2)
+//     {
+//         if(n%i==0)
+//         {
+//             tmp++;
+//             n = n / i;
+//         }
+//     }
+//     if(tmp==0){
+//         tmp = solve(n - 1, strg)+1;
+//     }
+    
+//     strg[n] = tmp;        
+    
+    
+//     return strg[n];
+
+// }
 
 
 signed main(int argc, char** argv)
@@ -261,39 +292,28 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
-        FOR(i,0,n)
+        ll n;
+        cin >> n;
+        if(n<=3)
         {
-            FOR(j,0,m)
-            {
-                cin >> arr[i][j];
-            }
+            cout << n-1 << endl;
+            continue;
         }
-        
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
+       
+            ll tmp = pow(n, 0.5);
+            // solve(n, strg);
+            if(tmp*tmp==n)
             {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
+            cout <<tmp << endl;
 
             }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
+            else
             {
-                cout << arr[i][j] << " ";
+                cout << tmp + 1 << endl;
             }
-            cout << endl;
-        }
+            
+        
+        
     }
     return 0;
 }

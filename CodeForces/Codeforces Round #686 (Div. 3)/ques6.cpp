@@ -261,39 +261,65 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
+        ll n;
+        cin >> n;
+        vector<ll> inp(n);
+        multiset<ll> strg;
         FOR(i,0,n)
         {
-            FOR(j,0,m)
+            cin >> inp[i];
+            if(i!=0 && i!=n-1)
             {
-                cin >> arr[i][j];
+                strg.insert(inp[i]);
             }
+        }
+        ll maxi1 = inp[0];
+        ll maxi2 = inp[1];
+        ll midi = *strg.begin();
+        ll i = 1, j = n - 2;
+        while(strg.empty()==false && (maxi1!=maxi2 || midi!=maxi1))
+        {
+            // cout << maxi1 << " " << maxi2 << " " << midi << endl;
+            if(maxi1!=midi || maxi1!=maxi2)
+            {
+                maxi1 = max(maxi1, inp[i]);
+                strg.erase(strg.find(inp[i]));
+                i++;
+                    if(strg.empty()==true)
+                {
+                    break;
+                }
+                midi = *strg.begin();
+            }
+            if(strg.empty()==true)
+            {
+                break;
+            }
+            if(maxi2!=midi || maxi2!=maxi1)
+            {
+                maxi2 = max(maxi2, inp[j]);
+                strg.erase(strg.find(inp[j]));
+                j--;
+                if(strg.empty()==true)
+                {
+                    break;
+                }
+                midi = *strg.begin();
+            }
+        }
+        if(strg.empty())
+        {
+            cout << "NO" << endl;
+        }
+        else
+        {
+            cout << "YES" << endl;
+            ll x = i ;
+            ll z = n  -1- j;
+            ll y = n - x - z;
+            cout << x << " " << y << " " << z << endl;
         }
         
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
-
-            }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cout << arr[i][j] << " ";
-            }
-            cout << endl;
-        }
     }
     return 0;
 }

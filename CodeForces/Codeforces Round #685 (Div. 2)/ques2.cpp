@@ -261,39 +261,62 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cin >> arr[i][j];
-            }
-        }
+        int n, q;
+        cin >> n >> q;
         
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
+        string str;
+        cin >> str;
+        // cout << str << endl;
 
-            }
-        }
+        ll cnt_0=0, cnt_1=0;
         FOR(i,0,n)
         {
-            FOR(j,0,m)
+            if(str[i]=='0')
             {
-                cout << arr[i][j] << " ";
+                cnt_0++;
             }
-            cout << endl;
+            else
+            {
+                cnt_1++;
+            }
+            
         }
+        while (q--)
+        {
+            ll l, r;
+            cin >> l>> r;
+            
+            
+           
+
+                bool flg1 = false, flg2 = false;
+                FOR(i,0,l-1)
+                {
+                    if(str[i]==str[l-1])
+                    {
+                        flg1 = true;
+                    }
+                }
+                FOR(i,r,n)
+                {
+                    if(str[i]==str[r-1])
+                    {
+                        flg2 = true;
+                    }
+                }
+                if(flg1 || flg2)
+                {
+                    cout << "YES" << endl;
+                }
+                else
+                {
+                    cout << "NO" << endl;
+                }
+                
+            
+            }
+        
+
     }
     return 0;
 }

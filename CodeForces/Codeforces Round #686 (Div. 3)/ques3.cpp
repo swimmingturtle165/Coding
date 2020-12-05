@@ -261,39 +261,47 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
+        ll n;
+        cin >> n;
+        vector<pair<ll,ll>> inp(n);
         FOR(i,0,n)
         {
-            FOR(j,0,m)
-            {
-                cin >> arr[i][j];
-            }
+            cin >> inp[i].first;
+            inp[i].second = i;
         }
-        
-        FOR(i,0,n)
+        sort(inp.begin(), inp.end());
+        ll ans = INT_MAX;
+        int i = 0;
+        while(i<n)
         {
-            FOR(j,0,m)
+            ll tmp=0;
+            if(inp[i].second!=0)
             {
-                
-                if((i+j)%2!=arr[i][j]%2)
+                tmp++;
+            }
+            // cout << inp[i].second << " "<<i <<" ";
+            bool flg = false;
+            while(i<n-1 && inp[i+1].first==inp[i].first )
+            {
+                flg = true;
+                if(inp[i].second+1!=inp[i+1].second)
                 {
-                    arr[i][j]++;
-                }                   
-                
-                
-
+                tmp ++;
+                }
+                i++;
             }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
+            if(i<n && inp[i].second!=n-1)
             {
-                cout << arr[i][j] << " ";
+                tmp++;
             }
-            cout << endl;
+            
+            
+                i++;
+            
+            // cout << tmp << endl;
+            ans = min(ans, tmp);
         }
+        cout << ans << endl;
     }
     return 0;
 }

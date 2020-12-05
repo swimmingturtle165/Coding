@@ -261,39 +261,42 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
+        ll n;
+        cin >> n;
+        ll ans = INT_MAX;
+        bool flg = true;
+        unordered_map<ll, ll> strg;
+        vector<ll> inp(n);
         FOR(i,0,n)
         {
-            FOR(j,0,m)
+            ll tmp;
+            cin >> tmp;
+            inp[i] = tmp;
+            strg[tmp] = strg[tmp] + 1;
+        }
+        for(auto it:strg)
+        {
+            if(it.second==1)
             {
-                cin >> arr[i][j];
+                flg = false;
+                ans = min(ans, it.first);
+            }
+        }
+        if(flg)
+        {
+            cout << -1 << endl;
+        }
+        else
+        {
+            FOR(j,0,n)
+            {
+                if(inp[j]==ans)
+                {
+                    cout << j + 1 << endl;
+                }
             }
         }
         
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
-
-            }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cout << arr[i][j] << " ";
-            }
-            cout << endl;
-        }
     }
     return 0;
 }

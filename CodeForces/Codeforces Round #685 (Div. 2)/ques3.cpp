@@ -261,39 +261,59 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
+        ll n, k;
+        cin >> n >> k;
+        string str1,str2;
+        cin >> str1>>str2;
+        sort(str1.begin(), str1.end());
+        sort(str2.begin(), str2.end());
+        // cout << str1 << " ** " << str2 << endl;
+
+        bool flg = true;
         FOR(i,0,n)
         {
-            FOR(j,0,m)
+            if(str1[i]==str2[i])
             {
-                cin >> arr[i][j];
+                continue;
             }
-        }
-        
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
+            
+            ll len = 0;
+            while(i+len<n && str1[i]!=str2[i] && str1[i]<str2[i] &&  str1[i]==str1[i+len] && len<k)
             {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
+                len++;
+            }
+            if(len%k!=0)
+            {
+                flg = false;
+                break;
 
             }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
+            else if(len!=k && str1[i]!=str2[i] )
             {
-                cout << arr[i][j] << " ";
+                flg = false;
+                break;
             }
-            cout << endl;
+            else if(len!=0)
+            {
+                FOR(j,i,i+k)
+                {
+                    str1[j] = str2[i];
+                }
+            }
+           
+            //  cout << str1 << " ** " << str2 << endl;
+
         }
+        if(flg)
+        {
+            cout << "YES" << endl;
+        }
+        else
+        {
+            cout << "NO" << endl;
+        }
+        
+
     }
     return 0;
 }

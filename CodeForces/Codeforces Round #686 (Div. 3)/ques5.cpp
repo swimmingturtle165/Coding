@@ -250,6 +250,69 @@ bool find(vector<ll>&Arr,int A,int B)
    
 
 
+
+int n; // number of nodes
+vector<vector<int>> adj; // adjacency list of graph
+
+vector<bool> visited;
+vector<int> tin, low;
+int timer;
+
+
+
+bool dfs(int a,int& vis_edges,int &vis_vertex)
+{
+
+}
+
+ll isBridge(int a,int b)
+{
+    int cnt1 = 0, cnt2 = 0;
+    bool flg1 = false;
+    bool flg2 = false;
+    dfs(a, cnt1, cnt2);
+    if(cnt1==cnt2)
+    {
+        flg1 = true;
+    }
+    cnt1 = 0;
+    cnt2 = 0;
+    dfs(b, cnt1, cnt2);
+    if(cnt1==cnt2)
+    {
+        flg2 = true;
+    }
+}
+
+ll dfs(int v, int p = -1) {
+
+    visited[v] = true;
+    tin[v] = low[v] = timer++;
+    for (int to : adj[v]) {
+
+        if (to == p) continue;
+        if (visited[to]) {
+            low[v] = min(low[v], tin[to]);
+        } else {
+            dfs(to, v);
+            low[v] = min(low[v], low[to]);
+            if (low[to] > tin[v])
+                return isBridge(v, to);
+        }
+    }
+}
+
+void find_bridges() {
+    timer = 0;
+    visited.assign(n, false);
+    tin.assign(n, -1);
+    low.assign(n, -1);
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i])
+            dfs(i);
+    }
+}
+
 signed main(int argc, char** argv)
 {
     #ifndef ONLINE_JUDGE
@@ -261,39 +324,7 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cin >> arr[i][j];
-            }
-        }
         
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
-
-            }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cout << arr[i][j] << " ";
-            }
-            cout << endl;
-        }
     }
     return 0;
 }

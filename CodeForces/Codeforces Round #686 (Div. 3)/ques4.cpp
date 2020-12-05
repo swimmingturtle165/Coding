@@ -248,7 +248,40 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+ vector<pair<ll, ll>> get_factors(ll n)
+{
+    vector<pair<ll, ll>> strg;
+    ll tmp = 0;
+    while (n%2==0)
+    {
+        tmp++;
+        n = n / 2;
+    }
+    if(tmp>0)
+    {
+        strg.pb({2, tmp});
+    }
+    for (ll i = 3; i <= pow(n,0.5)+1;i+=2)
+    {
+        tmp = 0;
+        while (n%i==0)
+        {
+            tmp++;
+            n = n / i;
+        }
+        if(tmp>0)
+        {
+            strg.pb({i, tmp});
+        }
 
+
+    }
+    if(n>0)
+    {
+        strg.pb({n, 1});
+    }
+    return strg;
+}
 
 signed main(int argc, char** argv)
 {
@@ -261,39 +294,48 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n, m;
-        cin >> n >> m;
-        vector<vector<ll>> arr(n, vector<ll>(m));
-        FOR(i,0,n)
+        ll n;
+        cin >> n;
+        vector<pair<ll, ll>> strg = get_factors(n);
+        
+        ll maxi = 0;
+        FOR(i,0,strg.size())
         {
-            FOR(j,0,m)
+            if(strg[i].second>strg[maxi].second)
             {
-                cin >> arr[i][j];
+                maxi = i;
             }
         }
         
-        FOR(i,0,n)
+        vector<ll> answ;
+        FOR(i,0,strg[maxi].second-1)
         {
-            FOR(j,0,m)
-            {
-                
-                if((i+j)%2!=arr[i][j]%2)
-                {
-                    arr[i][j]++;
-                }                   
-                
-                
-
-            }
+            answ.pb(strg[maxi].first);
         }
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                cout << arr[i][j] << " ";
-            }
-            cout << endl;
-        }
+        ll v = n / pow(strg[maxi].first, strg[maxi].second - 1);
+        answ.pb(v);
+        // while(sum+i<=strg[maxi].second)
+        // {
+        //     sum += i;                       
+        //     i++;
+        //     if(sum+i<=strg[maxi].second)
+        //     {
+        //     answ.pb(pow(strg[maxi].first, sum));
+        //     }
+        //     else
+        //     {
+        //         ll v = 1;
+        //         FOR(m,0,answ.size())
+        //         {
+        //             v = v * answ[m];
+        //         }
+        //         answ.pb(n/v);
+        //     }
+            
+        // }
+        cout << answ.size() << endl;
+        dispvector<ll>(answ);
+    
     }
     return 0;
 }
