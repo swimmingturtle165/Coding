@@ -247,12 +247,107 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-
-bool mycmp(pair<pair<ll,ll>,ll> &a,pair<pair<ll,ll>,ll> &b)
+   
+vector<ll> LCPArray(string str)
 {
+    ll n=str.size();
+    ll alphabet=256;
+    vector<ll> p(n),c(n),cnt(max(alphabet+1,n+1),0);
+    FOR(i,0,n)
+    {
+        cnt[str[i]]++;
+    }
+    FOR(i,1,256)
+    {
+        cnt[i]+=cnt[i-1];
+    }
+    FOR(i,0,n)
+    {
+        p[--cnt[str[i]]]=i;
+    }
+    c[p[0]]=0;
+    ll classes=1;
+    FOR(i,1,n)
+    {
+        if(str[p[i]]!=str[p[i-1]])
+        {
+            classes++;
+        }
+        c[p[i]]=classes-1;
+    }
+    vector<ll> pn(n),cn(n);
+    ll v1=log2(n);
+    int h=0;
+    while((1<<h) < n)
+    {
+        FOR(i,0,n)
+        {
+            pn[i]=(p[i]-(1<<h)+n)%n;
+            
+                
+            
+        }
+        fill(cnt.begin(),cnt.begin()+classes,0);
+        FOR(i,0,n)
+        {
+            cnt[c[pn[i]]]++;
+        }
+        FOR(i,1,classes+1)
+        {
+            cnt[i]+=cnt[i-1];
+        }
+        for(int i = n-1;i>=0;i--)
+        {
+            p[--cnt[c[pn[i]]]]=pn[i];
+        }
+        cn[p[0]]=0;
+        classes=1;
+        FOR(i,1,n)
+        {
+            pair<ll,ll> curr={c[p[i]],c[(p[i]+(1<<h))%n]};
+            pair<ll,ll> prev={c[p[i-1]],c[(p[i-1]+(1<<h))%n]};
 
-    return a.first<b.first;
+            if(prev!=curr)
+            {
+                classes++;
+            }
+            cn[p[i]]=classes-1;
+        }
+        c=cn;
+        h++;
+    }
+    dispvector<ll>(p);
+    // dispvector<ll>(c);
+    vector<ll> lcp(str.size(),0);
+    int k=0;
+    FOR(i,0,n-1)
+    {
+        ll v1=c[i];
+        ll v2=p[v1-1];
+        int st=k;
+        while(i+k <n && v2+k<n && str[i+k]==str[v2+k])
+        {
+            k++;
+        }
+        // cout<<i<<" ## "<<v1<<" %% "<<v2<<" "<<st<<" => "<<k<<endl;
+        lcp[v1]=k;
+        k=max(k-1,0);
+    }
+   FOR(i,1,str.size())
+   {
+       cout<<lcp[i]<<" ";
+   }
+   cout<<endl;
+    // FOR(i,0,n)
+    // {
+    //     cout<<lcp[i]<<" "<<p[i]<<" "<<str.substr(p[i],n-p[i])<<endl;
+    // }
+    return lcp;
+
+
+
 }
+
 
 
 signed main(int argc, char** argv)
@@ -263,125 +358,16 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-       ll n;
-       cin>>n;
-    //    vector<vector<ll>> inp(n,vector<ll>(3));
-       vector<pair<pair<ll,ll>,ll>> inp(n),inp1(n);
-       FOR(i,0,n)
-       {
-           ll v1,v2;
-           cin>>v1>>v2;
-
-           inp[i].first.first=min(v1,v2);
-           inp[i].first.second=max(v1,v2);
-
-           inp1[i].first.first=max(v1,v2);
-           inp1[i].first.second=min(v1,v2);
-
-           inp[i].second=i;
-           inp1[i].second=i;
-
-       } 
-
-        
-       sort(inp.begin(),inp.end(),mycmp);
-      
-       sort(inp1.begin(),inp1.end(),mycmp);
+        string str;
+        cin>>str;
+        str=str+"$";
+        vector<ll> strg=LCPArray(str);
+        // strg.erase(strg.begin());
 
 
-
-       
-
-       vector<ll> ans(n,-1);
-       ll i=n-1;
-       ll j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp1[j].first.second && inp[i].first.second>inp1[j].first.first)
-           {
-               ans[inp[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp[j].first.second && inp1[i].first.second>inp[j].first.first)
-           {
-               ans[inp1[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp1[j].first.first && inp1[i].first.second>inp1[j].first.second)
-           {
-               ans[inp1[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-        i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp[j].first.first && inp[i].first.second>inp[j].first.second)
-           {
-               ans[inp[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       dispvector<ll>(ans);
-       
     }
     return 0;
 }

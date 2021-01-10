@@ -247,12 +247,7 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-
-bool mycmp(pair<pair<ll,ll>,ll> &a,pair<pair<ll,ll>,ll> &b)
-{
-
-    return a.first<b.first;
-}
+   
 
 
 signed main(int argc, char** argv)
@@ -266,122 +261,52 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-       ll n;
-       cin>>n;
-    //    vector<vector<ll>> inp(n,vector<ll>(3));
-       vector<pair<pair<ll,ll>,ll>> inp(n),inp1(n);
-       FOR(i,0,n)
-       {
-           ll v1,v2;
-           cin>>v1>>v2;
+        ll n;
+        cin>>n;
+        vector<ll> inp(n);
+        FOR(i,0,n) cin>>inp[i];
+        int cnt=0;
+        vector<bool> strg(n,false);
+        FOR(i,1,n-1)
+        {
+            if(inp[i]>inp[i-1] && inp[i]>inp[i+1])
+            {
+                cnt++;
+                strg[i]=true;
+            }
+            if(inp[i]<inp[i-1] && inp[i]<inp[i+1])
+            {
+                strg[i]=true;
+                cnt++;
+            }
+        }
+        bool flg=false;
+        bool flg1=false;
 
-           inp[i].first.first=min(v1,v2);
-           inp[i].first.second=max(v1,v2);
-
-           inp1[i].first.first=max(v1,v2);
-           inp1[i].first.second=min(v1,v2);
-
-           inp[i].second=i;
-           inp1[i].second=i;
-
-       } 
-
+        FOR(i,1,n-1)
+        {
+            if(strg[i] && strg[i+1] )
+            {
+                flg=true;
+            }
+            if(strg[i] && strg[i+1] && strg[i+2])
+            {
+                flg1=true;
+            }
+        }
+        if(flg1)
+        {
+            cout<<cnt-3<<endl;
+        }
+        else if(flg)
+        {
+            cout<<cnt-1<<endl;
+        }
+        else 
+        {
+            cout<<max(cnt-1,0)<<endl;
+        }
         
-       sort(inp.begin(),inp.end(),mycmp);
-      
-       sort(inp1.begin(),inp1.end(),mycmp);
-
-
-
-       
-
-       vector<ll> ans(n,-1);
-       ll i=n-1;
-       ll j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp1[j].first.second && inp[i].first.second>inp1[j].first.first)
-           {
-               ans[inp[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp[j].first.second && inp1[i].first.second>inp[j].first.first)
-           {
-               ans[inp1[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp1[j].first.first && inp1[i].first.second>inp1[j].first.second)
-           {
-               ans[inp1[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-        i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp[j].first.first && inp[i].first.second>inp[j].first.second)
-           {
-               ans[inp[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       dispvector<ll>(ans);
-       
     }
     return 0;
 }

@@ -247,12 +247,7 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-
-bool mycmp(pair<pair<ll,ll>,ll> &a,pair<pair<ll,ll>,ll> &b)
-{
-
-    return a.first<b.first;
-}
+   
 
 
 signed main(int argc, char** argv)
@@ -266,122 +261,52 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-       ll n;
-       cin>>n;
-    //    vector<vector<ll>> inp(n,vector<ll>(3));
-       vector<pair<pair<ll,ll>,ll>> inp(n),inp1(n);
-       FOR(i,0,n)
-       {
-           ll v1,v2;
-           cin>>v1>>v2;
+        ll n;
+        cin>>n;
+        if(n==1)
+        {
+            cout<<9<<endl;
+        }
+        else if(n==2)
+        {
+            cout<<98<<endl;
+        }
+        else
+        {
+            string strg1="9876543210";
+            string strg2="12345678";
 
-           inp[i].first.first=min(v1,v2);
-           inp[i].first.second=max(v1,v2);
-
-           inp1[i].first.first=max(v1,v2);
-           inp1[i].first.second=min(v1,v2);
-
-           inp[i].second=i;
-           inp1[i].second=i;
-
-       } 
-
+            
+            ll k=n%18;            
+            ll v2=n/18;
+            FOR(i,0,v2)
+            {
+                cout<<strg1<<strg2;
+            }
+            strg2="123456789";
+            ll k2=(k+1)/2;
+            FOR(i,0,k2)
+            {
+                cout<<strg1[i];
+            }
+            ll k3=k-k2;
+            if(k%2==0)
+            {
+                k3--;
+            }
+            FOR(i,0,k3)
+            {
+                cout<<strg2[9-k3+i];
+            }
+            if(k%2==0)
+            {
+                cout<<0;
+            }
+            cout<<endl;
+            
+           
+        }
         
-       sort(inp.begin(),inp.end(),mycmp);
-      
-       sort(inp1.begin(),inp1.end(),mycmp);
-
-
-
-       
-
-       vector<ll> ans(n,-1);
-       ll i=n-1;
-       ll j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp1[j].first.second && inp[i].first.second>inp1[j].first.first)
-           {
-               ans[inp[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp[j].first.second && inp1[i].first.second>inp[j].first.first)
-           {
-               ans[inp1[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp1[j].first.first && inp1[i].first.second>inp1[j].first.second)
-           {
-               ans[inp1[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-        i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp[j].first.first && inp[i].first.second>inp[j].first.second)
-           {
-               ans[inp[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       dispvector<ll>(ans);
-       
     }
     return 0;
 }
