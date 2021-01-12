@@ -274,112 +274,74 @@ signed main(int argc, char** argv)
        {
            ll v1,v2;
            cin>>v1>>v2;
+            ll maxi=max(v1,v2);
+            ll mini=min(v1,v2);
 
-           inp[i].first.first=min(v1,v2);
-           inp[i].first.second=max(v1,v2);
+           inp[i].first.first=maxi;
+           inp[i].first.second=mini;
 
-           inp1[i].first.first=max(v1,v2);
-           inp1[i].first.second=min(v1,v2);
+           inp1[i].first.first=mini;
+           inp1[i].first.second=maxi;
+           
 
            inp[i].second=i;
            inp1[i].second=i;
 
-       } 
 
-        
+       } 
        sort(inp.begin(),inp.end(),mycmp);
-      
+       
        sort(inp1.begin(),inp1.end(),mycmp);
 
+        vector<ll> ans(n,-1);
 
+        ll mini=INT_MAX;
+        ll idx=-1;
+        ll next=INT_MAX;
+        ll next_idx=-1;
+        FOR(i,0,n)
+        {
+            if(i>0 && inp[i].first.first!=inp[i-1].first.first)
+            {
+                mini=next;
+                idx=next_idx;
+            }
+            if(inp[i].first.second>mini)
+            {
+                ans[inp[i].second]=idx+1;
+            }
+            else if(inp[i].first.second <next)
+            {
+                next_idx=inp[i].second;
+                next=inp[i].first.second;
+            }
+            
+        }
 
+        mini=INT_MAX;
+        idx=-1;
+        next_idx=-1;
+        next=INT_MAX;
+
+         FOR(i,0,n)
+        {
+            if(i>0 && inp1[i].first.first!=inp1[i-1].first.first)
+            {
+                mini=next;
+                idx=next_idx;
+            }
+            if(inp1[i].first.second>mini  )
+            {
+                ans[inp1[i].second]=idx+1;
+            }
+            else if(inp1[i].first.second < next)
+            {
+                 next_idx=inp1[i].second;
+                next=inp1[i].first.second;
+            }
+            
+        }
        
-
-       vector<ll> ans(n,-1);
-       ll i=n-1;
-       ll j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp1[j].first.second && inp[i].first.second>inp1[j].first.first)
-           {
-               ans[inp[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp[j].first.second && inp1[i].first.second>inp[j].first.first)
-           {
-               ans[inp1[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-       i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp1[i].first.first>inp1[j].first.first && inp1[i].first.second>inp1[j].first.second)
-           {
-               ans[inp1[i].second]=inp1[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
-        i=n-1;
-       j=n-1;
-       while(i>=0)
-       {
-           if(inp[i].first.first>inp[j].first.first && inp[i].first.second>inp[j].first.second)
-           {
-               ans[inp[i].second]=inp[j].second+1;
-               i--;
-           }
-           else if(j!=0)
-           {
-               
-               j--;
-           }
-           else
-           {
-               i--;
-           }
-           
-           
-       }
        dispvector<ll>(ans);
        
     }
