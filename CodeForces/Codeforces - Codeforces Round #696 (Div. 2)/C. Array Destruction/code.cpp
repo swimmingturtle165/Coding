@@ -252,10 +252,7 @@ bool find(vector<ll>&Arr,int A,int B)
 
 signed main(int argc, char** argv)
 {
-    #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-    #endif
+    
     FastIO;
     long t=1;
     cin>>t;
@@ -264,18 +261,66 @@ signed main(int argc, char** argv)
         ll n;
         cin>>n;
         vector<ll> inp(2*n);
-        unordered_set<ll> strg1;
-        vector<bool> vst(2*n,false);
         FOR(i,0,2*n)
         {
             cin>>inp[i];
-            strg1.insert(inp[i]);
-
         }
         sort(inp.begin(),inp.end());
-        
+        // dispvector<ll>(inp);
+        multiset<ll> strg1;
+        FOR(j,0,2*n-1)
+        {
+            strg1.insert(inp[j]);
+        }
+        bool flg=false;
+        FORDE(i,2*n-2,0)
+        {
+            multiset<ll> strg=strg1;
+            vector<pair<ll,ll>> ans;
+            auto it3=strg.find(inp[i]);
+            strg.erase(it3);
+            ll x=inp[2*n-1]+inp[i];
+            flg=true;
+            ans.pb({inp[i],inp[2*n-1]});
+            ll curr_x=inp[2*n-1];
+            while(strg.size()>0)
+            {
+                 auto it1=strg.end();
+                 it1--;
+                 ll v1=*it1;
+                 strg.erase(it1);
                 
-        
+                ll v2=curr_x-v1;
+                auto it2=strg.find(v2);
+
+                if(it2==strg.end())
+                {
+                    flg=false;
+                    break;
+                }
+                else
+                {
+                    ans.pb({v1,v2});
+                    strg.erase(it2);
+                    curr_x=max(v1,v2);
+                }
+                
+            }
+            if(flg)
+            {
+                cout<<"YES"<<endl;
+                cout<<x<<endl;
+                FOR(j,0,ans.size())
+                {
+                    cout<<ans[j].first<<" "<<ans[j].second<<endl;
+                }
+                break;
+            }
+        }
+        if(!flg)
+        {
+            cout<<"NO"<<endl;
+        }
     }
     return 0;
 }
