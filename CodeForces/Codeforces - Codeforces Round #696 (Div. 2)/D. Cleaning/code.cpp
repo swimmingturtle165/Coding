@@ -247,7 +247,24 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
+
+bool check(vector<ll> arr)
+{
+    FOR(i,0,arr.size()-1)
+    {
+        if(arr[i]>arr[i+1])
+        {
+            return false;
+        }
+        arr[i+1]-=arr[i];
+        arr[i]=0;
+    }
+    if(arr.back()!=0)
+    {
+        return false;
+    }
+    return true;
+}
 
 
 signed main(int argc, char** argv)
@@ -262,11 +279,96 @@ signed main(int argc, char** argv)
         cin>>n;
         vector<ll> inp(n);
         FOR(i,0,n) cin>>inp[i];
-        vector<ll> left(n,0),right(n,0);
+        vector<ll> left,right;
+        left=inp;
+        right=inp;
+        if(n==1 && inp[0]!=0)
+        {
+            cout<<"NO"<<endl;
+            continue;
+        }
+        if(n==1 && inp[0]==0)
+        {
+            cout<<"YES"<<endl;
+            continue;
+        }
+        if(check(inp))
+        {
+            cout<<"YES"<<endl;
+            continue;
+        }
+
+        swap(inp[0],inp[1]);
+
         
+        if(check(inp))
+        {
+            cout<<"YES"<<endl;
+            continue;
+        }
+        swap(inp[0],inp[1]);
+
+        swap(inp[n-1],inp[n-2]);
+        
+        if(check(inp))
+        {
+            cout<<"YES"<<endl;
+            continue;
+        }
+
+        swap(inp[n-1],inp[n-2]);
+        
+        vector<ll> b=inp;
+
         FOR(i,1,n)
         {
-            left[i]=
+            if(left[i-1]==-1 || b[i-1]>b[i])
+            {
+                left[i]=-1;
+            }
+            else 
+            {
+                
+                b[i]-=b[i-1];
+                b[i-1]=0;
+                left[i]=b[i];
+            }
+            
+        }
+        
+        b=inp;
+        FORDE(i,n-2,0)
+        {
+            if(right[i+1]==-1 || right[i+1]>right[i])
+            {
+                right[i]=-1;
+            }
+            else
+            {
+                b[i]-=b[i+1];
+                b[i+1]=0;
+                right[i]=b[i];
+            }
+            
+        }
+        bool flg=false;
+        FOR(i,1,n-2)
+        {
+            if(left[i-1]!=-1 && right[i+2]!=-1 )
+            {
+                vector<ll> strg={left[i-1],inp[i+1],inp[i],right[i+2]};
+                if(check(strg))
+                {
+
+                    cout<<"YES"<<endl;
+                    flg=true;
+                    break;
+                }
+            }
+        }
+        if(!flg)
+        {
+            cout<<"NO"<<endl;
         }
 
     }
