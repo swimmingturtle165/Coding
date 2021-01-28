@@ -259,114 +259,62 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    bool flg1=false;
     while(t--)
     {
         ll n;
         cin>>n;
-        vector<vector<char>> inp(n,vector<char>(n));
-        FOR(i,0,n)
-        {            
-            FOR(j,0,n)
-            {
-                cin>>inp[i][j];
-            }
-        }
-        FOR(i,0,n)
+        vector<ll> inp(n);
+        
+        FOR(i,0,n) cin>>inp[i];
+
+        sort(inp.begin(),inp.end());
+
+       vector<ll> dp(200001,INT_MAX);
+
+       unordered_map<ll,ll> strg_start;
+       unordered_map<ll,ll> strg_end;
+        ll maxi=0;
+       FOR(i,0,n)
+       {
+           maxi=max(maxi,inp[i]);
+           if(i==0 ||(i>0 && inp[i]!=inp[i-1]))
+           {
+           strg_start[inp[i]]=i;
+           dp[inp[i]]=i;
+
+           }
+                     
+           strg_end[inp[i]]=i;
+
+       }
+       
+        FOR(i,1,maxi+1)
         {
-            FOR(j,0,n)
+            
+            if(dp[i]==INT_MAX)
             {
-                char tmp;
-                cin>>tmp;
-                if(inp[i][j]!=tmp)
+            }
+            for(int j=2;i*j<=maxi;j++)
+            {
+                if(dp[i*j]!=INT_MAX)
                 {
-                    inp[i][j]='1';
+                    dp[i*j]=min(dp[i*j],dp[i]+strg_start[i*j]-1-strg_end[i]);
                 }
-                else
-                {
-                    inp[i][j]='0';
-                }
-                // cout<<inp[i][j]<<" ";
                 
             }
-            // cout<<endl;
+            // cout<<dp[i]<<" "<<i<<endl;
+            
+                            
+           
+            
+
         }
-        bool flg=true;
-        FOR(i,0,n)
+        ll ans=n-1;
+        for(int i = 0 ; i <n;i++)
         {
-            bool tmp=false;
-            
-                if(inp[i][0]=='1')
-                {
-                    tmp=true;
-                    
-                }
-            
-            if(tmp)
-            {
-                FOR(j,0,n)
-                {
-                    if(inp[i][j]=='1')
-                    {
-                        inp[i][j]='0';
-                    }
-                    else
-                    {
-                        inp[i][j]='1';
-                    }
-                }   
-            }
+            ans=min(ans,dp[inp[i]]+n-1-i);
         }
-        FOR(i,0,n)
-        {
-            bool tmp=false;
-            
-                if(inp[0][i]=='1')
-                {
-                    tmp=true;
-                    
-                }
-            
-            if(tmp)
-            {
-                FOR(j,0,n)
-                {
-                    if(inp[j][i]=='1')
-                    {
-                        inp[j][i]='0';
-                    }
-                    else
-                    {
-                        inp[j][i]='1';
-                    }
-                    
-                }   
-            }
-        }
-        FOR(i,0,n)
-        {
-            FOR(j,0,n)
-            {
-                // cout<<inp[i][j]<<" ";
-                if(inp[i][j]=='1')
-                {
-                    flg=false;
-                }
-            }
-            // cout<<endl;
-            
-            
-        }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else
-        {
-            cout<<"NO"<<endl;
-        }
-        flg1=true;
-        // cout<<"*********************"<<endl;
+        cout<<ans<<endl;
     }
     return 0;
 }
