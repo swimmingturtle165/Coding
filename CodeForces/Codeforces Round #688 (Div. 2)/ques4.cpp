@@ -261,29 +261,42 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n) 
+        ll k;
+        cin>>k;
+        if(k%2!=0 || k<2)
         {
-            cin>>inp[i];
+            cout<<-1<<endl;
         }
-        ll sum=0;
-        FOR(i,1,n)
+        else
         {
-            sum+=abs(inp[i]-inp[i-1]);
-        }
-        ll maxi=0;
-        maxi=max(abs(inp[0]-inp[1]),abs(inp[n-1]-inp[n-2]));
-        FOR(i,2,n)
-        {
-            maxi=max(maxi,abs(inp[i]-inp[i-1])+abs(inp[i-1]-inp[i-2])-abs(inp[i-2]-inp[i]));
-        }
-        cout<<sum-maxi<<endl;
-        
-        
-        
+            ll left=k;
+            string strg="";
+            while (left>0)
+            {
+                ll p=log2(left+2);
+                ll b=pow(2,p);
+                // cout<<left<<" "<<b<<" ";
+                left=left-(b-2);
+                if(left<0)
+                {
+                    left+=(b-2);
+                    p--;
+                    b=pow(2,p);
+                    left=left-(b-2);
 
+                }
+                // cout<<left<<endl;
+                strg+='1';
+                FOR(i,0,p-2)
+                {
+                    strg+='0';
+                }
+            }
+            cout<<strg.size()<<endl;
+            FOR(i,0,strg.size()) cout<<strg[i]<<" ";
+            cout<<endl;
+        }
+        
     }
     return 0;
 }

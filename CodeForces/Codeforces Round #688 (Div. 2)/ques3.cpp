@@ -262,26 +262,51 @@ signed main(int argc, char** argv)
     while(t--)
     {
         ll n;
+        
         cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n) 
-        {
-            cin>>inp[i];
-        }
-        ll sum=0;
-        FOR(i,1,n)
-        {
-            sum+=abs(inp[i]-inp[i-1]);
-        }
-        ll maxi=0;
-        maxi=max(abs(inp[0]-inp[1]),abs(inp[n-1]-inp[n-2]));
-        FOR(i,2,n)
-        {
-            maxi=max(maxi,abs(inp[i]-inp[i-1])+abs(inp[i-1]-inp[i-2])-abs(inp[i-2]-inp[i]));
-        }
-        cout<<sum-maxi<<endl;
         
+        vector<string> strg(n);
         
+        FOR(i,0,n) cin>>strg[i];
+
+        
+        vector<ll> ans(10,0);
+        vector<ll> max_row(10,INT_MIN);
+        vector<ll> min_row(10,INT_MAX);
+        vector<ll> max_col(10,INT_MIN);
+        vector<ll> min_col(10,INT_MAX);
+       
+            FOR(i,0,n)
+            {                
+                FOR(j,0,n)
+                {
+                    int val=strg[i][j]-'0';
+                    max_col[val]=max(j,max_col[val]);
+                    max_row[val]=max(i,max_row[val]);
+                    min_col[val]=min(j,min_col[val]);
+                    min_row[val]=min(i,min_row[val]);
+
+                }
+            }
+            
+            FOR(i,0,n)
+            {                
+                FOR(j,0,n)
+                {
+                    int val=strg[i][j]-'0';
+                    ll hori=max(j,n-1-j);
+                    ll vert=max(i,n-1-i);
+                    ll hori1=i-min_row[val];
+                    ll hori2=max_row[val]-i;
+                    ll vert1=j-min_col[val];
+                    ll vert2=max_col[val]-j;
+                    vert1=max(vert1,vert2);
+                    hori1=max(hori1,hori2);
+                    ans[val]=max(ans[val],max(hori*hori1,vert*vert1));
+
+                }
+            }
+            dispvector<ll>(ans);
         
 
     }
