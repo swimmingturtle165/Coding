@@ -261,57 +261,200 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll px,py;
-        cin>>px>>py;
-        string str;
-        cin>>str;
-        ll left=0,right=0,up=0,down=0;
-        FOR(i,0,str.size())
+        ll n,m;
+        cin>>n>>m;
+        vector<string> strg(n);
+        FOR(i,0,n)
         {
-            if(str[i]=='U')
+            cin>>strg[i];
+        }
+        vector<ll>len_2 (1000,-1);
+        vector<vector<bool>> len_3(n,vector<bool>(1000,false));
+        pll a={-1,-1};
+        
+        FOR(i,0,n)
+        {
+            FOR(j,0,n)
             {
-                up++;
-            }
-            if(str[i]=='R')
-            {
-                right++;
-            }
-            if(str[i]=='L')
-            {
-                left++;
-            }
-            if(str[i]=='D')
-            {
-                down++;
+                if(strg[i][j]!='*')
+                {
+                    a.first=i;
+                    a.second=j;
+                }
             }
         }
-        bool flg=true;
-        if(px>=0 && right<px)
-        {
-            flg=false;
-        }
-        if(py>=0 && up<py)
-        {
-            flg=false;
-        }
-        if(px<0 && abs(px)>left)
-        {
-            flg=false;
-        }
-        if(py<0 && down<abs(py))
-        {
-            flg=false;
-        }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else 
+        if(a.first==-1 && a.second==-1)
         {
             cout<<"NO"<<endl;
-            /* code */
+            continue;
+        }
+        FOR(i,0,n)
+        {
+            FOR(j,0,n)
+            {
+                if(strg[i][j]!='*' && strg[j][i]!='*' && strg[i][j]==strg[j][i] && i!=j)
+                {
+                    len_2[i]=j;
+                    len_2[j]=i;
+
+                }
+            }
         }
         
+        
+        FOR(i,0,n)
+        {
+            FOR(j,0,n)
+            {
+                if(strg[i][j]!='*' && strg[j][i]!='*' )
+                {
+                    len_3[i][j]=true;
+                    len_3[j][i]=true;
+                }
+            }
+        }
+        
+        if(m==1)
+        {
+                cout<<"YES"<<endl;
+            
+            cout<<1<<" "<<2<<endl;
+        }
+        else if(m%2==0)
+        {
+            ll v1=-1;
+            FOR(i,0,n)
+            {
+                if(len_2[i]!=-1)
+                {
+                    v1=i;
+                    break;
+                }
+            }
+            if(v1==-1)
+            {
+                vector<ll> va(n,-1);
+                vector<ll> vb(n,-1);
+                FOR(i,0,n)
+                {
+                    FOR(j,0,n)
+                    {
+                        if(strg[i][j]=='a')
+                        {
+                            va[i]=j;
+                        }
+                        else if(strg[i][j]=='b')
+                        {
+                            vb[i]=j;
+                        }
+                    }
+                }
+                ll x=-1,y=-1,z=-1;
+                FOR(i,0,n)
+                {
+                    FOR(j,0,n)
+                    {
+                        if(i!=j && (strg[i][j] =='a' && va[j]!=-1))
+                        {
+                            x=i;
+                            y=j;
+                            z=va[j];
+                        }
+                        if(i!=j && (strg[i][j] =='b' && vb[j]!=-1))
+                        {
+                            x=i;
+                            y=j;
+                            z=vb[j];
+                        }
+                        if(x!=-1)
+                        {
+                            break;
+                        }
+                    }
+                    if(x!=-1)
+                    {
+                        break;
+                    }
+                }
+                if(x==-1)
+                {
+                    cout<<"NO"<<endl;
+                    continue;
+                }
+                else
+                {
+                    x++;
+                    y++;
+                    z++;
+                    cout<<"YES"<<endl;
+                    ll v3=m/2;
+                    if(v3%2==0)
+                    {
+                        FOR(i,0,v3)
+                        {
+                            if(i%2==0)
+                            {
+                                cout<<y<<" "<<z<<" ";
+                            }
+                            else
+                            {
+                                cout<<y<<" "<<x<<" ";
+                            }
+                        }
+                        cout<<y<<endl;
+                    }
+                    else
+                    {
+                        FOR(i,0,v3)
+                        {
+                            if(i%2==0)
+                            {
+                                cout<<x<<" "<<y<<" ";
+                            }
+                            else
+                            {
+                                cout<<z<<" "<<y<<" ";
+                            }
+                        }
+                        cout<<z<<endl;
+                    }
+                }
+            }
+            else
+            {
+                cout<<"YES"<<endl;
+                FOR(i,0,m+1)
+                {
+                    if(i%2==0)
+                    {
+                        cout<<v1+1<<" ";
+                    }
+                    else
+                    {
+
+                    cout<<len_2[v1]+1<<" ";
+                    }
+                }
+                cout<<endl;
+            }
+        }      
+        else
+        {
+            cout<<"YES"<<endl;
+
+            FOR(i,0,m+1)
+            {
+                if(i%2==0)
+                {
+                    cout<<1<<" ";
+                }
+                else
+                {
+                    cout<<2<<" ";
+                }
+            }
+            cout<<endl;
+        }
     }
     return 0;
 }

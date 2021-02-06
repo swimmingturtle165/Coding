@@ -261,57 +261,57 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll px,py;
-        cin>>px>>py;
-        string str;
-        cin>>str;
-        ll left=0,right=0,up=0,down=0;
-        FOR(i,0,str.size())
+        ll n,k;
+        cin>>n>>k;
+        vector<ll> inp(n);
+        FOR(i,0,n)
         {
-            if(str[i]=='U')
+            cin>>inp[i];
+        }
+        if(n==1)
+        {
+            cout<<-1<<endl;
+            continue;
+        }
+        ll ans=0;
+        ll i=0;
+        ll prev=0;
+        bool flg=false;
+        if(inp[0]<inp[1])
+        {
+            ll gr=inp[1]-inp[0];
+            if(gr>=k)
             {
-                up++;
+                cout<<1<<endl;
+                continue;
             }
-            if(str[i]=='R')
+            else
             {
-                right++;
+                k-=gr;
+                inp[0]=inp[1];
             }
-            if(str[i]=='L')
+        }
+        ll ans=0;
+        FOR(i,1,n)
+        {
+            if(inp[i]>inp[i-1])
             {
-                left++;
+                
+                FOR(j,0,i)
+                {
+
+                }
+
             }
-            if(str[i]=='D')
-            {
-                down++;
-            }
         }
-        bool flg=true;
-        if(px>=0 && right<px)
+        // cout<<endl;
+        if(k>0)
         {
-            flg=false;
+            cout<<-1<<endl;
         }
-        if(py>=0 && up<py)
-        {
-            flg=false;
+        else{
+            cout<<ans+1<<endl;
         }
-        if(px<0 && abs(px)>left)
-        {
-            flg=false;
-        }
-        if(py<0 && down<abs(py))
-        {
-            flg=false;
-        }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else 
-        {
-            cout<<"NO"<<endl;
-            /* code */
-        }
-        
     }
     return 0;
 }

@@ -261,57 +261,91 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll px,py;
-        cin>>px>>py;
-        string str;
-        cin>>str;
-        ll left=0,right=0,up=0,down=0;
-        FOR(i,0,str.size())
+        ll n,m;
+        cin>>n>>m;
+        vector<ll> inp(n),fin(n);
+        FOR(i,0,n) cin>>inp[i];
+
+        FOR(i,0,n) cin>>fin[i];
+        
+        unordered_map<ll,vector<ll>> strg;
+        vector<ll> ans(m,-1);
+        FOR(i,0,m)
         {
-            if(str[i]=='U')
-            {
-                up++;
-            }
-            if(str[i]=='R')
-            {
-                right++;
-            }
-            if(str[i]=='L')
-            {
-                left++;
-            }
-            if(str[i]=='D')
-            {
-                down++;
-            }
+            ll tmp;
+            cin>>tmp;
+            strg[tmp].push_back(i);
         }
         bool flg=true;
-        if(px>=0 && right<px)
+        FOR(i,0,n)
         {
-            flg=false;
+            if(inp[i]!=fin[i])
+            {
+                if(strg.find(fin[i])==strg.end() || strg[fin[i]].size()==0)
+                {
+                    flg=false;
+                    break;
+                }
+                else
+                {
+                    ll v1=strg[fin[i]].back();
+                    ans[v1]=i+1;
+                    strg[fin[i]].pop_back();
+                }
+            }
+            
         }
-        if(py>=0 && up<py)
+        FOR(i,0,n)
         {
-            flg=false;
+            if(inp[i]==fin[i])
+            {
+                if(strg.find(fin[i])==strg.end() || strg[fin[i]].size()==0)
+                {
+                    continue;
+                }
+                else
+                {
+                    ll v1=strg[fin[i]].back();
+                    ans[v1]=i+1;
+                    strg[fin[i]].pop_back();
+                }
+            }
+            
         }
-        if(px<0 && abs(px)>left)
-        {
-            flg=false;
-        }
-        if(py<0 && down<abs(py))
-        {
-            flg=false;
-        }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else 
+        if(flg==false)
         {
             cout<<"NO"<<endl;
-            /* code */
+            continue;
         }
-        
+        else
+        {
+            ll m1=ans[m-1];
+            if(m1==-1)
+            {
+                cout<<"NO"<<endl;
+                continue;
+            }
+            FOR(i,0,m)
+            {
+                if(ans[i]==-1 )
+                {
+                    ans[i]=m1;
+                }
+               
+            }
+            if(flg==false)
+            {
+                cout<<"NO"<<endl;
+                continue;
+            }
+            else
+            {
+                cout<<"YES"<<endl;
+                dispvector<ll> (ans);
+            }
+        }
+
+
     }
     return 0;
 }
