@@ -273,43 +273,94 @@ signed main(int argc, char** argv)
             cout<<-1<<endl;
             continue;
         }
-        ll ans=0;
-        ll i=0;
-        ll prev=0;
-        bool flg=false;
-        if(inp[0]<inp[1])
+        ll left=k;
+        ll ans=-2;
+        FOR(i,0,n-1)
         {
-            ll gr=inp[1]-inp[0];
-            if(gr>=k)
+            if(inp[i]<inp[i+1])
             {
-                cout<<1<<endl;
-                continue;
-            }
-            else
-            {
-                k-=gr;
-                inp[0]=inp[1];
-            }
-        }
-        ll ans=0;
-        FOR(i,1,n)
-        {
-            if(inp[i]>inp[i-1])
-            {
-                
-                FOR(j,0,i)
+                ll cnt=0;
+                FORDE(j,i,0)
                 {
+                   
+                    if(inp[j]>=inp[i+1])
+                    {
+                        break;
+                    }
+                    else 
+                    {
+                         if(j==0 && i!=0)
+                        {
+                            i--;
+                            break;
+                        }
+                        // cout<<j<<" ))) ";
+                         while(j>0 && inp[j]==inp[j-1])
+                        {
+                            cnt++;
+                            j--;
+                        }
+                        // cout<<j<<" ))) "<<endl;
 
+                        cnt=i+1-j;
+                        ll v1=inp[i];
+                        ll v2=inp[i+1];
+                        bool flg=false;
+                        
+                        if(j!=0)
+                        {
+                            j--;
+                            flg=true;
+                            v2=min(v2,inp[j]);
+                        }
+
+                        // cout<<v1<<" && "<<v2<<"  ** ";
+                        if(left<cnt*(v2-v1))
+                        {
+                            // cout<<" :: "<<cnt<<endl;
+                            ll v3=left%cnt;
+                            ans=i+1-v3;
+                            if(v3==0)
+                            {
+                                ans=i+1-cnt;
+                            }
+                            left=0;
+                        }
+                        else
+                        {
+                            left-=(cnt*(v2-v1));
+                            if(!flg)
+                            {
+                                j--;
+                            }
+                            FOR(m,j+1,i+1)
+                            {
+                                inp[m]=v2;
+                            }
+                            if(!flg)
+                            {
+                                j++;
+                            }
+                            ans=i+1-cnt;
+                        }
+                        // cout<<ans<<" ^^ "<<left<<endl;
+                        // dispvector<ll>(inp);
+                        i--;
+                    }
                 }
-
+            }
+            if(left==0)
+            {
+                break;
             }
         }
-        // cout<<endl;
-        if(k>0)
+
+        if(left>0)
         {
             cout<<-1<<endl;
         }
-        else{
+        else
+        {
             cout<<ans+1<<endl;
         }
     }
