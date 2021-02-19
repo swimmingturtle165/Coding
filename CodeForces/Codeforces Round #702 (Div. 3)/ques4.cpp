@@ -248,7 +248,30 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+void solve(ll start,ll end,ll curr,vector<ll>& inp,vector<ll>& ans)
+{
+    if(start>end)
+    {
+        return;
+    }
+    if(start==end)
+    {
+        ans[start]=curr;
+        return;
+    }
+    ll maxi=start;
+    FOR(i,start,end+1)
+    {
+        if(inp[maxi]<inp[i])
+        {
+            maxi=i;
+        }
+    }
+    ans[maxi]=curr;
+    solve(start,maxi-1,curr+1,inp,ans);
+    solve(maxi+1,end,curr+1,inp,ans);
 
+}
 
 signed main(int argc, char** argv)
 {
@@ -265,36 +288,11 @@ signed main(int argc, char** argv)
         cin>>n;
         vector<ll> inp(n);
         FOR(i,0,n) cin>>inp[i];
+        vector<ll> level(n,0);
+        solve(0,n-1,0,inp,level);
+        dispvector<ll>(level);
 
-        vector<ll> dp_left(n,0);
-        vector<ll> dp_right(n,0);
-        FOR(i,0,n)
-        {
-            FOR(j,0,i)
-            {
-                if(inp[i]<inp[j])
-                {
-                    dp_left[i]=max(dp_left[i],dp_left[j]+1);
-                }
-            }
-        }
-        FORDE(i,n-1,0)
-        {
-            FORDE(j,n-1,i)
-            {
-                if(inp[i]<inp[j])
-                {
-                    dp_right[i]=max(dp_right[i],dp_right[j]+1);
-                }
-            }
-        }
-        FOR(i,0,n)
-        {
-            cout<<dp_left[i]+dp_right[i]<<" ";
-        }
-         cout<<endl;
-
-
+        
 
     }
     return 0;
