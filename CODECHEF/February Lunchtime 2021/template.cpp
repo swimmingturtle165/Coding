@@ -258,60 +258,10 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
     while(t--)
     {
-         ll n1,n2,n3;
-         cin>>n1>>n2>>n3;
-         ll n=n1+n2+n3;
-         vector<ll> inp1(n1);
-         vector<ll> inp2(n2);
-         vector<ll> inp3(n3);
-        ll min1=INT_MAX;
-        ll min2=INT_MAX;
-        ll min3=INT_MAX;
-        ll sum=0;
-        ll sum1=0;
-        ll sum2=0;
-        ll sum3=0;
-         FOR(i,0,n1) 
-         {
-             cin>>inp1[i];
-             min1=min(min1,inp1[i]);
-             sum+=inp1[i];
-             sum1+=inp1[i];
-         }
-         FOR(i,0,n2) 
-         {
-             cin>>inp2[i];
-             min2=min(min2,inp2[i]);
-             sum+=inp2[i];
-             sum2+=inp2[i];
-         }
-         FOR(i,0,n3) 
-         {
-             cin>>inp3[i];
-             min3=min(min3,inp3[i]);
-             sum+=inp3[i];
-             sum3+=inp3[i];
-         }
-
-
-         
-
-         sum=sum-min1;
-         sum=sum-min2;
-         sum=sum-min3;
-         ll v1=max(min1,min2);
-         v1=max(v1,min3);
-         sum=sum+2*v1-(min1+min2+min3);
-
-        ll ans=sum;
-        ans=max(ans,sum1+sum2-sum3);
-        ans=max(ans,sum3+sum2-sum1);
-        ans=max(ans,sum1+sum3-sum2);
-
-         cout<<ans<<endl;
+        
     }
     return 0;
 }
