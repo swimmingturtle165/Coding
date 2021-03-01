@@ -285,6 +285,7 @@ signed main(int argc, char** argv)
                 if(inp[j]==1)
                 {
                     strg[j]++;
+                    
                 }
                 inp[j]=max(1ll,inp[i]-1);
             }   
