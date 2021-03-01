@@ -267,28 +267,28 @@ signed main(int argc, char** argv)
         FOR(i,0,n) cin>>inp[i];
         real=inp;
         ll ans=0;
-        vector<ll> strg(n+1,0);
-        ll curr=0;
-        ll carry=0;
+        vector<ll> strg(n,0);
+       
         FOR(i,0,n)
-        {
-            cout<<ans<<" "<<strg[i]<<" "<<i<<" "<<inp[i]<<" ";
-            inp[i]=max(1ll,inp[i]-curr);
-             curr+=carry;
-            carry=0;
-            cout<<inp[i]<<endl;
-            
-                ans+=(inp[i]-1);
-                ll v1=i+real[i];
-                carry++;
-                if(v1<n)
+        {    
+            inp[i]=max(1ll,inp[i]-strg[i]);
+            strg[i]-=(real[i]-inp[i]);
+            ans+=(inp[i]-1);
+            strg[i]+=(inp[i]-1);
+            ll maxi=max(n-1,i+strg[i]);
+            if(i>=n-1)
+            {
+                continue;
+            }
+            FORDE(j,maxi,i+2)
+            {
+                if(inp[j]==1)
                 {
-                    strg[v1]--;
+                    strg[j]++;
                 }
-                
-            
+                inp[j]=max(1ll,inp[i]-1);
+            }   
            
-            curr+=strg[i];
         }
         cout<<ans<<endl;
     }
