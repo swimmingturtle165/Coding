@@ -264,61 +264,32 @@ signed main(int argc, char** argv)
         ll n;
         cin>>n;
         vector<ll> inp(n);
+        vector<ll> strg(n,-1);
 
+        FOR(i,0,n) cin>>inp[i];
+        stack<ll> st;
+        ll ans=-1;
         FOR(i,0,n)
         {
-            cin>>inp[i];
-        }
-        vector<ll> srted=inp;
-        sort(srted.begin(),srted.end());
-        if(inp==srted)
-        {
-            cout<<0<<endl;
-            break;
-        }
-        ll ans=0;
-        if(inp==srted)
-        {
-            cout<<0<<endl;
-            continue;
-        }
-        vector<ll> cnt(n+1,0);
-        vector<ll> right_maxi(n,0);
-        right_maxi[0]=inp[0];
-        FOR(i,1,n)
-        {
-            right_maxi[i]=max(right_maxi[i-1],inp[i]);
-        }
-        ll prev_obstacle=inp[n-1];
-        ll cnt_pbstacle=0;
-        FORD(i,n-1,0)
-        {
-            if(i>=0 && inp[i]>right_maxi[i-1])
+            ll tmp=1;
+            while (st.size()>0 && inp[st.top()]<inp[i])
             {
-                cnt[i]=0;
-                left_maxi=inp[i-1];
+                tmp=max(tmp,strg[st.top()]+1);
+                st.pop();
             }
-            else if(prev_obstacle<inp[i])
+            if(st.size()==0)
             {
-                ans=max(cnt,ans);
+                tmp=0;
             }
-            else if(i!=n-1 && inp[i]<inp[i-1])
-            {
-                cnt[i]=1+cnt[i+1];
-            }
-            else
-            {
-                cnt[i]=cnt[i+1];
-            }
+           strg[i]=tmp;
+           ans=max(ans,tmp);
+           st.push(i);
+            
             
         }
-
-        dispvector<ll>(inp);
-        dispvector<ll>(cnt);
-
-        cout<<*(max_element(cnt.begin(),cnt.end()))+1<<endl;
-
-
+        // dispvector<ll>(strg);
+        cout<<ans<<endl;
+      
     }
     return 0;
 }

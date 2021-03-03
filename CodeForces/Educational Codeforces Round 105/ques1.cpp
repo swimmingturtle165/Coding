@@ -261,11 +261,173 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        
+        string str;
+        cin>>str;
+        ll n=str.size();
+        bool flg=false;
+
+        if(str[0]=='A')
+        {
+            // A=> "("
+            ll tmp1=0;
+            ll tmp2=0;
+            ll tmp3=0;
+            ll tmp4=0;
+
+            FOR(i,0,n)
+            {
+                if(str[i]=='A')
+                {
+                    tmp1++;
+                    tmp2++;
+                    tmp3++;
+                    tmp4++;
+
+                }
+                else if(str[i]=='B')
+                {
+                    tmp1--;
+                    tmp2--;
+                    tmp3++;
+                    tmp4++;
+                }
+                else
+                {
+                    tmp1++;
+                    tmp2--;
+                    tmp3++;
+                    tmp4--; 
+                }
+                if(tmp1<0 )
+                {
+                    tmp1=INT_MAX;
+                }
+                if(tmp2<0 )
+                {
+                    tmp2=INT_MAX;
+                }if(tmp3<0 )
+                {
+                    tmp3=INT_MAX;
+                }if(tmp4<0 )
+                {
+                    tmp4=INT_MAX;
+                }
+            }
+            if(tmp1==0 || tmp2==0 || tmp3==0 || tmp4==0)
+            {
+                flg=true;
+            }
+        }
+        else if( str[0]=='B')
+        {
+            ll tmp1=0;
+            ll tmp2=0;
+            ll tmp3=0;
+            ll tmp4=0;
+
+            FOR(i,0,n)
+            {
+                if(str[i]=='B')
+                {
+                    tmp1++;
+                    tmp2++;
+                    tmp3++;
+                    tmp4++;
+
+                }
+                else if(str[i]=='C')
+                {
+                    tmp1--;
+                    tmp2--;
+                    tmp3++;
+                    tmp4++;
+                }
+                else
+                {
+                    tmp1++;
+                    tmp2--;
+                    tmp3++;
+                    tmp4--; 
+                }
+                if(tmp1<0 )
+                {
+                    tmp1=INT_MAX;
+                }
+                if(tmp2<0 )
+                {
+                    tmp2=INT_MAX;
+                }if(tmp3<0 )
+                {
+                    tmp3=INT_MAX;
+                }if(tmp4<0 )
+                {
+                    tmp4=INT_MAX;
+                }
+            }
+            if(tmp1==0 || tmp2==0 || tmp3==0 || tmp4==0)
+            {
+                flg=true;
+            }
+        }
+        else if(str[0]=='C')
+        {
+            ll tmp1=0;
+            ll tmp2=0;
+            ll tmp3=0;
+            ll tmp4=0;
+
+            FOR(i,0,n)
+            {
+                if(str[i]=='C')
+                {
+                    tmp1++;
+                    tmp2++;
+                    tmp3++;
+                    tmp4++;
+
+                }
+                else if(str[i]=='B')
+                {
+                    tmp1--;
+                    tmp2--;
+                    tmp3++;
+                    tmp4++;
+                }
+                else
+                {
+                    tmp1++;
+                    tmp2--;
+                    tmp3++;
+                    tmp4--; 
+                }
+                if(tmp1<0 )
+                {
+                    tmp1=INT_MAX;
+                }
+                if(tmp2<0 )
+                {
+                    tmp2=INT_MAX;
+                }if(tmp3<0 )
+                {
+                    tmp3=INT_MAX;
+                }if(tmp4<0 )
+                {
+                    tmp4=INT_MAX;
+                }
+            }
+            if(tmp1==0 || tmp2==0 || tmp3==0 || tmp4==0)
+            {
+                flg=true;
+            }
+        }
+        if(flg)
+        {
+            cout<<"YES"<<endl;
+        }
+        else
+        {
+            cout<<"NO"<<endl;
+        }
     }
     return 0;
 }

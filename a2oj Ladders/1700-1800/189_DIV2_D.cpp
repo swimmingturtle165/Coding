@@ -264,37 +264,32 @@ signed main(int argc, char** argv)
         ll n;
         cin>>n;
         vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        
-        stack<pll> st;
-        ll ans=0;
-        st.push({inp[0],0});
-        FOR(i,1,n)
-        {
-            if(inp[i]>inp[i-1])
-            {
-                while (st.size()>0 && st.top().first<inp[i])
-                {
-                    st.pop();
-                }
-                if(st.empty())
-                {
-                    
-                }
-                else if(st.size()==1)
-                {
-                    
-                }
-                else
-                {
-                    
-                }
-                
-                
-                
-            }
+        vector<ll> strg(n,-1);
 
+        FOR(i,0,n) cin>>inp[i];
+        stack<ll> st;
+        ll ans=-1;
+        FOR(i,0,n)
+        {
+            ll tmp=1; 
+            while (st.size()>0 && inp[st.top()]<inp[i])
+            {
+                tmp=max(tmp,strg[st.top()]+1);
+                st.pop();
+            }
+            if(st.size()==0)
+            {
+                tmp=0;
+            }
+           strg[i]=tmp;
+           ans=max(ans,tmp);
+           st.push(i);
+            
+            
         }
+        // dispvector<ll>(strg);
+        cout<<ans<<endl;
+      
     }
     return 0;
 }

@@ -267,28 +267,38 @@ signed main(int argc, char** argv)
         FOR(i,0,n) cin>>inp[i];
         real=inp;
         ll ans=0;
-        vector<ll> strg(n,0);
+        vector<ll> strg(n+3,0);
        
         FOR(i,0,n)
         {    
-            inp[i]=max(1ll,inp[i]-strg[i]);
-            strg[i]-=(real[i]-inp[i]);
-            ans+=(inp[i]-1);
-            strg[i]+=(inp[i]-1);
-            ll maxi=max(n-1,i+strg[i]);
-            if(i>=n-1)
+            if(inp[i]==1)
             {
+                strg[i+1]+=strg[i];
                 continue;
             }
-            FORDE(j,maxi,i+2)
+            else
             {
-                if(inp[j]==1)
+
+                FOR(j,2,1+inp[i])
                 {
-                    strg[j]++;
-                    
+                    if(i+j>=n)
+                    {
+                        break;
+                    }
+                    strg[i+j]++;
                 }
-                inp[j]=max(1ll,inp[i]-1);
-            }   
+                ll extra=(inp[i]-1-strg[i]);
+                if(extra<0)
+                {
+                    strg[i+1]+=abs(extra);
+                }
+                else
+                {
+                    ans+=extra;
+                }
+            }
+
+
            
         }
         cout<<ans<<endl;

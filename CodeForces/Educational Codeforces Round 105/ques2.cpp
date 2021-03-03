@@ -263,8 +263,113 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
+        vector<ll> inp(4);
+        FOR(i,0,4) cin>>inp[i];
+        ll cnt_n1=0;
+        ll cnt_n2=0;
+        FOR(i,0,4)
+        {
+            if(inp[i]==n-1)
+            {
+                cnt_n1++;
+            }
+            else if(inp[i]==n)
+            {
+                cnt_n2++;
+            }
+        }
+        if(cnt_n2+cnt_n1==0)
+        {
+            cout<<"YES"<<endl;
+        }
+        else 
+        {
+            bool flg=true;
+            FOR(i,0,4)
+            {
+                if(inp[i]<2)
+                {
+                    flg=false;
+                }
+            }
+            if(flg)
+            {
+                cout<<"YES"<<endl;
+                continue;
+            }
+            else
+            {
+                flg=true;
+            }
+            FOR(i,0,4)
+            {
+                if(inp[i]==n-1)
+                {
+                    if(inp[(i+3)%4]>0 && inp[(i+1)%4]==0)
+                    {
+                        inp[i]=0;
+
+                        inp[(i+3)%4]--;
+                    }
+                    else if(inp[(i+1)%4]>0 && inp[(i+3)%4]==0)
+                    {
+                        inp[i]=0;
+                        inp[(i+1)%4]--;
+                    }
+                    else if(inp[(i+1)%4]>0 && inp[(i+3)%4]>0)
+                    {
+                        inp[i]--;
+
+                        if(inp[(i+1)%4]>inp[(i+3)%4])
+                        {
+                        inp[(i+1)%4]--;
+
+                        }
+                        else
+                        {
+
+                        inp[(i+3)%4]--;
+
+                        }
+                    }
+                    else
+                    {
+                        flg=false;
+                        break;
+
+                    }
+                }
+                else if(inp[i]==n)
+                {
+
+                    if(inp[(i+3)%4]>0 && inp[(i+1)%4]>0)
+                    {
+                        inp[i]=0;
+                        
+                        inp[(i+1)%4]--;
+
+                        inp[(i+3)%4]--;
+                        
+
+                    }
+                    else
+                    {
+                        flg=false;
+                        break;
+                    }
+                }
+
+            }
+            if(flg)
+            {
+                cout<<"YES"<<endl;
+
+            }
+            else
+            {
+                cout<<"NO"<<endl;
+            }
+        }
         
     }
     return 0;

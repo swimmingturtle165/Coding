@@ -261,11 +261,96 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        
+        ll n,m;
+        cin>>n>>m;
+        vector<ll> boxes(n);
+        vector<ll> pts1(m);
+
+        unordered_set<ll> pts;
+        FOR(i,0,n) cin>>boxes[i];
+        FOR(i,0,m)
+        {
+            ll tmp;
+            cin>>tmp;
+            pts1[i]=tmp;
+            pts.insert(tmp);
+        }
+        ll left=0;
+        ll right=0;
+        FOR(i,0,n)
+        {
+            if(boxes[i]<=0)
+            {
+                left++;
+            }
+            if(boxes[i]>=0)
+            {
+                right++;
+            }
+        }
+
+
+        vector<ll> left_side(left);
+        vector<ll> right_side(right);
+        vector<ll> left_of_it(left+1,0);
+        vector<ll> right_of_it(right+1,0);
+
+        FOR(i,0,n)
+        {
+            if(boxes[i]<=0)
+            {
+                left_side[i]=boxes[i];
+                if(pts.count(boxes[i]))
+                {
+                    left_of_it[i+1]=1+left_of_it[i];
+                }
+                else
+                {
+                    left_of_it[i+1]=1+left_of_it[i];
+
+                }
+            }
+            if(boxes[i]>=0)
+            {
+                right_side[i-right]=boxes[i];
+            }
+        }
+        FORDE(i,right-1,0)
+        {
+            if(pts.count(right_side[i]))
+            {
+                right_of_it[i]=1+right_of_it[i+1];
+            }
+            else
+            {
+                right_of_it[i]=right_of_it[i+1];
+
+            }
+        }
+        ll left_max=left_of_it[left];
+        ll right_max=right_of_it[0];
+
+        FORDE(i,left-1,0)
+        {
+            ll start=left_side[i];
+            ll end=i==0? INT64_MIN : left_side[i-1]+1;
+            ll tmp_end=lower_bound(pts1.begin(),pts1.end(),end) - pts1.begin();
+            
+            ll tmp_start=lower_bound(pts1.begin(),pts1.end(),start) - pts1.begin();
+            left_max=max(tmp_start+1+left_of_it[i]-tmp_end,left_max);
+
+        }
+        FOR(i,0,right)
+        {
+            ll start=right_side[i];
+            ll end= i==right-1? INT64_MAX : right_side[i+1]-1;
+            ll tmp_end=lower_bound(pts1.begin(),pts1.end(),end) - pts1.begin();
+            
+            ll tmp_start=lower_bound(pts1.begin(),pts1.end(),start) - pts1.begin();
+
+            right_max=max(tmp_start+1+right_of_it[i]-tmp_end,right_max);
+        }
+        cout<<left_max+right_max<<endl;
     }
     return 0;
 }
