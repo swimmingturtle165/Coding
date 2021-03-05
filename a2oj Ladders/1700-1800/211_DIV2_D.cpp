@@ -258,91 +258,10 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
     while(t--)
     {
-        ll n,m,q;
-        cin>>n>>m>>q;
-        vector<string> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        vector<vector<ll>> dp_v(n+1,vector<ll>(m+1,0));
-        vector<vector<ll>> dp_h(n+1,vector<ll>(m+1,0));
-         FORDE(i,n-1,0)
-            {
-                // n*m complexity for this loop
-                FORDE(j,m-1,0)
-                {
-                    if(inp[i][j]=='0')
-                    {
-                        dp_h[i][j]=1+dp_h[i][j+1];
-                        dp_v[i][j]=1+dp_v[i+1][j];
-
-                    }
-                }
-            }
-            vector<vector<vector<ll>>> strg_v(n,vector<vector<ll>>(m,vector<ll>(m,0)));
-            vector<vector<vector<ll>>> strg_h(n,vector<vector<ll>>(m,vector<ll>(n,0)));
-
-            FOR(i,0,n)
-            {
-                FOR(j,0,m)
-                {
-                    // calculating for (i,j)
-                    // horizontal
-
-                    ll tmp=dp_v[i][j];
-
-                    strg_h[i][j][j]=tmp;
-                    
-                    FOR(k,j+1,m)
-                    {
-                        tmp=min(tmp,dp_v[i][k]);
-                        strg_h[i][j][k]=tmp+strg_v[i][j][k-1];
-                    }
-
-                    // tmp=dp_v[i][j];
-
-                    // // vertical
-                    // strg_v[i][j][i]=tmp;
-
-                    // FOR(k,j+1,n)
-                    // {
-                    //     tmp=min(tmp,dp_v[i][k]);
-                    //     strg_v[i][j][k]=tmp+strg_v[i][j][k-1];
-                    // }
-                }
-            }
-
-        while (q--)
-        {
-            ll a,b,c,d;
-            cin>>a>>b>>c>>d;
-          
-            
-            ll ans=0;
-            a--;
-            b--;
-            c--;
-            d--;
-            FORE(i,a,c)
-            {
-                FORE(j,b,d)
-                {
-                        cout<<strg_h[i][j][d]<<" ";
-                        ans+=strg_h[i][j][d];
-
-                    
-                }
-                cout<<endl;
-            }
-
-           
-           
-            cout<<ans<<endl;
-
-        }
         
-
     }
     return 0;
 }

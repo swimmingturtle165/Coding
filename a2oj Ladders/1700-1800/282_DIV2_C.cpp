@@ -258,91 +258,85 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
     while(t--)
     {
-        ll n,m,q;
-        cin>>n>>m>>q;
-        vector<string> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        vector<vector<ll>> dp_v(n+1,vector<ll>(m+1,0));
-        vector<vector<ll>> dp_h(n+1,vector<ll>(m+1,0));
-         FORDE(i,n-1,0)
-            {
-                // n*m complexity for this loop
-                FORDE(j,m-1,0)
-                {
-                    if(inp[i][j]=='0')
-                    {
-                        dp_h[i][j]=1+dp_h[i][j+1];
-                        dp_v[i][j]=1+dp_v[i+1][j];
+        string str;
+        cin>>str;
+        vector<int> strg(str.size(),0);
+        ll n=str.size();
+        int done=0;
+        vector<int> opening(n+1,0);
+        vector<int> closing(n+1,0);
+        vector<int> ans;
+        ll idx=0;
+        ll last_opening=0;
+        ll last_closing=0;
 
-                    }
-                }
-            }
-            vector<vector<vector<ll>>> strg_v(n,vector<vector<ll>>(m,vector<ll>(m,0)));
-            vector<vector<vector<ll>>> strg_h(n,vector<vector<ll>>(m,vector<ll>(n,0)));
-
-            FOR(i,0,n)
-            {
-                FOR(j,0,m)
-                {
-                    // calculating for (i,j)
-                    // horizontal
-
-                    ll tmp=dp_v[i][j];
-
-                    strg_h[i][j][j]=tmp;
-                    
-                    FOR(k,j+1,m)
-                    {
-                        tmp=min(tmp,dp_v[i][k]);
-                        strg_h[i][j][k]=tmp+strg_v[i][j][k-1];
-                    }
-
-                    // tmp=dp_v[i][j];
-
-                    // // vertical
-                    // strg_v[i][j][i]=tmp;
-
-                    // FOR(k,j+1,n)
-                    // {
-                    //     tmp=min(tmp,dp_v[i][k]);
-                    //     strg_v[i][j][k]=tmp+strg_v[i][j][k-1];
-                    // }
-                }
-            }
-
-        while (q--)
+        bool flg=true;
+        FOR(i,0,n)
         {
-            ll a,b,c,d;
-            cin>>a>>b>>c>>d;
-          
-            
-            ll ans=0;
-            a--;
-            b--;
-            c--;
-            d--;
-            FORE(i,a,c)
+            if(str[i]=='(')
             {
-                FORE(j,b,d)
-                {
-                        cout<<strg_h[i][j][d]<<" ";
-                        ans+=strg_h[i][j][d];
-
-                    
-                }
-                cout<<endl;
+            opening[i+1]=opening[i]+1;
+            closing[i+1]=closing[i];
+            last_opening=i;
             }
+            else if(str[i]==')')
+            {
+            opening[i+1]=opening[i];
+            closing[i+1]=closing[i]+1;
+            last_closing=i;
 
-           
-           
-            cout<<ans<<endl;
-
+            }    
+            else 
+            {
+            idx=i;
+            opening[i+1]=opening[i];
+            closing[i+1]=closing[i]+1;
+            ans.pb(1);
+            idx=i;
+            }
+            if(closing[i+1]>opening[i+1])
+            {
+                flg=false;
+                break;
+            }        
         }
-        
+        stack<char> st;
+        FOR(i,idx+1,n)
+        {
+            if(str[i]=='(')
+            {
+                st.push(str[i]);
+            }
+            else if(st.size()>0)
+            {
+                st.pop();
+            }
+        }
+        if(st.size()>0)
+        {
+            flg=false;
+        }
+        if(!flg ||(last_opening>last_closing && last_opening>idx))
+        {
+            cout<<-1<<endl;
+            return 0;
+        }
+        int v1=opening[n]-closing[n];
+        if(v1<0)
+        {
+            cout<<-1<<endl;
+            return 0;
+        }
+        ans[ans.size()-1]+=v1;
+        FOR(i,0,ans.size())
+        {
+            cout<<ans[i]<<endl;
+        }
 
+        
+        
     }
     return 0;
 }
