@@ -248,7 +248,41 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+bool check(int curr,vector<bool> strg,int upper_limit)
+{
+    int v1 = curr / 10;
+    int v2 = curr % 10;
 
+    if(strg[v1]==false || strg[v2]==false)
+    {
+        return false;
+    }
+    vector<ll> con(10);
+    con[0] = 0;
+    con[1] = 1;
+    con[2] = 5;
+    con[5] = 2;
+    con[8] = 8;
+    
+    v1 = con[v1];
+    v2 = con[v2];
+
+
+
+    if (v2 * 10 + v1 >= upper_limit)
+    {
+        return false;
+    }
+    return true;
+}
+
+string conv(int n)
+{
+    string ans = "00";
+    ans[0] ='0'+ (n / 10);
+    ans[1] ='0'+ (n % 10);
+    return ans;
+}
 
 signed main(int argc, char** argv)
 {
@@ -258,25 +292,85 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    while(t--)
+    cin>>t;
+    vector<bool> strg(10, false);
+    strg[0] = true;
+    strg[1] = true;
+    strg[2] = true;
+    strg[5] = true;
+    strg[8] = true;
+
+    while (t--)
     {
-        ll n,m;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
-            cin >> inp[i];
+        ll h, m;
+        cin >> h >> m;
+        string str;
+        cin >> str;
+        ll hour = 10 * (str[0] - '0') + (str[1] - '0');
+        ll min = 10 * (str[3] - '0') + (str[4] - '0');
+        vector<bool> valid_hr(h+1,true) ;
+        vector<bool> valid_min(m+1,true) ;
+        ll ans = ((h - hour)*m+(m-min))%(h*m);
+        int tmp_h = 0;
+        int tmp_m = 0;
 
-        unordered_set<ll> strg;
-        strg.insert(inp[0]);
-        ll maxi 
-        FOR(i, 1, n)
+        FOR(i, hour, h )
         {
-            strg.insert(inp[i]);
-
-            inp[i] += inp[i - 1];
+            if(check(i,strg,m))
+            {
+                tmp_h = i;
+                break;
+            }
         }
+        
+        FOR(i,min,m)
+        {
+            if(check(i,strg,h))
+            {
+                tmp_m = i;
+                break;
+            }
+        }
+        // cout << hour << " ** " << min << endl;
+        // cout << tmp_h << " ** " << tmp_m << endl;
+        if (tmp_h == 0 && tmp_m == 0)
+        {
+            cout << "00:00" << endl;
+        }
+        else if(tmp_h!=hour)
+        {
+            cout << conv(tmp_h) << ":00" << endl;
+        }
+        else 
+        {
+            if(tmp_h==hour && tmp_m<min)
+            {
+                FOR(i, hour+1, h )
+                {
+                    if(check(i,strg,m))
+                    {
+                        tmp_h = i;
+                        break;
+                    }
+                }
+                if(tmp_h==hour)
+                {
+                    cout << "00:00" << endl;
 
-        ll sum = inp.back();
-        if(sum<0 && inp)
+                }
+                else
+                {
+                    cout << conv(tmp_h) << ":00" << endl;
+                }
+            }
+
+            else
+            {
+            cout << conv(tmp_h) <<':'<<conv(tmp_m) << endl;
+
+            }
+
+        }
 
     }
     return 0;

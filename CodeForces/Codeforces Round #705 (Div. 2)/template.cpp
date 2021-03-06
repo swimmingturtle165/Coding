@@ -258,26 +258,10 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n,m;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
-            cin >> inp[i];
-
-        unordered_set<ll> strg;
-        strg.insert(inp[0]);
-        ll maxi 
-        FOR(i, 1, n)
-        {
-            strg.insert(inp[i]);
-
-            inp[i] += inp[i - 1];
-        }
-
-        ll sum = inp.back();
-        if(sum<0 && inp)
-
+        
     }
     return 0;
 }

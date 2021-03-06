@@ -258,26 +258,111 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n,m;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
-            cin >> inp[i];
-
-        unordered_set<ll> strg;
-        strg.insert(inp[0]);
-        ll maxi 
-        FOR(i, 1, n)
+        ll n, k;
+        cin >> n >> k;
+        string str;
+        cin >> str;
+        if(n%k!=0)
         {
-            strg.insert(inp[i]);
-
-            inp[i] += inp[i - 1];
+            cout << -1 << endl;
+            continue;
         }
+        else if(k==1)
+        {
+            cout << str << endl;
+        }
+        else 
+        {
+            vector<ll> cnt(26, 0);
 
-        ll sum = inp.back();
-        if(sum<0 && inp)
+            FOR(i,0,n) 
+            {
+            cnt[str[i]-'a']++;
+            }
+            // dispvector<ll>(cnt);
+            bool flg = true;
+            vector<ll> req(26, 0);
+            ll sum = 0;
+            FOR(i, 0, 26)
+            {
+                req[i] = (k - cnt[i] % k) % k;
+                if (req[i] != 0)
+                {
+                    flg = false;
+                }
+                sum += req[i];
+            }
+            if(flg)
+            {
+                // cout << sum << endl;
+                cout << str << endl;
+            }
+            else
+            {
+                string ans;
+                bool flg = false;
+                FORDE(i, n - 1, 0)
+                {
+                    sum -= req[str[i] - 'a'];
+                    cnt[str[i] - 'a']--;
+                    req[str[i] - 'a'] = (k - cnt[str[i] - 'a'] % k) % k;
+                    sum += req[str[i] - 'a'];
+                    cout << i << " " << sum << endl;
+                    if (n-i>=sum &&  (n - i - sum) % k == 0 && str[i-1] != 'z')
+                    {
+                        i--;
+                        flg = true;
+                        sum -= req[str[i] - 'a'];
+                        cout << sum << " " << req[str[i] - 'a'] << endl;
+                        cnt[str[i] - 'a']--;
+                        req[str[i] - 'a'] = (k - cnt[str[i] - 'a'] % k) % k;
+                        sum += req[str[i] - 'a'];
+                        cout << sum << " " << req[str[i] - 'a'] << endl;
 
+                        str[i]++;
+                        sum -= req[str[i] - 'a'];
+                        cout << sum << " " << req[str[i] - 'a'] << endl;
+
+                        cnt[str[i] - 'a']++;
+                        req[str[i] - 'a'] = (k - cnt[str[i] - 'a'] % k) % k;
+                        sum += req[str[i] - 'a'];
+                        cout << sum << " " << req[str[i] - 'a'] << endl;
+
+                        cout << sum << endl;
+                        dispvector<ll>(req);
+                        ll k1 = n - 1 - i - sum;
+                        cout << " ** " << k1 << endl;
+                        cout << i << endl;
+                        FOR(j, i + 1, i + k1 + 1)
+                        {
+                            str[j] = 'a';
+                        }
+                        ll curr = i + k1+1;
+                        FOR(j,0,26)
+                        {
+                            FOR(m,0,req[j])
+                            {
+                                str[curr] = 'a' + j;
+                                curr++;
+                            }
+                        }
+                        ans = str;
+                        break;
+                    }
+                }
+                if(flg)
+                {
+                    cout << ans << endl;
+                }
+                else
+                {
+                    cout << -1 << endl;
+                }
+            }
+        }
     }
     return 0;
 }

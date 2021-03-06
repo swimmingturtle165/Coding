@@ -248,7 +248,47 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+class NumArray {
+    public:
+    vector<ll> tree;
+    int N;
+    void buildTree(vector<ll> &nums) 
+    {
+        for (int i = 0, j = N; i < N;) tree[j++] = nums[i++]; // the input array values are stored in `tree[N...(2 * N - 1)]`
+        for (int i = N - 1; i > 0; --i) tree[i] = gcd(tree[2 * i] , tree[2 * i + 1]); // from `tree[N-1]` to `tree[1]`, build the non-leaf nodes. Note that we don't use `tree[0]`.
+    }
+    NumArray(vector<ll>& nums) 
+    {
+        if (nums.empty()) return;
+        N = nums.size();
+        tree = vector<ll>(N * 2);
+        buildTree(nums); // Segment tree requires initialization.
+    }
 
+    void update(int i, int val) {
+        i += N; // Offset N to get the leaf node
+        tree[i] *= val;
+        tree[i] %= MOD;
+        while (i > 0)
+        {
+            i /= 2; // Move to the parent node
+            tree[i] = gcd(tree[2 * i], tree[2 * i + 1]); // Update the parent node
+        }
+    }
+
+    ll gcdr(int i, int j) {
+        i += N; // Offset N to get the leaf nodes
+        j += N;
+        ll sum = 0;
+        while (i <= j) { // When the range is not empty
+            if (i % 2) sum =gcd(sum,tree[i++]);
+            if (j % 2 == 0) sum =gcd(sum,tree[j--]);;
+            i /= 2;
+            j /= 2;
+        }
+        return sum;
+    }
+};
 
 signed main(int argc, char** argv)
 {
@@ -260,24 +300,20 @@ signed main(int argc, char** argv)
     long t=1;
     while(t--)
     {
-        ll n,m;
+        ll n, q;
+        cin >> n >> q;
         vector<ll> inp(n);
-        FOR(i, 0, n)
-            cin >> inp[i];
+        FOR(i, 0, n)  cin >> inp[i];
 
-        unordered_set<ll> strg;
-        strg.insert(inp[0]);
-        ll maxi 
-        FOR(i, 1, n)
+        NumArray arr = NumArray(inp);
+
+        while(q--)
         {
-            strg.insert(inp[i]);
-
-            inp[i] += inp[i - 1];
+            ll a, b;
+            cin >> a >> b;
+            arr.update(a-1 , b);
+            cout << arr.gcdr(0, n - 1) << endl;
         }
-
-        ll sum = inp.back();
-        if(sum<0 && inp)
-
     }
     return 0;
 }
