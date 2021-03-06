@@ -248,41 +248,7 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-bool solve(int idx,int n,vector<int>& inp,vector<int>& vst)
-{
-        if(idx==4)
-        {
-            vector<int> tmp = inp;
-            FOR(i,0,4)
-            {
-                tmp[(i + 3) % 4] -= vst[i];
-                tmp[i] -= vst[i];
-                
-            }
-            FOR(i,0,4)
-            {
-                if(tmp[i]<0 || tmp[i]>n-2)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        else
-        {
-            bool flg = true;
-            FOR(i, 0, 2)
-            {
-                vst[idx] = i;
-                flg=solve(idx + 1, n, inp, vst);
-                if(flg)
-                {
-                    return flg;
-                }
-            }
-        }
-        return false;
-}
+
 
 signed main(int argc, char** argv)
 {
@@ -295,22 +261,7 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        int n;
-        cin>>n;
-        vector<int> inp(4);
-        vector<int> vst(4,0);
-
-        FOR(i, 0, 4)
-            cin >> inp[i];
-
-        if(solve(0,n,inp,vst))
-        {
-            cout << "YES" << endl;
-        }
-        else
-        {
-            cout << "NO" << endl;
-        }
+        
     }
     return 0;
 }

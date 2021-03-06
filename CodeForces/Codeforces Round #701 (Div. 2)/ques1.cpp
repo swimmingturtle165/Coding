@@ -261,7 +261,7 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        
+            
     }
     return 0;
 }
