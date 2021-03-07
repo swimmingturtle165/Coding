@@ -248,7 +248,39 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+ll solve(vector<ll> &arr,vector<ll>&pts)
+{
+    if(arr.size()==0 || pts.size()==0)
+    {
+        return 0;
+    }
+    int n = arr.size();
+    int m = pts.size();
+    ll ans = 0;
+    vector<ll> strg(m + 1);
+    FORDE(i,m-1,0)
+    {
+        auto it = lower_bound(arr.begin(), arr.end(), pts[i]);
+        if(it==arr.end())
+            strg[i] = strg[i + 1];
+        else
+            strg[i] = strg[i + 1] + (*it == pts[i]);
 
+    }
+    ans = strg[0];
+    FOR(i,0,m)
+    {
+        // stack till ith special position and then start removing and placing in left side till each one is occupied by one
+        auto it = lower_bound(arr.begin(), arr.end(),pts[i]);
+        if(it==arr.end() || (*it>pts[i]))
+        {
+            it--;
+        }
+        it = lower_bound(pts.begin(), pts.end(), pts[i] + int(arr.begin() - it));
+        ans = max(ans, strg[i + 1] + int(pts.begin() + i+1 - it));
+    }
+    return ans;
+}
 
 signed main(int argc, char** argv)
 {
@@ -263,94 +295,43 @@ signed main(int argc, char** argv)
     {
         ll n,m;
         cin>>n>>m;
-        vector<ll> boxes(n);
-        vector<ll> pts1(m);
+        vector<ll> left_boxes, right_boxes, left_pnts, right_pnts;
 
-        unordered_set<ll> pts;
-        FOR(i,0,n) cin>>boxes[i];
-        FOR(i,0,m)
+        FOR(i,0,n) 
         {
             ll tmp;
-            cin>>tmp;
-            pts1[i]=tmp;
-            pts.insert(tmp);
-        }
-        ll left=0;
-        ll right=0;
-        FOR(i,0,n)
-        {
-            if(boxes[i]<=0)
+            cin >> tmp;
+            if(tmp<0)
             {
-                left++;
-            }
-            if(boxes[i]>=0)
-            {
-                right++;
-            }
-        }
-
-
-        vector<ll> left_side(left);
-        vector<ll> right_side(right);
-        vector<ll> left_of_it(left+1,0);
-        vector<ll> right_of_it(right+1,0);
-
-        FOR(i,0,n)
-        {
-            if(boxes[i]<=0)
-            {
-                left_side[i]=boxes[i];
-                if(pts.count(boxes[i]))
-                {
-                    left_of_it[i+1]=1+left_of_it[i];
-                }
-                else
-                {
-                    left_of_it[i+1]=1+left_of_it[i];
-
-                }
-            }
-            if(boxes[i]>=0)
-            {
-                right_side[i-right]=boxes[i];
-            }
-        }
-        FORDE(i,right-1,0)
-        {
-            if(pts.count(right_side[i]))
-            {
-                right_of_it[i]=1+right_of_it[i+1];
+                left_boxes.pb(0 - tmp);
             }
             else
             {
-                right_of_it[i]=right_of_it[i+1];
-
+                right_boxes.pb(tmp);
             }
         }
-        ll left_max=left_of_it[left];
-        ll right_max=right_of_it[0];
 
-        FORDE(i,left-1,0)
+        FOR(i,0,m)
         {
-            ll start=left_side[i];
-            ll end=i==0? INT64_MIN : left_side[i-1]+1;
-            ll tmp_end=lower_bound(pts1.begin(),pts1.end(),end) - pts1.begin();
-            
-            ll tmp_start=lower_bound(pts1.begin(),pts1.end(),start) - pts1.begin();
-            left_max=max(tmp_start+1+left_of_it[i]-tmp_end,left_max);
-
+             ll tmp;
+            cin >> tmp;
+            if(tmp<0)
+            {
+                left_pnts.pb(0 - tmp);
+            }
+            else
+            {
+                right_pnts.pb(tmp);
+            }
         }
-        FOR(i,0,right)
-        {
-            ll start=right_side[i];
-            ll end= i==right-1? INT64_MAX : right_side[i+1]-1;
-            ll tmp_end=lower_bound(pts1.begin(),pts1.end(),end) - pts1.begin();
-            
-            ll tmp_start=lower_bound(pts1.begin(),pts1.end(),start) - pts1.begin();
 
-            right_max=max(tmp_start+1+right_of_it[i]-tmp_end,right_max);
-        }
-        cout<<left_max+right_max<<endl;
+        reverse(left_boxes.begin(), left_boxes.end());
+        reverse(left_pnts.begin(), left_pnts.end());
+
+        ll left_max = solve(left_boxes, left_pnts);
+        ll right_max = solve(right_boxes, right_pnts);
+
+        cout << right_max + left_max<< endl;
     }
     return 0;
 }
