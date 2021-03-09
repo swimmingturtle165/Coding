@@ -258,32 +258,35 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n,q,k;
-        cin >> n >> q >> k;
-        vector<ll> inp(n + 2, 0);
-        FOR(i, 0, n)
-            cin >> inp[i + 1];
-        inp[n + 1] = k;
-        vector<ll> strg(n + 1);
-        FOR(i, 0, n+1)
-        strg[i] = 2*(inp[i + 1] - 1-inp[i]);
-       
-        // dispvector<ll>(strg);
-       
-        FOR(i,1,n+1)
-        strg[i] += strg[i - 1];
-        // dispvector<ll>(inp);
-        // dispvector<ll>(strg);
-
-        while (q--)
+        ll a, b;
+        cin >> a >> b;
+        ll v = min(a, b);
+        ll ans = 0;
+        // cout << v << endl;
+        FOR(i, 1, v )
         {
-            ll left, right;
-            cin >> left >> right;
-            // cout << (inp[left ] - 1) <<" "<< (strg[right - 1] - strg[left - 1]) <<" "<< (k  - inp[right ]) << endl;
-            cout << (inp[left ] - 1) +((strg[right - 1] - strg[left - 1])) + (k  - inp[right ]) << endl;
+            ll denominator = b - i;
+            ll numerator_start = (i * (i + 2));
+            ll numerator_end = a;
+            if(numerator_start>numerator_end)
+            {
+                break;
+            }
+            numerator_end -= (a - numerator_start) % i;
+
+            ll num = (numerator_end - numerator_start) / i;
+            num++;
+            ll tmp = min(num, denominator);
+            if(tmp<=0)
+            {
+                break;
+            }
+            ans += tmp;
         }
+        cout << ans << endl;
     }
     return 0;
 }

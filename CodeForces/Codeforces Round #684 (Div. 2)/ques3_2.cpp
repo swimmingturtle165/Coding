@@ -374,58 +374,82 @@ signed main(int argc, char** argv)
         oper[2] = 1;
         oper[3] = 4;
 
-        FOR(f,0,2)
-        {
-
-
-        FOR(k,0,4)
-        {
-            for (int i = 0; i < n; i +=2)
+        
+            FOR(i,0,n-1)
             {
-                for (int j = 0; j < m;j+=2)
+                FOR(j,0,m)
                 {
-                    int start_r = i == n - 1 ? i - 1 : i;
-                    int start_c = j == m - 1 ? j - 1 : j;
-                    int end_r = min(i + 1, n - 1);
-                    int end_c = min(j + 1, m - 1);
-                    int cnt = 0;
-                    FORE(q,start_r,start_r+1)
+                    if(strg[i][j]=='1')
                     {
-                        FORE(w,start_c,start_c+1)
+                        ll cnt = 0;
+                        ll start_c = j == m - 1 ? j - 1 : j;
+                        FOR(k, i, i + 2)
                         {
-                            // cout << strg[q][w] << " ";
-                            if (strg[q][w] == '1')
+                            FOR(x,start_c,start_c+2)
                             {
-                                cnt++;
+                                if(strg[k][x]=='1')
+                                {
+                                    cnt++;
+                                }
                             }
                         }
-                        // cout << endl;
-                    }
-                    if(cnt==oper[k])
-                    {
-                        // cout << cnt <<" && "<< endl;
-                        if (cnt == 1)
+                         if (cnt == 1)
                         {
-                            soln1(start_r, start_c, strg);
+                            soln1(i, start_c,strg);
                         }
-                        if(cnt==2)
+                        else if(cnt==2)
                         {
-                            soln2(start_r, start_c, strg);
+                            soln2(i, start_c,strg);
                         }
-                        if(cnt==3)
+                        else if(cnt==3)
                         {
-                            soln3(start_r, start_c, strg);
+                            soln3(i, start_c,strg);
+
                         }
-                        if(cnt==4)
+                        else if(cnt==4)
                         {
-                            soln4(start_r, start_c, strg);
+                            soln4(i, start_c, strg);
                         }
+
                     }
                 }
             }
-        }
-        }
-       
+                // for (int j = 0; j < m;j+=2)
+                // {
+                //     ll start = j==m-1 ? j-1:j;
+                //     ll end = start + 1;
+                //     ll cnt = 0;
+                //     FOR(i,start,end+1)
+                //     {
+                //         if(strg[n-1][i]=='1')
+                //         {
+                //             cnt++;
+                //         }
+                //          if(strg[n-2][i]=='1')
+                //         {
+                //             cnt++;
+                //         }
+                        
+                //     }
+                //     if (cnt == 1)
+                //     {
+                //         soln1(n - 2, start,strg);
+                //     }
+                //     else if(cnt==2)
+                //     {
+                //         soln2(n - 2, start,strg);
+                //     }
+                //     else if(cnt==3)
+                //     {
+                //         soln3(n - 2, start,strg);
+
+                //     }
+                //     else if(cnt==4)
+                //     {
+                //         soln4(n - 2, start, strg);
+                //     }
+                // }
+
         cout << ans.size() << endl;
         FOR(i,0,ans.size())
         {

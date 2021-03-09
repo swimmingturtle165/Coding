@@ -261,7 +261,46 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-            
+            ll a,b;
+            cin >> a >> b;
+            if(b>a)
+            {
+                cout << 1 << endl;
+            }
+            else if(a==b)
+            {
+                cout << 2 << endl;
+            }
+            else
+            {
+                ll ans = a+2-b;
+                ll v1 = pow(a, 0.5);
+                ll v2 = 0;
+                
+                FOR(j,0,100)
+                {
+                    ll i = b + j;
+                    if (i == 1)
+                    {
+                        continue;
+                    }
+                    ll tmp = ceil((log2(a)) / (log2(i)));
+                    // cout << tmp << "**  ";
+                    if(pow(i,tmp)<=a)
+                    {
+
+                    tmp += (j+1);
+                    }
+                    else
+                    {
+                    tmp += (j);
+
+                    }
+                    // cout << tmp << endl;
+                    ans = min(ans, tmp);
+                }
+                cout << ans << endl;
+            }
     }
     return 0;
 }
