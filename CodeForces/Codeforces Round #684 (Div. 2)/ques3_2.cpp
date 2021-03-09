@@ -375,81 +375,194 @@ signed main(int argc, char** argv)
         oper[3] = 4;
 
         
-            FOR(i,0,n-1)
+            FOR(i,0,n-2)
             {
                 FOR(j,0,m)
                 {
                     if(strg[i][j]=='1')
                     {
-                        ll cnt = 0;
-                        ll start_c = j == m - 1 ? j - 1 : j;
-                        FOR(k, i, i + 2)
+                        
+                        strg[i][j] = '0';
+                        vector<ll> strg1;
+
+                        strg1.pb(i + 1);
+                        strg1.pb(j + 1);
+
+                        if (j == m - 1)
                         {
-                            FOR(x,start_c,start_c+2)
+                            strg1.pb(i + 2);
+                            strg1.pb(j +1 );
+                             if(strg[i+1][j]=='1')
                             {
-                                if(strg[k][x]=='1')
-                                {
-                                    cnt++;
-                                }
+                                strg[i+1][j]--;
+                            }
+                            else
+                            {
+                                strg[i+1][j]++;
+                            }
+
+                            strg1.pb(i + 2);
+                            strg1.pb(j );
+                            if(strg[i+1][j-1]=='1')
+                            {
+                                strg[i+1][j-1]--;
+                            }
+                            else
+                            {
+                                strg[i+1][j-1]++;
                             }
                         }
-                         if (cnt == 1)
+                        else
                         {
-                            soln1(i, start_c,strg);
-                        }
-                        else if(cnt==2)
-                        {
-                            soln2(i, start_c,strg);
-                        }
-                        else if(cnt==3)
-                        {
-                            soln3(i, start_c,strg);
+                            strg1.pb(i + 1);
+                            strg1.pb(j +2);
+                            if(strg[i][j+1]=='1')
+                            {
+                                strg[i][j+1]--;
+                            }
+                            else
+                            {
+                                strg[i][j+1]++;
+                            }
 
+                            strg1.pb(i + 2);
+                            strg1.pb(j + 2);
+                            if(strg[i+1][j+1]=='1')
+                            {
+                                strg[i+1][j+1]--;
+                            }
+                            else
+                            {
+                                strg[i+1][j+1]++;
+                            }
                         }
-                        else if(cnt==4)
-                        {
-                            soln4(i, start_c, strg);
-                        }
+
+                        ans.pb(strg1); 
+                        // FOR(i1,0,n)
+                        // {
+                        //     FOR(i2,0,m)
+                        //     {
+                        //         cout << strg[i1][i2] << " ";
+                        //     }
+                        //     cout << endl;
+                        // }
+                        // cout << " && " << endl;
 
                     }
                 }
             }
-                // for (int j = 0; j < m;j+=2)
-                // {
-                //     ll start = j==m-1 ? j-1:j;
-                //     ll end = start + 1;
-                //     ll cnt = 0;
-                //     FOR(i,start,end+1)
-                //     {
-                //         if(strg[n-1][i]=='1')
-                //         {
-                //             cnt++;
-                //         }
-                //          if(strg[n-2][i]=='1')
-                //         {
-                //             cnt++;
-                //         }
+            
+            
+            FOR(j,0,m-2)
+            {
+                FOR(i,n-2,n)
+                {
+                    if(strg[i][j]=='1')
+                    {
+                        strg[i][j] = '0';
+
+                        vector<ll> strg1;
                         
-                //     }
-                //     if (cnt == 1)
-                //     {
-                //         soln1(n - 2, start,strg);
-                //     }
-                //     else if(cnt==2)
-                //     {
-                //         soln2(n - 2, start,strg);
-                //     }
-                //     else if(cnt==3)
-                //     {
-                //         soln3(n - 2, start,strg);
+                        strg1.pb(i + 1);
+                        strg1.pb(j + 1);
 
-                //     }
-                //     else if(cnt==4)
-                //     {
-                //         soln4(n - 2, start, strg);
-                //     }
-                // }
+                        if (i == n - 1)
+                        {
+                            strg1.pb(i );
+                            strg1.pb(j + 2);
 
+                            if(strg[i-1][j+1]=='1')
+                            {
+                                strg[i - 1][j + 1]--;
+                            }
+                            else
+                            {
+                                strg[i - 1][j + 1]++;
+                            }
+
+                            strg1.pb(i +1);
+                            strg1.pb(j +2);
+
+                            if(strg[i][j+1]=='1')
+                            {
+                                strg[i][j + 1]--;
+                            }
+                            else
+                            {
+                                strg[i][j + 1]++;
+                            }
+                        }
+                        else
+                        {
+                            strg1.pb(i + 1);
+                            strg1.pb(j + 2);
+
+                            if(strg[i][j+1]=='1')
+                            {
+                                strg[i][j + 1]--;
+                            }
+                            else
+                            {
+                                strg[i][j +1]++;
+                            }
+
+                            strg1.pb(i + 2);
+                            strg1.pb(j + 2);
+
+                            if(strg[i+1][j+1]=='1')
+                            {
+                                strg[i + 1][j + 1]--;
+                            }
+                            else
+                            {
+                                strg[i + 1][j + 1]++;
+                            }
+                        }
+                        
+                        ans.pb(strg1); 
+                        // FOR(i1,0,n)
+                        // {
+                        //     FOR(i2,0,m)
+                        //     {
+                        //         cout << strg[i1][i2] << " ";
+                        //     }
+                        //     cout << endl;
+                        // }
+                        // cout << " && " << endl;
+
+                    }
+                }
+            }
+            ll cnt = 0;
+
+            FOR(i,n-2,n)
+            {
+                FOR(j,m-2,m)
+                {
+                    if (strg[i][j] == '1')
+                    {
+                        cnt++;
+                    }
+                    
+                }
+            }
+            if(cnt==1)
+            {
+                soln1(n - 2, m - 2, strg);
+            }
+            if(cnt==2)
+            {
+                soln2(n - 2, m - 2, strg);
+            }
+            if(cnt==3)
+            {
+                soln3(n - 2, m - 2, strg);
+            }
+            if(cnt==4)
+            {
+                soln4(n - 2, m - 2, strg);
+            }
+                
         cout << ans.size() << endl;
         FOR(i,0,ans.size())
         {
