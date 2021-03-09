@@ -247,48 +247,74 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
-class NumArray {
-    public:
-    vector<ll> tree;
-    int N;
-    void buildTree(vector<ll> &nums) 
+
+ll ans = 1;
+unordered_map<ll, ll> curr;
+unordered_map<ll, unordered_map<ll, ll>> factors;
+unordered_map<ll, multiset<ll>> cnt;
+
+vector<ll> strg(200001);
+ll n;
+
+void upd(int idx, int val)
+{
+    // cout << idx << " %% " << val << endl;
+    vector<ll> tmp;
+    while(val!=1)
     {
-        for (int i = 0, j = N; i < N;) tree[j++] = nums[i++]; // the input array values are stored in `tree[N...(2 * N - 1)]`
-        for (int i = N - 1; i > 0; --i) tree[i] = gcd(tree[2 * i] , tree[2 * i + 1]); // from `tree[N-1]` to `tree[1]`, build the non-leaf nodes. Note that we don't use `tree[0]`.
-    }
-    NumArray(vector<ll>& nums) 
-    {
-        if (nums.empty()) return;
-        N = nums.size();
-        tree = vector<ll>(N * 2);
-        buildTree(nums); // Segment tree requires initialization.
+        tmp.pb(strg[val]);
+        val = val / strg[val];
     }
 
-    void update(int i, int val) {
-        i += N; // Offset N to get the leaf node
-        tree[i] *= val;
-        tree[i] %= MOD;
-        while (i > 0)
+    FOR(i,0,tmp.size())
+    {
+        ll prev = factors[idx][tmp[i]];
+        ll upd = prev + 1;
+        // cout << prev << " " << upd << " " << tmp[i] << endl;
+        
+        if (prev > 0)
         {
-            i /= 2; // Move to the parent node
-            tree[i] = gcd(tree[2 * i], tree[2 * i + 1]); // Update the parent node
+        cnt[tmp[i]].erase(cnt[tmp[i]].find(prev));
         }
-    }
+        
+        cnt[tmp[i]].insert(upd);
 
-    ll gcdr(int i, int j) {
-        i += N; // Offset N to get the leaf nodes
-        j += N;
-        ll sum = 0;
-        while (i <= j) { // When the range is not empty
-            if (i % 2) sum =gcd(sum,tree[i++]);
-            if (j % 2 == 0) sum =gcd(sum,tree[j--]);;
-            i /= 2;
-            j /= 2;
+        ll diff = 0;
+        
+        
+        if(cnt[tmp[i]].size()==n)
+        {
+            if (*cnt[tmp[i]].begin() != curr[tmp[i]])
+            {
+                diff = (*cnt[tmp[i]].begin()) - curr[tmp[i]];
+                curr[tmp[i]] += diff;
+            }
+            ans *= power(tmp[i], diff,MOD);
+            ans %= MOD;
         }
-        return sum;
+        factors[idx][tmp[i]]++;
     }
-};
+}
+
+void seive()
+{
+    FOR(i,0,200001)
+    {
+        strg[i] = i;
+    }
+    FOR(i,2,1500)
+    {
+        if(strg[i]==i)
+        {
+            ll k = 2;
+            while(k*i<200001)
+            {
+                strg[i * k] = i;
+                k++;
+            }
+        }
+    }
+}
 
 signed main(int argc, char** argv)
 {
@@ -298,21 +324,27 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    seive();
+
     while(t--)
     {
-        ll n, q;
+        ll q;
         cin >> n >> q;
         vector<ll> inp(n);
-        FOR(i, 0, n)  cin >> inp[i];
+        FOR(i, 0, n) 
+        {
+        
+         cin >> inp[i];
+         upd(i, inp[i]);
+        }
 
-        NumArray arr = NumArray(inp);
 
         while(q--)
         {
             ll a, b;
             cin >> a >> b;
-            arr.update(a-1 , b);
-            cout << arr.gcdr(0, n - 1) << endl;
+            upd(a-1 , b);
+            cout << ans << endl;
         }
     }
     return 0;
