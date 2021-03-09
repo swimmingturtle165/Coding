@@ -285,6 +285,7 @@ signed main(int argc, char** argv)
             // dispvector<ll>(cnt);
             bool flg = true;
             vector<ll> req(26, 0);
+
             ll sum = 0;
             FOR(i, 0, 26)
             {
@@ -302,57 +303,68 @@ signed main(int argc, char** argv)
             }
             else
             {
-                string ans;
+                string ans=str;
                 bool flg = false;
-                FORDE(i, n - 1, 0)
+
+                FORDE(i,n-1,0)
                 {
-                    sum -= req[str[i] - 'a'];
-                    cnt[str[i] - 'a']--;
-                    req[str[i] - 'a'] = (k - cnt[str[i] - 'a'] % k) % k;
-                    sum += req[str[i] - 'a'];
-                    cout << i << " " << sum << endl;
-                    if (n-i>=sum &&  (n - i - sum) % k == 0 && str[i-1] != 'z')
+                    if(flg)
                     {
-                        i--;
-                        flg = true;
-                        sum -= req[str[i] - 'a'];
-                        cout << sum << " " << req[str[i] - 'a'] << endl;
-                        cnt[str[i] - 'a']--;
-                        req[str[i] - 'a'] = (k - cnt[str[i] - 'a'] % k) % k;
-                        sum += req[str[i] - 'a'];
-                        cout << sum << " " << req[str[i] - 'a'] << endl;
-
-                        str[i]++;
-                        sum -= req[str[i] - 'a'];
-                        cout << sum << " " << req[str[i] - 'a'] << endl;
-
-                        cnt[str[i] - 'a']++;
-                        req[str[i] - 'a'] = (k - cnt[str[i] - 'a'] % k) % k;
-                        sum += req[str[i] - 'a'];
-                        cout << sum << " " << req[str[i] - 'a'] << endl;
-
-                        cout << sum << endl;
-                        dispvector<ll>(req);
-                        ll k1 = n - 1 - i - sum;
-                        cout << " ** " << k1 << endl;
-                        cout << i << endl;
-                        FOR(j, i + 1, i + k1 + 1)
-                        {
-                            str[j] = 'a';
-                        }
-                        ll curr = i + k1+1;
-                        FOR(j,0,26)
-                        {
-                            FOR(m,0,req[j])
-                            {
-                                str[curr] = 'a' + j;
-                                curr++;
-                            }
-                        }
-                        ans = str;
                         break;
                     }
+
+                    ll v1 = str[i] - 'a';
+                    cnt[v1]--;
+                    sum -= req[v1];
+                    req[v1] = (k - (cnt[v1]) % k) % k;
+                    sum += req[v1];
+
+                    ll left = n - 1 - i;
+                    v1++;
+                    FOR(j,v1, 26)
+                    {
+                        cnt[j]++;
+                        sum -= req[j];
+                        req[j] = (k - (cnt[j]) % k) % k;
+                        sum += req[j];
+
+                        if(sum<=left && ((left-sum)%k==0) )
+                        {
+                            flg = true;
+                            str[i] = 'a' + j;
+                            ll curr = i + 1;
+                            while (curr+sum<n)
+                            {
+                                str[curr] = 'a';
+                                curr++;
+                            }
+                            FOR(v,0,26)
+                            {
+                                FOR(r,0,req[v])
+                                {
+                                    str[curr] = 'a' + v;
+                                    curr++;
+                                }
+                            }
+                            
+
+                            ans = str;
+                            break;
+                        }
+                        if(flg)
+                        {
+                            break;
+                        }
+
+                        cnt[j]--;
+                        sum -= req[j];
+                        req[j] = (k - (cnt[j]) % k) % k;
+                        sum += req[j];
+                        
+
+                    }
                 }
+
                 if(flg)
                 {
                     cout << ans << endl;
