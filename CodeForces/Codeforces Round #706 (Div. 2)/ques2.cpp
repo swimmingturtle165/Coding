@@ -258,18 +258,66 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
+        ll n, k;
+        cin >> n >> k;
         vector<ll> inp(n);
+
+        set<ll> strg;
+        unordered_set<ll> strg1;
+        
+        strg.clear();
+        strg1.clear();
+
         FOR(i, 0, n)
         {
             cin >> inp[i];
-        }
-        
-        
+            strg.insert(inp[i]);
+            strg1.insert(inp[i]);
 
+        }
+        ll mini = 0;
+        ll ans = strg.size();
+        while (k--)
+        {
+            // cout << strg.size() << " " ;
+
+            ll maxi = *strg.rbegin();
+
+            while (strg1.count(mini)==1)
+            {
+                mini++;
+            }
+            // cout << mini << " " << maxi << " ";
+            if (maxi < mini)
+            {
+                ll v2 = k+1;
+                ans = strg.size() + v2;
+                break;
+            }
+            else
+            {
+                ll v1 = (maxi + mini+1) / 2;
+                strg.insert(v1);
+                strg1.insert(v1);
+                
+                ans=strg.size();
+                
+                if(v1!=mini && v1!=maxi)
+                {
+                    break;
+                }
+                // cout << v1;
+            }
+            // cout << endl;
+        }
+        if(ans==-1)
+        {
+            ans = strg.size();
+        }
+        cout << ans << endl;
     }
     return 0;
 }

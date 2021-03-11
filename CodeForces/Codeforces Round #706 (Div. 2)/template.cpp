@@ -258,18 +258,10 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
-        {
-            cin >> inp[i];
-        }
         
-        
-
     }
     return 0;
 }

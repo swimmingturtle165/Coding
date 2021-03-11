@@ -265,11 +265,37 @@ signed main(int argc, char** argv)
         vector<ll> inp(n);
         FOR(i, 0, n)
         {
-            cin >> inp[i];
+           cin >> inp[i];
         }
+        vector<ll> flags(n, true);
+
+        if(n>5)
+        {
+            cout << 0 << endl;
+        }
+        else if(n==5)
+        {
+    //        a b c d e
+            //  x=3 works if   (c>b or c>d)
+            //  y can be either 2 or 4 
         
+            // if y==2  and b<c   
+            //  a c b d e
+            //  c > a so that first one wins
         
 
+            // if y==4 , d<c  
+            //  a b d c e
+            //  c>e so that first one wins
+
+            bool flg1 = inp[1] < inp[2];
+            bool flg2 = inp[2] > inp[3];
+            
+            
+            
+
+
+        }
     }
     return 0;
 }

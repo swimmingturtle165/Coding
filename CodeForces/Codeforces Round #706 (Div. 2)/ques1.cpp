@@ -258,18 +258,29 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
+        string str;
+        ll n ,k;
+        cin >> n >> k;
+        cin >> str;
+        ll i = 0, j = n - 1;
+        while(str[i]==str[j] && i<j)
         {
-            cin >> inp[i];
-        }
-        
-        
+            i++;
+            j--;
 
+        }
+        // cout << i << " " << j << endl;
+        if (k == 0 || i > k || (i == k && i <= j))
+        {
+            cout << "YES" << endl;
+        }
+        else
+        {
+            cout << "NO" << endl;
+        }
     }
     return 0;
 }

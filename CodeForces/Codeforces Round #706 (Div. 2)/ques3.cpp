@@ -258,18 +258,54 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
         ll n;
         cin >> n;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
-        {
-            cin >> inp[i];
-        }
-        
-        
+        vector<pair<ld,ld>> miners(n), mines(n);
 
+        ll v1 = 0, v2 = 0;
+
+        FOR(i,0,2*n)
+        {
+            ll a, b;
+            cin >> a>>b;
+            a = abs(a);
+            b = abs(b);
+            if (a == 0)
+            {
+                miners[v1] = {a, b};
+                v1++;
+            }
+            else
+            {
+                mines[v2] = {a, b};
+                v2++;
+            }
+        }
+        sort(mines.begin(), mines.end());
+
+        sort(miners.begin(), miners.end());
+
+        ld ans1 = 0;
+        FOR(i,0,n)
+        {
+            ld v1 = pow(mines[i].first, 2) + pow(miners[i].second, 2);
+            v1 = pow(v1, 0.5);
+            ans1 += v1;
+        }
+        reverse(mines.begin(), mines.end());
+        ld ans2 = 0;
+        FOR(i,0,n)
+        {
+            ld v1 = pow(mines[i].first, 2) + pow(miners[i].second, 2);
+            v1 = pow(v1, 0.5);
+            ans2 += v1;
+        }
+        ld ans = min(ans1, ans2);
+        cout << fixed << setprecision(10) << ans << endl;
+        // cout << ans << endl;
     }
     return 0;
 }

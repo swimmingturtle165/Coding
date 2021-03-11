@@ -258,18 +258,187 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    // cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n;
-        vector<ll> inp(n);
-        FOR(i, 0, n)
-        {
-            cin >> inp[i];
-        }
-        
-        
+        ll n1, n2, n3, n4;
+        cin >> n1 >> n2 >> n3 >> n4;
 
+        vector<pll> dish1(n1);
+        vector<pll> dish2(n2);
+        vector<pll> dish3(n3);
+        vector<pll> dish4(n4);
+
+        FOR(i, 0, n1)
+        {
+            cin >> dish1[i].second;
+            dish1[i].first = i ;
+            swap(dish1[i].first, dish1[i].second);
+        }
+
+        FOR(i,0,n2)
+        {
+            cin >> dish2[i].second;
+            dish2[i].first = i ;
+            swap(dish2[i].first, dish2[i].second);
+
+        }
+
+        FOR(i,0,n3)
+        {
+            cin >> dish3[i].second;
+            dish3[i].first = i ;
+            swap(dish3[i].first, dish3[i].second);
+
+        }
+
+        FOR(i,0,n4)
+        {
+            cin >> dish4[i].second;
+            dish4[i].first = i ;
+            swap(dish4[i].first, dish4[i].second);
+
+        }
+
+        sort(dish1.begin(), dish1.end());
+        sort(dish2.begin(), dish2.end());
+        sort(dish3.begin(), dish3.end());
+        sort(dish4.begin(), dish4.end());
+
+
+        ll m1, m2, m3;
+
+        unordered_map<ll, unordered_set<ll>> fst_pr;
+        unordered_map<ll, unordered_set<ll>> scnd_pr;
+        unordered_map<ll, unordered_set<ll>> thrd_pr;
+
+        cin >> m1;
+        FOR(i,0,m1)
+        {
+            ll a, b;
+            cin >> a >> b;
+            a--;
+            b--;
+            fst_pr[b].insert(a);
+        }
+
+        cin >> m2;
+        FOR(i,0,m2)
+        {
+            ll a, b;
+            cin >> a >> b;
+            a--;
+            b--;
+            scnd_pr[b].insert(a);
+        }
+
+        cin >> m3;
+        FOR(i,0,m3)
+        {
+            ll a, b;
+            cin >> a >> b;
+            a--;
+            b--;
+            thrd_pr[b].insert(a);
+        }
+
+        vector<pll> strg1(n2);
+        vector<pll> strg2(n3);
+        vector<pll> strg3(n4);
+
+
+        FOR(i, 0, n2)
+        {
+            ll idx = 0;
+
+            while(idx<n1 &&  fst_pr[dish2[i].second].count(dish1[idx].second)==1)
+            {
+                idx++;
+            }
+            if (idx != n1)
+            {
+                strg1[i].first = dish2[i].first + dish1[idx].first;
+                strg1[i].second = dish2[i].second;
+            }
+            else
+            {
+                strg1[i].first = -1;
+            }
+            // cout << i << " " << idx << " " <<strg1[i]<< endl;
+        }
+        sort(strg1.begin(), strg1.end());
+        ll v1 = 0;
+        while (v1<strg1.size() && strg1[v1].first==-1)
+        {
+            v1++;
+        }
+
+        FOR(i, 0, n3)
+        {
+            ll idx = v1;
+
+            while(idx<n2 &&  ((scnd_pr[dish3[i].second].count(strg1[idx].second)==1) || (strg1[idx].first==-1)) )
+            {
+                idx++;
+            }
+            if(idx!=n2)
+            {
+
+                strg2[i].first = dish3[i].first + strg1[idx].first;
+                strg2[i].second = dish3[i].second;
+
+            }
+            else
+            {
+                strg2[i].first = -1;
+            }
+            // cout << i << " " << idx << " " <<strg2[i]<<" "<<strg1[idx-1]<< endl;
+
+        }
+        sort(strg2.begin(), strg2.end());
+        ll v2 = 0;
+        while (v2<n3 && strg2[v2].first==-1)
+        {
+            v2++;
+        }
+        FOR(i,0,n4)
+        {
+            ll idx = v2;
+
+            while(idx<n3 && ((thrd_pr[dish4[i].second].count(strg2[idx].second)==1) || (strg2[idx].first==-1)))
+            {
+                idx++;
+            }
+            if(idx!=n3)
+            {
+                strg3[i].first = dish4[i].first + strg2[idx].first;
+                strg3[i].second = dish4[i].second;
+            
+            }
+            else
+            {
+                strg3[i].first = -1;
+            }
+        }
+
+        ll ans = INT_MAX;
+        bool flg = true;
+        FOR(i, 0, n4)
+        {
+            if(strg3[i].first!=-1)
+            {
+                flg = false;
+                ans = min(ans, strg3[i].first);
+            }
+        }
+        if(flg)
+        {
+            cout << -1 << endl;
+        }
+        else
+        {
+            cout << ans << endl;
+        }
     }
     return 0;
 }
