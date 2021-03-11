@@ -258,43 +258,81 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin >> t;
-    while (t--)
+    cin>>t;
+    while(t--)
     {
-        ll n;
-        cin >> n;
+        ll n, m;
+        cin >> n >> m;
         vector<ll> inp(n);
-
         FOR(i, 0, n)
         {
             cin >> inp[i];
         }
-        sort(inp.begin(), inp.end());
+        vector<ll> prefix_sum_max(n);
 
+        prefix_sum_max[0] = inp[0];
 
-        vector<ll> cnt(n + 1, 0);
-        cnt[1]++;
-        ll prev = 1;
         FOR(i, 1, n)
         {
-            if(inp[i]!=inp[i-1])
-            {
-                prev = 1;
-                cnt[1]++;
-            }
-            else
-            {
-                prev++;
-                cnt[prev]++;
-            
-            }
+            prefix_sum_max[i] = inp[i] + prefix_sum_max[i - 1];
+
         }
-        ll ans = n;
-        FOR(i,1,n+1)
+        ll sum = prefix_sum_max[n - 1];
+        FOR(i,1,n)
         {
-            ans = min(ans, n - cnt[i]*i);
+            prefix_sum_max[i] = max(prefix_sum_max[i], prefix_sum_max[i - 1]);
         }
-        cout << ans << endl;
+        
+
+        
+        while(m--)
+        {
+            ll v1;
+            cin >> v1;
+            if(sum>0 )
+            {
+                ll max_elem = prefix_sum_max[n - 1];
+                if(v1<max_elem)
+                {
+                     ll tmp= (ll)(lower_bound(prefix_sum_max.begin(), prefix_sum_max.end(), v1) - prefix_sum_max.begin());
+                     cout << tmp << endl;
+                     continue;
+                }
+                ll v2 = v1 - max_elem;
+                ll v3=(v2+sum-1)/sum;
+                ll v4 = v3 * sum;
+                ll ans = v3 * n;
+                ll rem = v1 - v4;
+                // cout << max_elem << " " << v2 << " " << v3 << " " << v4 << " " << ans << " " << rem << endl;
+                // cout << ans << " "<<rem<<" & ";
+                if(rem!=0)
+                {
+                ll tmp= (ll)(lower_bound(prefix_sum_max.begin(), prefix_sum_max.end(), rem) - prefix_sum_max.begin());
+                ans += tmp;
+                }
+                cout << ans << " ";
+                ;
+            }
+            else if(sum<=0)
+            {
+                ll max_elem = prefix_sum_max[n - 1];
+                if(v1>max_elem)
+                {
+                    cout << -1 << " ";
+                }
+                else
+                {
+                    cout <<  lower_bound(prefix_sum_max.begin(), prefix_sum_max.end(), v1) - prefix_sum_max.begin() << " ";
+                }
+            }
+            
+
+           
+
+            
+
+        }
+        cout << endl;
     }
     return 0;
 }
