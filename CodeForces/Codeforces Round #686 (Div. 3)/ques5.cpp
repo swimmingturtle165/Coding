@@ -247,73 +247,72 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
 
+set<pll> edges;
 
-
-int n; // number of nodes
-vector<vector<int>> adj; // adjacency list of graph
-
-vector<bool> visited;
-vector<int> tin, low;
-int timer;
-
-
-
-bool dfs(int a,int& vis_edges,int &vis_vertex)
+void solve(ll curr,ll pa,vector<ll>& parent,vector<bool>& vst,vector<vector<ll>>& graph)
 {
+    vst[curr] = true;
+    parent[curr] = pa;
 
-}
+    FOR(i,0,graph[curr].size())
+    {
 
-ll isBridge(int a,int b)
-{
-    int cnt1 = 0, cnt2 = 0;
-    bool flg1 = false;
-    bool flg2 = false;
-    dfs(a, cnt1, cnt2);
-    if(cnt1==cnt2)
-    {
-        flg1 = true;
-    }
-    cnt1 = 0;
-    cnt2 = 0;
-    dfs(b, cnt1, cnt2);
-    if(cnt1==cnt2)
-    {
-        flg2 = true;
+        if(graph[curr][i]==pa || vst[graph[curr][i]]==true)
+        {
+            continue;
+        }
+        edges.erase({curr, graph[curr][i]});
+        edges.erase({graph[curr][i],curr});
+        solve(graph[curr][i], curr, parent,vst, graph);
+
     }
 }
 
-ll dfs(int v, int p = -1) {
+bool dfs(ll curr, ll dst, vector<ll>&path,vector<bool>& vst,vector<vector<ll>>& tree)
+{
+    path.pb(curr);
 
-    visited[v] = true;
-    tin[v] = low[v] = timer++;
-    for (int to : adj[v]) {
+    vst[curr] = true;
 
-        if (to == p) continue;
-        if (visited[to]) {
-            low[v] = min(low[v], tin[to]);
-        } else {
-            dfs(to, v);
-            low[v] = min(low[v], low[to]);
-            if (low[to] > tin[v])
-                return isBridge(v, to);
+    if(curr==dst)
+    {
+        return true;
+    }
+    bool flg = false;
+    FOR(i,0,tree[curr].size())
+    {
+       
+
+        if(vst[tree[curr][i]]==false)
+        {
+            flg = dfs(tree[curr][i], dst, path, vst, tree);
+            if(flg)
+            {
+                return true;
+            }
         }
     }
+    path.pop_back();
+    return flg;
 }
 
-void find_bridges() {
-    timer = 0;
-    visited.assign(n, false);
-    tin.assign(n, -1);
-    low.assign(n, -1);
-    for (int i = 0; i < n; ++i) {
-        if (!visited[i])
-            dfs(i);
+ll dfs2(ll cnt,ll curr,vector<bool>& vst,vector<vector<ll>>&tree)
+{
+    ll v1 = 1;
+    vst[curr] = true;
+
+    FOR(i,0,tree[curr].size())
+    {
+        if(vst[tree[curr][i]]==false)
+        {
+            v1 += dfs2(0, tree[curr][i], vst, tree);
+        }
     }
+    return v1;
 }
 
-signed main(int argc, char** argv)
+signed main(int argc, char **argv)
 {
     #ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
@@ -324,7 +323,78 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
+        edges.clear();
+        ll n;
+        cin >> n;
+        vector<vector<ll>> graph(n+1,vector<ll>());
+        vector<vector<ll>> tree(n+1,vector<ll>());
+        FOR(i,0,n)
+        {
+        ll a,b;
+        cin >> a >> b;
+        graph[a].pb(b);
+        graph[b].pb(a);
+
+        edges.insert({a, b});
+        edges.insert({b, a});
+
+        }
+        vector<bool> vst(n + 1,false);
+
+        vector<ll> parent(n + 1, -1);
+        solve(1,-1, parent, vst,graph);
         
+
+        FOR(i,1,n+1)
+        {
+            if(parent[i]!=-1)
+            {
+                tree[i].pb(parent[i]);
+                tree[parent[i]].pb(i);
+            }
+            
+        }
+        pll tmp;
+        for(auto it:edges)
+        {
+            tmp= it;
+        }
+        
+
+        FOR(i, 0, n + 1)
+            vst[i] = false;
+
+        vector<ll> path;    
+        dfs(tmp.first, tmp.second,path ,vst, tree);
+        // dispvector<ll>(path);
+        ll cycle = path.size();
+        vector<ll> strg(cycle);
+        FOR(i, 0, n + 1)
+           {
+               
+            vst[i] = false;
+           }
+        FOR(i,0,cycle)
+        {
+            vst[path[i]] = true;
+        }
+
+        FOR(i,0,path.size())
+        {
+            strg[i] = dfs2(0,path[i], vst, tree);
+        }
+        // dispvector<ll>(strg);
+        
+        ll not_in_cycle = n - cycle;
+
+        ll ans = 0;
+        FOR(i,0,cycle)
+        {
+            ans += ((strg[i]-1)*(strg[i]));
+            ans += 2 *(strg[i])* (n - strg[i]);
+        }
+        cout << ans/2 << endl;
+
     }
     return 0;
 }
