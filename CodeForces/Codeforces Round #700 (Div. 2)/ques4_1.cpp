@@ -258,91 +258,71 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
     while(t--)
     {
         ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        ll cnt=1;
-        ll ans=0;
-        ll prev1=-1;
-        ll prev2=-1;
-        ll prev3=-1;
-        ll sz=0;
-        cnt=1;
-        bool flg=true;
-        FOR(i,1,n)
+        cin >> n;
+        vector<ll> inp(n + 1);
+
+        vector<ll> next(n+1), pos(100010,1);
+        FOR(i, 1, n+1)
         {
-            if(inp[i]!=inp[i-1])
-            {
-                if( prev2!=inp[i-1] && prev3!=inp[i-1])
-                {
-                    if(flg)
-                    {
-                     ans+=min(2ll,cnt);
-                    }
-                    if(sz==0)
-                    {
-                        prev2=inp[i-1];
-                        if(cnt>1)
-                        {
-                            prev3=inp[i-1];
-                        }
-                        sz++;
-                    }
-                    else
-                    {
-                    prev3=prev2;
-                    prev2=prev1;
-                    prev1=inp[i-1];
-                    }
-                    
-                }
-                else if( prev2!=inp[i-1] || prev3!=inp[i-1])
-                {
-                       ans++;
-                    if(sz==0)
-                    {
-                        prev2=inp[i-1];
-                        if(cnt>1)
-                        {
-                            prev3=inp[i-1];
-                        }
-                        sz++;
-                    }
-                    else
-                    {
-                    prev3=prev2;
-                    prev2=prev1;
-                    prev1=inp[i-1];
-                    }
-                        
-                }
-                cnt=1;
-            }
-            else cnt++;
-            
+            cin >> inp[i];
+        }
+        FOR(i,0,n+1)
+        {
+            pos[i] = n + 1;
+
         }
 
-            if( prev2!=inp[n-1] && prev3!=inp[n-1])
-                {
-                    if(flg)
-                    {
-                     ans+=min(2ll,cnt);
-                    }
-                    
-                    
-                }
-                else if( prev2!=inp[n-1] || prev3!=inp[n-1])
-                {
-                       ans++;
-                    
-                        
-                }
+        FORDE(i,n,0)
+        {
+            next[i] = pos[inp[i]];
+            pos[inp[i]] = i;
+        }
+        
+        ll x = 0, y = 0;
 
-        cout<<ans<<endl;
+        ll ans = 0;
+
+        FOR(i, 1, n + 1)
+        {
+            if(inp[i]==inp[x])
+            {
+                if(inp[i]!=inp[y])
+                {
+                    ans++;
+                }
+                y=i;
+            }
+            else if(inp[i]==inp[y])
+            {
+
+                if(inp[i]!=inp[x])
+                {
+                    ans++;
+                }
+                x=i;
+            }
+            else if(next[x]<next[y])
+            {
+                if(inp[i]!=inp[x])
+                {
+                    ans++;
+                }
+                x=i;
+            }
+            else 
+            {
+               if(inp[i]!=inp[y])
+                {
+                    ans++;
+                }
+                y=i;
+            }
+        }
+        cout << ans << endl;
+
     }
     return 0;
 }

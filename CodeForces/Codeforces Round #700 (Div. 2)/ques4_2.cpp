@@ -258,10 +258,71 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
     while(t--)
     {
+        ll n;
+        cin >> n;
+        vector<ll> inp(n + 1);
+
+        vector<ll> next(n+1), pos(100010,1);
+        FOR(i, 1, n+1)
+        {
+            cin >> inp[i];
+        }
+        FOR(i,0,n+1)
+        {
+            pos[i] = n + 1;
+
+        }
+
+        FORDE(i,n,0)
+        {
+            next[i] = pos[inp[i]];
+            pos[inp[i]] = i;
+        }
         
+        ll x = 0, y = 0;
+
+        ll ans = 0;
+
+        FOR(i, 1, n + 1)
+        {
+            if(inp[i]==inp[y])
+            {
+                if(inp[i]!=inp[y])
+                {
+                    ans++;
+                }
+                y=i;
+            }
+            else if(inp[i]==inp[x])
+            {
+
+                if(inp[i]!=inp[x])
+                {
+                    ans++;
+                }
+                x=i;
+            }
+            else if(next[x]>next[y])
+            {
+                if(inp[i]!=inp[x])
+                {
+                    ans++;
+                }
+                x=i;
+            }
+            else 
+            {
+               if(inp[i]!=inp[y])
+                {
+                    ans++;
+                }
+                y=i;
+            }
+        }
+        cout << ans << endl;
+
     }
     return 0;
 }
