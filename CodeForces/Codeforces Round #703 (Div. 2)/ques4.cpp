@@ -267,11 +267,11 @@ signed main(int argc, char** argv)
         {
          cin>>inp[i];
         }
-        ll left = 0, right = INT_MAX;
-        while (left<right)
+        ll left = 1, right = n+1;
+        ll ans=0;
+        while (left<=right)
         {
             ll mid = (left + right) / 2;
-            cout << left << " " << right << " " << mid << endl;
             ll maxi=INT_MIN, mini=INT_MAX;
             ll mn=INT_MAX, mx=INT_MIN;
             ll sgt = 0;
@@ -282,27 +282,27 @@ signed main(int argc, char** argv)
                 strg[i] = strg[i - 1] + v1;
                 if (i >= k)
                 {
-                    maxi = max(maxi, strg[i]);
+                    mn = min(mn, strg[i  - k]);
+                    maxi = max(maxi, strg[i]-mn);
 
-                    mn = min(mn, strg[i + 1 - k]);
-                    cout << maxi << " " << mn << " " << i << endl;
-                    if (maxi - mn >= 0)
+                    if (maxi > 0)
                     {
                         sgt++;
                     }
                 }
             }
-            dispvector<ll>(strg);
             if (sgt)
             {
-                left = mid;
+                ans=mid;
+                left = mid+1;
+                
             }
             else
             {
-                right = mid - 1;
+                right = mid-1;
             }
         }
-        cout << left << endl;
+        cout<<ans<<endl;
     }
     return 0;
 }
