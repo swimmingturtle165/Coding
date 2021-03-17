@@ -78,35 +78,6 @@ struct segmenttree{
         build(a, 0, 0, sz);
     }
 
-    ll set(ll val,ll x,ll lx, ll rx)
-    {
-        if(rx-lx==1 && val==0)
-        {
-            segtree[x] = 0;
-            return lx;
-        }
-        ll right = segtree[2*x+2];
-        ll mid = (lx + rx) / 2;
-        ll ans = 0;
-        if (val >= right)
-        {
-            // left child
-            ans=set(val-right, 2 * x + 1,lx,mid);
-        }
-        else
-        {
-            // right child 
-            ans=set(val, 2 * x + 2, mid,rx);
-
-        }
-        segtree[x] = segtree[2 * x + 1] + segtree[2 * x + 2];
-        return ans;
-    }
-
-    ll set(ll val)
-    {
-        return (set(val, 0, 0, sz)+1);
-    }
 
     ll get_segment(ll l, ll r,ll x,ll lx ,ll rx)
     {
@@ -139,6 +110,34 @@ struct segmenttree{
     {
         return get_segment(l, r, 0, 0, sz);
     }
+
+    void set(ll idx, ll val,ll x,ll lx, ll rx)
+    {
+        if(rx-lx==1)
+        {
+            segtree[x]+= val;
+            return ;
+        }
+        ll mid = (lx + rx) / 2;
+        if (idx < mid)
+        {
+            // left child
+            set(idx, val, 2 * x + 1, lx, mid);
+        }
+        else
+        {
+            // right child 
+            set(idx, val, 2 * x + 2, mid,rx);
+
+        }
+        segtree[x] = segtree[2*x+1] + segtree[2*x+2];
+        return;
+    }
+
+    void set(ll idx, ll val)
+    {
+         set(idx, val, 0, 0, sz);
+    }
 };
 
 signed main(int argc, char** argv)
@@ -152,27 +151,50 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n ;
-        vector<ll> inp(n);
+        ll n,m;
+        cin >> n>>m;
         segmenttree arr;
-        arr.init(n);
-        arr.build(inp);
-        FOR(i, 0, n)
-        {
-         cin >> inp[i];
-        }
-       
-        vector<ll> ans(n);
-        FORDE(i, n - 1, 0)
-        {
-            ans[i]=arr.set(inp[i]);
-           
+        arr.init(2*n+1);
 
+        while(m--)
+        {
+            ll op;
+            cin >> op;
+            if(op==1)
+            {
+                // add operation
+                ll l, r, v;
+                cin >> l >> r >> v;
+                arr.set(l, v);
+                arr.set(r, 0-v);
+
+            }
+            else
+            {
+                // find i
+                ll idx;
+                cin >> idx;
+                cout << arr.get_segment(0, idx + 1) << endl;
+            }
         }
-        FOR(i, 0, n)
-            cout << ans[i] << " ";
-        cout << endl;
+        // Uncomment to see the segment tree
+        // ll v1 = 0;
+        // FOR(i, 0, log2(arr.sz)+1)
+        // {
+            
+        //     v1 = pow(2, i);
+        //     FOR(j,0,pow(2,i))
+        //     {
+        //         cout << arr.segtree[v1-1 + j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        // cout << " &&&&&&& " << endl;
+        // FOR(i,1,n+1)
+        // {
+        //     cout << ans[i] << " ";
+        // }
+        // cout << endl;
     }
     return 0;
 }

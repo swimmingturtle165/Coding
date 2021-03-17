@@ -35,13 +35,15 @@ typedef     pair<ll,ll>      pll;
 #define     here             cout<<"I'm here\n";
 #define     flush            fflush(stdout);
 #define endl '\n'         
+#define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
-   
 struct segmenttree{
 
     ll sz=1;
 
     vector<ll> segtree;
+    vector<ll> mins;
+
 
     void init(ll n)
     {
@@ -51,93 +53,81 @@ struct segmenttree{
             sz = sz * 2;
         }
         segtree.assign(2 * sz, 0);
-    }
-
-    void build(vector<ll>&a, ll x, ll lx ,ll rx)
-    {
-
-        if(rx-lx==1)
-        {
-            // leaf node
-            if(lx<a.size())
-            {
-                segtree[x] = 1;
-            }
-            return;
-        }
-        ll mid = (lx + rx) / 2;
-        build(a, 2 * x + 1, lx, mid);
-        build(a, 2 * x + 2, mid,rx);
-        segtree[x] = segtree[2 * x + 1] + segtree[2 * x + 2];
-
+        mins.assign(2 * sz, 0);
 
     }
 
-    void build(vector<ll>&a)
-    {
-        build(a, 0, 0, sz);
-    }
+   
 
-    ll set(ll val,ll x,ll lx, ll rx)
-    {
-        if(rx-lx==1 && val==0)
-        {
-            segtree[x] = 0;
-            return lx;
-        }
-        ll right = segtree[2*x+2];
-        ll mid = (lx + rx) / 2;
-        ll ans = 0;
-        if (val >= right)
-        {
-            // left child
-            ans=set(val-right, 2 * x + 1,lx,mid);
-        }
-        else
-        {
-            // right child 
-            ans=set(val, 2 * x + 2, mid,rx);
 
-        }
-        segtree[x] = segtree[2 * x + 1] + segtree[2 * x + 2];
-        return ans;
-    }
-
-    ll set(ll val)
-    {
-        return (set(val, 0, 0, sz)+1);
-    }
-
-    ll get_segment(ll l, ll r,ll x,ll lx ,ll rx)
+    ll get_segment(ll l,ll r,ll x,ll lx ,ll rx)
     {
 
         //  get sum from l to r-1
         // we currently store in x sum from lx to rx-1
         
 
-        if(l>=rx || r<=lx)
+        if(l>=rx || r<=lx )
         {
             // don't intersect
-            return 0;
+            return INT_MAX;
         }
 
         if(l<=lx && rx<=r)
         {
             //  complete intersection
-             return segtree[x]; 
+              return mins[x];
         }
         
         ll mid = (lx + rx) / 2;
-        // left child             +                        right child       
-        return    get_segment(l, r, 2 * x + 1, lx, mid) + get_segment(l, r, 2 * x + 2, mid,rx);
-    
-
         
+        // left child   
+       ll m1= get_segment(l, r, 2 * x + 1, lx, mid);
+
+        //  right child
+       ll m2=get_segment(l, r, 2 * x + 2, mid, rx);
+       
+       return min(m1,m2)+segtree[x];
     }
-    
-    ll get_segment(ll l, ll r)
+
+    ll get_segment(ll l,ll r)
     {
-        return get_segment(l, r, 0, 0, sz);
+        return get_segment(l,r, 0, 0, sz);
+    }
+
+    
+    
+    void add(ll l, ll r,ll v,ll x,ll lx ,ll rx)
+    {
+
+        if(l>=rx || r<=lx)
+        {
+            // don't intersect
+            return;
+        }
+
+        if(l<=lx && rx<=r)
+        {
+            //  complete intersection
+                segtree[x]+=v;
+                mins[x] += v;
+                return;
+        }
+        
+        ll mid = (lx + rx) / 2;
+        
+        // left child             + 
+        add(l, r, v, 2 * x + 1, lx, mid);
+        //  right child
+        add(l, r, v, 2 * x + 2, mid, rx);
+        mins[x] = min(mins[2 * x + 1], mins[2 * x + 2]) + segtree[x];
+
+        return;
+    }
+
+    void add(ll l, ll r,ll v)
+    {
+        add(l, r, v, 0, 0, sz);
     }
 };
 
@@ -149,30 +139,31 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
     while(t--)
     {
-        ll n;
-        cin >> n ;
-        vector<ll> inp(n);
+        ll n, m;
+        cin >> n >> m;
         segmenttree arr;
         arr.init(n);
-        arr.build(inp);
-        FOR(i, 0, n)
+        while(m--)
         {
-         cin >> inp[i];
-        }
-       
-        vector<ll> ans(n);
-        FORDE(i, n - 1, 0)
-        {
-            ans[i]=arr.set(inp[i]);
-           
+            ll op;
+            cin >> op;
+            if(op==1)
+            {
+                ll l, r, v;
+                cin >> l >> r >> v;
+                arr.add(l, r, v);
 
+            }
+            else
+            {
+                ll l,r;
+                cin >> l >> r;
+                cout<<arr.get_segment(l,r)<<endl;
+            }
+            
         }
-        FOR(i, 0, n)
-            cout << ans[i] << " ";
-        cout << endl;
     }
     return 0;
 }
