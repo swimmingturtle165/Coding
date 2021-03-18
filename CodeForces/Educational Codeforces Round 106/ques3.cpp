@@ -34,9 +34,7 @@ typedef     pair<ll,ll>      pll;
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
 #define     flush            fflush(stdout);
-#define endl '\n'        
-const int INF = 1e9 + 5;
-
+#define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
 typedef tree<
@@ -250,7 +248,10 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-
+bool comp(pll &a,pll &b)
+{
+    return a.first*a.second<b.first*b.second;
+}
 
 signed main(int argc, char** argv)
 {
@@ -260,50 +261,45 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
         ll n;
         cin>>n;
-        vector<double> a(n);
-        vector<double> b(n);
-        double tot=0;
-      
+        vector<ll> inp(n);
+        FOR(i,0,n) cin>>inp[i];
+        ll ans=INT64_MAX;
+        ll mini1=INT64_MAX;
+        ll mini2=INT64_MAX;
+        ll sum1=0;
+        ll sum2=0;
         FOR(i,0,n)
         {
-            cin>>a[i]>>b[i];
-            tot+=b[i];
-        }
-        vector<vector<double>> dp(105,vector<double>(10501,-INF));
-        dp[0][0]=0;
-        FOR(i,0,n)
-        {
-            FORDE(k,i,0)
+            if(i==0)
             {
-                FOR(j,0,10001)
-                {
-                    if(dp[k][j]>=0)
-                    {
-                    dp[k+1][j+a[i]]=max(dp[k+1][j+a[i]],dp[k][j]+b[i]);
-                    }
-                }
+            mini1=min(inp[i],mini1);
+            ll cnt=(i)/2;
+            sum1+=inp[i]; 
             }
-        }
-        FOR(i,1,n+1)
-        {
-            double v1=0;
-            FOR(j,1,i*101)
+            else if(i%2==1)
             {
-                if(dp[i][j]>=0)
-                {
-                v1=max(v1,min((double)j,(tot+dp[i][j])/2.0));
+            mini2=min(inp[i],mini2);
+            ll cnt=(i)/2;
+            sum2+=inp[i];
+            ans=min(ans,sum2+(n-1-cnt)*mini2+sum1+(n-1-cnt)*mini1);
+            }
+            else if(i%2==0)
+            {
+                 mini1=min(inp[i],mini1);
+                ll cnt=(i)/2;
+                sum1+=inp[i];  
+                ans=min(ans,sum2+(n-(cnt))*mini2+sum1+(n-1-cnt)*mini1);
+            }
+            // cout<<i <<" "<<mini1<<" "<<mini2<<" "<<sum1<<" "<<sum2<<" "<<ans<<endl;
+        }
+        cout<<ans<<endl;
 
-                }
-            }
-        cout.precision(12);
-    
-            cout << v1<<" ";
-        }
-        cout<<endl;
+
         
 
 

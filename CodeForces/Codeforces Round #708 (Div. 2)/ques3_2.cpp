@@ -261,73 +261,44 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n,m;
-        cin>>n>>m;
-        vector<ll> strg(40,0),prefixsum(40,0);
-        ll idx=0;
-        ll done=0;
-        while(n>0)
+        ll n,k;
+        cin>>n>>k;
+        ll v=0;
+        if(k>3)
         {
-            strg[idx]=n%2;
-            n=n/2;
-            idx++;
-        }
-        reverse(strg.begin(),strg.end());
-        prefixsum=strg;
-        FORDE(i,39,1)
-        {
-            prefixsum[i-1]+=prefixsum[i];
-        }
-        prefixsum.pb(0);
-        strg.pb(0);
-        // dispvector<ll>(strg);
-        // dispvector<ll>(prefixsum);
-
-
-        bool flg=true;
-        FOR(i,0,40)
-        {
-            ll v1=strg[i];
-            if(flg && v1!=0)
-            {
-                strg[i]=0;
-                strg[i+1]+=2;
-                prefixsum[i+1]+=2;
-                flg=false;
-            }
-            else if(flg==false && (v1+prefixsum[i+1])%m==0)
-            {
-                break;
-            }
-            else if(flg==false && v1!=0)
-            {
-                ll k1=(m-(v1+prefixsum[i+1]))%m;
-                k1=min(k1,v1);
-                strg[i+1]+=2*k1;
-                prefixsum[i+1]+=2*k1;
-                strg[i]-=k1;
-                v1=strg[i];
-                if( (v1+prefixsum[i+1])%m==0)
-                {
-                    break;
-                }
-            }
-            // cout<<"*********"<<endl;
-        // dispvector<ll>(strg);
-        // dispvector<ll>(prefixsum);
+         v=k-3;
+        n-=v;
 
         }
-        ll v1=1;
-        FORDE(i,39,0)
+        if(n%3==0)
         {
-            while(strg[i]>0)
+            cout<<n/3<<" "<<n/3<<" "<<n/3<<" ";
+        }
+        else if(n%2==0)
+        {
+            if(n%4==0)
             {
-                cout<<v1<<" ";
-                strg[i]--;
+                cout<<n/2<<" "<<n/4<<" "<<n/4<<" ";
             }
-            v1*=2;
+            else
+            {
+                cout<<2<<" "<<(n-2)/2<<" "<<(n-2)/2<<" ";
+            }
+
+        }
+        else 
+        {
+            ll v1=1;
+            ll v2=(n-1)/2;
+            ll v3=(n-1)/2;
+            cout<<v1<<" "<<v2<<" "<<v3<<" ";
+        }
+        FOR(i,0,v)
+        {
+            cout<<1<<" ";
         }
         cout<<endl;
+        
     }
     return 0;
 }

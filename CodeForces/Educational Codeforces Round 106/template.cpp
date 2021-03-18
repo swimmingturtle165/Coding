@@ -34,9 +34,7 @@ typedef     pair<ll,ll>      pll;
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
 #define     flush            fflush(stdout);
-#define endl '\n'        
-const int INF = 1e9 + 5;
-
+#define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
 typedef tree<
@@ -260,53 +258,10 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
+    cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<double> a(n);
-        vector<double> b(n);
-        double tot=0;
-      
-        FOR(i,0,n)
-        {
-            cin>>a[i]>>b[i];
-            tot+=b[i];
-        }
-        vector<vector<double>> dp(105,vector<double>(10501,-INF));
-        dp[0][0]=0;
-        FOR(i,0,n)
-        {
-            FORDE(k,i,0)
-            {
-                FOR(j,0,10001)
-                {
-                    if(dp[k][j]>=0)
-                    {
-                    dp[k+1][j+a[i]]=max(dp[k+1][j+a[i]],dp[k][j]+b[i]);
-                    }
-                }
-            }
-        }
-        FOR(i,1,n+1)
-        {
-            double v1=0;
-            FOR(j,1,i*101)
-            {
-                if(dp[i][j]>=0)
-                {
-                v1=max(v1,min((double)j,(tot+dp[i][j])/2.0));
-
-                }
-            }
-        cout.precision(12);
-    
-            cout << v1<<" ";
-        }
-        cout<<endl;
         
-
-
     }
     return 0;
 }
