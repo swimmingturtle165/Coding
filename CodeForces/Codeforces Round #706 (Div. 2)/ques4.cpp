@@ -267,35 +267,78 @@ signed main(int argc, char** argv)
         {
            cin >> inp[i];
         }
-        vector<ll> flags(n, true);
+        vector<ll> flags(n, false);
 
-        if(n>5)
-        {
-            cout << 0 << endl;
-        }
-        else if(n==5)
-        {
-    //        a b c d e
-            //  x=3 works if   (c>b or c>d)
-            //  y can be either 2 or 4 
+        ll i=1;
+        ll cnt=0;
+        ll maxi=0;
         
-            // if y==2  and b<c   
-            //  a c b d e
-            //  c > a so that first one wins
+        while (i<n)
+        {
+            ll sz=1;
+            while(i<n && inp[i]>inp[i-1])
+            {
+                sz++;
+                flags[i]=true;
+                i++;
+            }
+
+            if(sz>maxi) {maxi=sz;cnt=1;}
+
+            else if(sz==maxi) {cnt++;}
+
+            sz=1;
+
+            while(i<n && inp[i]<inp[i-1])
+            {
+                sz++;
+                flags[i]=false;
+                i++;
+            }
+            if(sz>maxi) {maxi=sz;cnt=1;}
+
+            else if(sz==maxi) {cnt++;}
+        }
+        // cout<<cnt<<" "<<maxi<<endl;
+        if(cnt!=2 || maxi%2==0)
+        {
+            cout<<0<<endl;
+        }
+        else
+        {
+            bool dl=false;
+            FOR(i,1,n-1)
+            {
+                if(flags[i] && !flags[i+1])
+                {
+                    ll sz0=0,sz1=0;
+                    ll v1=i-1;
+                    while(v1>=0 && inp[v1+1]>inp[v1])
+                    {
+                        v1--;
+                        sz0++;
+                    }
+                    ll v2=i;
+                    while(v2<n-1 && inp[v2+1]<inp[v2])
+                    {
+                        v2++;
+                        sz1++;
+                    }
+                    if(sz0 == sz1 )
+                    {
+                        dl=true;
+                        break;
+                    }
+                }
+            }
+            cout<<dl<<endl;
+        }
+                
+
+        
         
 
-            // if y==4 , d<c  
-            //  a b d c e
-            //  c>e so that first one wins
-
-            bool flg1 = inp[1] < inp[2];
-            bool flg2 = inp[2] > inp[3];
-            
-            
-            
-
-
-        }
+       
     }
     return 0;
 }
