@@ -56,11 +56,13 @@ signed main(int argc, char** argv)
         cin>>n>>m;
 
         vector<vector<pll>> graph(n+1,vector<pll>());
-        vector<ll> dp(n+1,LONG_LONG_MAX);
+        ll v1=INT64_MAX;
+        vector<ll> dp(n+1,v1/3);
         vector<ll> maxi(n+1,0);
         vector<bool> visited(n+1,false);
 
         dp[0]=dp[1]=0;
+        
         FOR(i,0,m)
         {
             ll a,b,c;
