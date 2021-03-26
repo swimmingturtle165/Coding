@@ -264,53 +264,73 @@ signed main(int argc, char** argv)
         string str;
         cin>>str;
 
-        vector<ll> cnt(26,0);
-        vector<pll> tmp(26,{-1,-1});
-
-        char ans=0;
-        FOR(i,0,str.size())
-        {
-            tmp[str[i]-'a'].f=i;
-            tmp[str[i]-'a'].s=str[i]-'a';
-
-        }
-       
-        FORDE(i,str.size()-1,0)
-        {
-            // remove if next is greater and there exists 1 more 
-
-            if(cnt[str[i]-'a']==0 )
-            {
-                ans=str[i];
-                cnt[str[i]-'a']++;
-                tmp[str[i]-'a'].first=i;
-            }
-            else if(i!=str.size()-1 && ans<str[i])
-            {
-                ans=str[i];
-                cnt[str[i]-'a']++;
-                tmp[str[i]-'a'].first=i;
-            }
-
-        }
-        sort(tmp.begin(),tmp.end());
-        ll v=0;
-        string sad="";
-        while (v<26 && tmp[v].first==-1)
-        {
-            /* code */
-            v++;
-        }
-        while(v<26)
-        {
-            // cout<<tmp[v].s<<" "<<(char)(tmp[v].s+'a')<<endl;
-            sad+=(char)(tmp[v].s+'a');
-            v++;
-        }
-        cout<<sad<<endl;
         
 
+        // string ans="";
+        vector<bool> vst(26,false);
+        vector<bool> vst1(26,false);
 
+        vector<ll> occur(26,-1);
+
+        ll done=0;
+        ll dist=0;
+        ll n=str.size();
+        FOR(i,0,n)
+        {
+            if(vst[str[i]-'a']==false)
+            {
+                dist++;
+                vst[str[i]-'a']=true;
+            }
+        
+                occur[str[i]-'a']=i;
+            
+
+        }
+        vst1=vst;
+        vst.assign(26,false);
+        string ans="";
+        ll mxi=0;
+        FOR(k,0,26)
+        {
+            FORDE(j,25,0)
+            {
+                if(vst[j] || vst1[j]==false)
+                {
+                    continue;
+                }
+                bool flg=false;
+                // let's try 'a'+j th character
+                ll prev=0;
+                FOR(i,mxi,n)
+                {
+                    prev=i;
+                    // cout<<i<<" "<<j<<" "<<str[i]-'a'<<" "<<vst[str[i]-'a']<<" "<<occur[str[i]-'a']<<endl;
+                    if(str[i]-'a'==j)
+                    {
+                        // cout<<"U* "<<i<<" "<<j<<endl;
+                        flg=true;
+                        break;
+                    }
+                    if(vst[str[i]-'a']==false && i==occur[str[i]-'a'] )
+                    {
+                        flg=false;
+                        break;
+                    }
+                }
+                if(flg)
+                {
+                    // cout<<prev<<" "<<mxi<<" && ";
+                    mxi=max(mxi,prev);
+                    // cout<<prev<<" "<<mxi<<endl;
+
+                    vst[j]=true;
+                    ans+=(char)('a'+j);
+                    break;
+                }
+            }
+        }
+        cout<<ans<<endl;
 
 
     }
