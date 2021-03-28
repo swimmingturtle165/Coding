@@ -268,14 +268,41 @@ signed main(int argc, char** argv)
             cin >> inp[i];
         
         sort(inp.begin(), inp.end());
-        vector<vector<ll>> dp(n,vector<ll>(2*n+1,INT_MAX));
-        FOR(i,0,n)
+        vector<vector<ll>> dp(403,vector<ll>(403,INT_MAX));
+        dp[0][0]=0;
+
+        // dp[i][j]  stores minimum cost till ith dish served upto jth minute
+
+        // dp[i][j]=min(dp[i][j],dp[i-1][j-1]+abs(inp[i]-j));
+
+       FOR(i,0,403)
+       {
+           dp[0][i]=0;
+       }
+
+       FOR(i,0,n)
+       {
+           FOR(j,1,403)
+           {
+               dp[i+1][j]=min(dp[i+1][j],dp[i][j-1]+abs(inp[i]-j));
+               dp[i+1][j]=min(dp[i+1][j],dp[i+1][j-1]);
+           }
+       }
+    //    FOR(i,0,n+1)
+    //    {
+    //        FOR(j,0,6)
+    //        {
+    //            cout<<dp[i][j]<<" ";
+    //        }
+    //        cout<<endl;
+    //    }
+
+        ll ans=INT_MAX;
+        FOR(i,1,403)
         {
-            FOR(j,i+1,2*n+1)
-            {
-                    
-            }
+            ans=min(ans,dp[n][i]);
         }
+        cout<<ans<<endl;
     }
     return 0;
 }

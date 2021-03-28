@@ -41,17 +41,21 @@ struct segmenttree{
 
     ll sz=1;
 
-    vector<ll> segtree;
-    vector<ll> val;
+   vector<ll> segtree;
+    
+   vector<ll> val;
+
    ll modify_operation(ll a,ll b)
    {
        return (a * b) % MOD;
    }
    
+
    ll calc_operation(ll a,ll b)
    {
        return (a + b) % MOD;
    }
+
 
    void apply_mod_operation(ll&a,ll b)
    {
@@ -70,9 +74,10 @@ struct segmenttree{
         ll mid = (lx + rx) / 2;
         build(2 * x + 1, lx, mid);
         build(2 * x + 2,  mid,rx);
-        val[x] = calc_operation(val[2 * x + 1], val[2 * x + 2]);
+        val[x] = (val[2 * x + 1]+val[2 * x + 2]);
 
     }
+    
     void init(ll n)
     {
         sz = 1;
@@ -108,17 +113,20 @@ struct segmenttree{
         
         ll mid = (lx + rx) / 2;
 
-        ll v1 = get_segment(l, r, 2 * x + 1, lx, mid);
-        ll v2 = get_segment(l, r, 2 * x + 2,  mid,rx);
+        ll v1 = get_segment(l, r, 2 * x + 1, lx, mid)%MOD;
+
+        ll v2 = get_segment(l, r, 2 * x + 2,  mid,rx)%MOD;
 
         ll res = calc_operation(v1, v2);
+
         apply_mod_operation(res, segtree[x]);
+        
         return res;
     }
 
     ll get_segment(ll l,ll r)
     {
-        return get_segment(l,r, 0, 0, sz);
+        return get_segment(l , r , 0 , 0 , sz);
     }
 
     
@@ -136,6 +144,15 @@ struct segmenttree{
         {
             //  complete intersection
             apply_mod_operation(segtree[x], v);
+            if(rx-lx!=1)
+            {
+            val[x]=val[2*x+1]+val[2*x+2];
+            }
+            else
+            {
+                val[x]=1;
+            }
+            
             apply_mod_operation(val[x],segtree[x]);
 
             return;
@@ -145,13 +162,16 @@ struct segmenttree{
         
         // left child             + 
         multiply(l, r, v, 2 * x + 1, lx, mid);
+
         //  right child
         multiply(l, r, v, 2 * x + 2, mid, rx);
 
         val[x] = calc_operation(val[2 * x + 1], val[2 * x + 2]);
+
         apply_mod_operation(val[x], segtree[x]);
 
         return;
+        
     }
 
     void multiply(ll l, ll r,ll v)
