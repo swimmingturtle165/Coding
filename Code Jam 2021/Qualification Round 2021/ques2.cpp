@@ -249,34 +249,6 @@ bool find(vector<ll>&Arr,int A,int B)
 }
    
 
-class playlist{
-
-    public:
-    ll rep=0;
-    ll sz=0;
-    set<pll> bad_pairs;
-    set<ll>  left;
-
-    playlist(ll n,vector<ll>&inp)
-    {
-        // cout<<"*"<<endl;
-        sz=n;
-        FOR(i,0,inp.size())
-        {
-            if(gcd(inp[i],inp[(i+1)%n])==1)
-            {
-                // cout<<inp[i]<<" "<<inp[(i+1)%n]<<endl;
-                bad_pairs.insert({i,(i+1)%n});
-            }
-            left.insert(i);
-        }
-        left.insert(INT_MIN);
-        left.insert(INT_MAX);
-        bad_pairs.insert({INT_MAX,INT_MAX});
-        // cout<<bad_pairs.size()<<" ^^ "<<left.size()<<endl;
-    }
-};
-
 
 signed main(int argc, char** argv)
 {
@@ -287,86 +259,168 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
+    ll v1=0;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n)
+        ll x,y;
+        cin>>x>>y;
+        v1++;
+        cout<<"Case #"<<v1<<": ";
+        string str;
+        cin>>str;
+        str='*'+str+'*';
+        ll ans=0;
+        ll n=str.size();
+
+        FOR(i,0,str.size())
         {
-            cin>>inp[i];
-        }
-        // dispvector<ll>(inp)
-        playlist p1=playlist(n,inp);
-        // cout<<p1.sz<<endl;
-        vector<ll> ans;
-        ans.clear();
-        bool flg=true;
-        ll currt=INT_MIN+1;
-        ll v3=0;
-        while (p1.bad_pairs.size()>1)
-        {
-            v3++;
-            if(v3>n) break;
-
-            ll tmp=*(p1.left.lower_bound(currt));
-            // cout<<tmp<<endl;
-            if(tmp==INT_MAX)
+            if(str[i]=='?')
             {
-            currt=INT_MIN+1;
-            continue;
-            }
-            pll bp=*(p1.bad_pairs.lower_bound({tmp,-1}));
-            // cout<<bp.first<<" ^^ "<<bp.second<<endl;
-            if(bp.first!=tmp)
-            {
-                currt=bp.first;
-                continue;
-            }
-            else
-            {
-                v3=0;
-                ll prv=inp[bp.first];
-                ll v2=bp.second;
-                ll del=inp[bp.second];
-                ll nxt=*(p1.left.lower_bound(v2+1));
-
-                if(nxt==INT_MAX)
-                nxt=*(p1.left.upper_bound(INT_MIN));
-                ll v1=nxt;
-                nxt=inp[nxt];
-                // cout<<prv<<" "<<del<<" "<<nxt<<" "<<bp.second<<endl;
-
-                p1.left.erase(v2);
-                p1.bad_pairs.erase({bp.first,bp.second});
-                p1.bad_pairs.erase({bp.second,bp.first});
-
-                p1.bad_pairs.erase({bp.second,v1});
-                p1.bad_pairs.erase({v1,bp.second});
-
-
-                if(gcd(prv,nxt)==1)
+                char prev=str[i-1];
+                char nxt=str[i];
+                ll len=0;
+                while(i<str.size() && str[i]=='?')
                 {
-                    p1.bad_pairs.insert({bp.first,v1});
-                    // p1.left.insert(bp.first);
-                    // p1.left.insert(v1);
-
+                    i++;
+                    len++;
+                    
                 }
-                currt=v1;
-                ans.pb(bp.second+1);
+                nxt=str[i];
 
-                // remove bp.second
-                // check for next and bp.first
-                //  currt=next;
+                if(prev=='*')
+                {
+                    if(nxt=='*')
+                    {
+                        ans+=(len/2)*(min(0ll,min(x,y)));
+                    }
+                    else if(nxt=='C')
+                    {
+                        // cj jc cc jj for len/2
+                        ans+=(len/2)*(min(0ll,min(x,y)));
+                        if(len%2==1)
+                        {
+                            if(y<=0)
+                            {
+                                ans+=y;
+                            }
+                        }
+                    }
+                    else if(nxt=='J')
+                    {
+                        // cj jc cc jj for len/2
+                        ans+=(len/2)*(min(0ll,min(x,y)));
+                        if(len%2==1)
+                        {
+                            if(x<=0)
+                            {
+                                ans+=x;
+                            }
+                        }
+                    }
+                }
+                else if(prev=='C')
+                {
+                    if(nxt=='*')
+                    {
+                        ans+=(len/2)*(min(0ll,min(x,y)));
+                        if(len%2==1)
+                        {
+                            if(x<=0)
+                            {
+                                ans+=x;
+                            }
+                        }
+                    }
+                    else if(nxt=='C')
+                    {
+                        // if(len==1)
+                        // {
+                        // ans+=min(x,0ll);
+
+                        // }
+                        // else 
+                        // {
+                        //     len-=2;
+                        //     ans+=min(x,0ll);
+                        //     ans+=min(y,0ll);
+
+                        //     ans+=(len/2)*(min(0ll,min(x,y)));
+                            
+                        //     if(len%2==1)
+                        //     {
+                        //         if(x<=0)
+                        //         {
+                        //             ans+=x;
+                        //         }
+                        //         if(y<=0)
+                        //         {
+                        //             ans+=x;
+                        //         }
+                        //     }
+
+                        // }
+                        
+                        // cj jc cc jj for len/2
+                    }
+                    else if(nxt=='J')
+                    {
+                        // cj jc cc jj for len/2
+                        ans+=x;
+                    }
+                }
+                else if(prev=='J')
+                {
+                    if(nxt=='*')
+                    {
+                        ans+=(len/2)*(min(0ll,min(x,y)));
+                        if(len%2==1)
+                        {
+                            if(y<=0)
+                            {
+                                ans+=y;
+                            }
+                        }
+                    }
+                    else if(nxt=='C')
+                    {
+                        ans+=y;
+                        // cj jc cc jj for len/2
+                        // ans+=(len/2)*(min(0ll,min(x,y)));
+                        // if(len%2==1)
+                        // {
+                        //     if(y<=0)
+                        //     {
+                        //         ans+=y;
+                        //     }
+                        // }
+                    }
+                    else if(nxt=='J')
+                    {
+                        // cj jc cc jj for len/2
+                        // ans+=(len/2)*(min(0ll,min(x,y)));
+                        // if(len%2==1)
+                        // {
+                        //     if(x<=0)
+                        //     {
+                        //         ans+=x;
+                        //     }
+                        // }
+                    }
+                }
             }
+            else if( str[i]=='C' && str[i-1]=='J')
+            {
+                // cout<<i<<" CJ "<<i-1<<endl;
+                ans+=y;
+            }
+            else if( str[i]=='J' && str[i-1]=='C')
+            {
+                // cout<<i<<" JC "<<i-1<<endl;
 
-
+                ans+=x;
+            }
         }
-        cout<<ans.size()<<" ";
-        FOR(i,0,ans.size()) cout<<ans[i]<<" ";
-        cout<<endl;
-
-
+            cout<<ans<<endl;
     }
     return 0;
 }

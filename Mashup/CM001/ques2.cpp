@@ -249,34 +249,8 @@ bool find(vector<ll>&Arr,int A,int B)
 }
    
 
-class playlist{
 
-    public:
-    ll rep=0;
-    ll sz=0;
-    set<pll> bad_pairs;
-    set<ll>  left;
-
-    playlist(ll n,vector<ll>&inp)
-    {
-        // cout<<"*"<<endl;
-        sz=n;
-        FOR(i,0,inp.size())
-        {
-            if(gcd(inp[i],inp[(i+1)%n])==1)
-            {
-                // cout<<inp[i]<<" "<<inp[(i+1)%n]<<endl;
-                bad_pairs.insert({i,(i+1)%n});
-            }
-            left.insert(i);
-        }
-        left.insert(INT_MIN);
-        left.insert(INT_MAX);
-        bad_pairs.insert({INT_MAX,INT_MAX});
-        // cout<<bad_pairs.size()<<" ^^ "<<left.size()<<endl;
-    }
-};
-
+ll dp[202][202][202];
 
 signed main(int argc, char** argv)
 {
@@ -286,85 +260,70 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n)
+        ll n1,n2,n3;
+        cin>>n1>>n2>>n3;
+        vector<ll> arr1(n1),arr2(n2),arr3(n3);
+
+        
+        // memset(dp,0,sizeof(dp));
+
+     
+        
+        FOR(i,0,n1) cin>>arr1[i];
+
+        FOR(i,0,n2) cin>>arr2[i];
+        
+        FOR(i,0,n3) cin>>arr3[i];
+
+        sort(arr1.begin(),arr1.end());
+        sort(arr2.begin(),arr2.end());
+        sort(arr3.begin(),arr3.end());
+
+        
+        ll ans=0;
+
+        FORDE(i,n1,0)
         {
-            cin>>inp[i];
-        }
-        // dispvector<ll>(inp)
-        playlist p1=playlist(n,inp);
-        // cout<<p1.sz<<endl;
-        vector<ll> ans;
-        ans.clear();
-        bool flg=true;
-        ll currt=INT_MIN+1;
-        ll v3=0;
-        while (p1.bad_pairs.size()>1)
-        {
-            v3++;
-            if(v3>n) break;
-
-            ll tmp=*(p1.left.lower_bound(currt));
-            // cout<<tmp<<endl;
-            if(tmp==INT_MAX)
+            FORDE(j,n2,0)
             {
-            currt=INT_MIN+1;
-            continue;
-            }
-            pll bp=*(p1.bad_pairs.lower_bound({tmp,-1}));
-            // cout<<bp.first<<" ^^ "<<bp.second<<endl;
-            if(bp.first!=tmp)
-            {
-                currt=bp.first;
-                continue;
-            }
-            else
-            {
-                v3=0;
-                ll prv=inp[bp.first];
-                ll v2=bp.second;
-                ll del=inp[bp.second];
-                ll nxt=*(p1.left.lower_bound(v2+1));
-
-                if(nxt==INT_MAX)
-                nxt=*(p1.left.upper_bound(INT_MIN));
-                ll v1=nxt;
-                nxt=inp[nxt];
-                // cout<<prv<<" "<<del<<" "<<nxt<<" "<<bp.second<<endl;
-
-                p1.left.erase(v2);
-                p1.bad_pairs.erase({bp.first,bp.second});
-                p1.bad_pairs.erase({bp.second,bp.first});
-
-                p1.bad_pairs.erase({bp.second,v1});
-                p1.bad_pairs.erase({v1,bp.second});
-
-
-                if(gcd(prv,nxt)==1)
+                FORDE(k,n3,0)
                 {
-                    p1.bad_pairs.insert({bp.first,v1});
-                    // p1.left.insert(bp.first);
-                    // p1.left.insert(v1);
+                    if(i>=1 && j>=1)
+                    {
 
+                    dp[i-1][j-1][k]=max(dp[i][j][k]+arr1[i-1]*arr2[j-1],dp[i-1][j-1][k]);
+                    }
+
+                    if(k>=1 && j>=1)
+                    {
+                        dp[i][j-1][k-1]=max(dp[i][j][k]+arr3[k-1]*arr2[j-1],dp[i][j-1][k-1]);
+                    }
+                    if(k>=1 && i>=1)
+                    {
+                        dp[i-1][j][k-1]=max(dp[i][j][k]+arr1[i-1]*arr3[k-1],dp[i-1][j][k-1]);
+                    }
                 }
-                currt=v1;
-                ans.pb(bp.second+1);
-
-                // remove bp.second
-                // check for next and bp.first
-                //  currt=next;
             }
-
-
         }
-        cout<<ans.size()<<" ";
-        FOR(i,0,ans.size()) cout<<ans[i]<<" ";
-        cout<<endl;
+        FOR(i,0,n1+2)
+        {
+            FOR(j,0,n2+2)
+            {
+                FOR(k,0,n3+2)
+                {
+                    ans=max(dp[i][j][k],ans);
+                }
+
+            }
+        }
+        cout<<ans<<endl;
+
+
+
+
 
 
     }

@@ -248,35 +248,23 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-
-class playlist{
-
-    public:
-    ll rep=0;
-    ll sz=0;
-    set<pll> bad_pairs;
-    set<ll>  left;
-
-    playlist(ll n,vector<ll>&inp)
+void dfs(int curr, int dis,vector<ll>& dist,vector<vector<ll>>& graph,vector<bool>& vst)
+{
+    if(vst[curr])
     {
-        // cout<<"*"<<endl;
-        sz=n;
-        FOR(i,0,inp.size())
-        {
-            if(gcd(inp[i],inp[(i+1)%n])==1)
-            {
-                // cout<<inp[i]<<" "<<inp[(i+1)%n]<<endl;
-                bad_pairs.insert({i,(i+1)%n});
-            }
-            left.insert(i);
-        }
-        left.insert(INT_MIN);
-        left.insert(INT_MAX);
-        bad_pairs.insert({INT_MAX,INT_MAX});
-        // cout<<bad_pairs.size()<<" ^^ "<<left.size()<<endl;
+        return;
     }
-};
-
+    vst[curr]=true;
+    dist[curr]=dis;
+    for(auto it:graph[curr])
+    {
+        if(vst[it]==false)
+        {
+            dist[it]=dis+1;
+            dfs(it,dis+1,dist,graph,vst);
+        }
+    }
+}
 
 signed main(int argc, char** argv)
 {
@@ -289,82 +277,63 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n)
-        {
-            cin>>inp[i];
-        }
-        // dispvector<ll>(inp)
-        playlist p1=playlist(n,inp);
-        // cout<<p1.sz<<endl;
-        vector<ll> ans;
-        ans.clear();
-        bool flg=true;
-        ll currt=INT_MIN+1;
-        ll v3=0;
-        while (p1.bad_pairs.size()>1)
-        {
-            v3++;
-            if(v3>n) break;
+        ll n,a,b,na,nb;
+        cin>>n>>a>>b>>na>>nb;
 
-            ll tmp=*(p1.left.lower_bound(currt));
-            // cout<<tmp<<endl;
-            if(tmp==INT_MAX)
-            {
-            currt=INT_MIN+1;
+        vector<vector<ll>> graph(n+1,vector<ll>());
+        vector<ll> dis(n+1,0);
+        FOR(i,0,n-1)
+        {
+            ll a,b;
+            cin>>a>>b;
+            graph[a].pb(b);
+            graph[b].pb(a);
+        }
+
+        vector<bool> vst(n+1,false);
+        dfs(a,0,dis,graph,vst);
+        // dispvector<ll>(dis);
+        
+        if(nb<=2*na || dis[b]<=na)
+        {
+            cout<<"Alice"<<endl;
             continue;
-            }
-            pll bp=*(p1.bad_pairs.lower_bound({tmp,-1}));
-            // cout<<bp.first<<" ^^ "<<bp.second<<endl;
-            if(bp.first!=tmp)
-            {
-                currt=bp.first;
-                continue;
-            }
-            else
-            {
-                v3=0;
-                ll prv=inp[bp.first];
-                ll v2=bp.second;
-                ll del=inp[bp.second];
-                ll nxt=*(p1.left.lower_bound(v2+1));
-
-                if(nxt==INT_MAX)
-                nxt=*(p1.left.upper_bound(INT_MIN));
-                ll v1=nxt;
-                nxt=inp[nxt];
-                // cout<<prv<<" "<<del<<" "<<nxt<<" "<<bp.second<<endl;
-
-                p1.left.erase(v2);
-                p1.bad_pairs.erase({bp.first,bp.second});
-                p1.bad_pairs.erase({bp.second,bp.first});
-
-                p1.bad_pairs.erase({bp.second,v1});
-                p1.bad_pairs.erase({v1,bp.second});
-
-
-                if(gcd(prv,nxt)==1)
-                {
-                    p1.bad_pairs.insert({bp.first,v1});
-                    // p1.left.insert(bp.first);
-                    // p1.left.insert(v1);
-
-                }
-                currt=v1;
-                ans.pb(bp.second+1);
-
-                // remove bp.second
-                // check for next and bp.first
-                //  currt=next;
-            }
-
-
         }
-        cout<<ans.size()<<" ";
-        FOR(i,0,ans.size()) cout<<ans[i]<<" ";
-        cout<<endl;
+        // cout<<"**"<<endl;
+        ll v1=0,v2=0;
+        FOR(i,1,n+1)
+        {
+            if(v1<dis[i])
+            {
+                v1=dis[i];
+                v2=i;
+            }
+        }
+        dis.assign(n+1,-1);
+        vst.assign(n+1,false);
+        // cout<<v1<<" "<<v2<<endl;
+
+        dfs(v2,0,dis,graph,vst);
+        // dispvector<ll>(dis);
+        v2=0;
+        FOR(i,1,n+1)
+        {
+            if(v2<dis[i])
+            {
+                v2=dis[i];
+            }
+        }
+        // cout<<v1<<" "<<v2<<endl;
+        if(v2<=2*na)
+        {
+            cout<<"Alice"<<endl;
+        }
+        else
+        {
+            cout<<"Bob"<<endl;
+        }
+
+
 
 
     }
