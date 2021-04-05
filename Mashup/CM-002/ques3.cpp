@@ -247,6 +247,24 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
+const int Nmax = 1000005;
+
+int do_calc(int x, int p, int y) {
+    if(p == 1) {
+        return x;
+    }
+    int ans = 1;
+    for(int i = 1; i <= y; i++) {
+        if(1LL * ans * p > Nmax) {
+            return -1;
+        }
+        ans *= p;
+    }
+    if(1LL * x * ans > Nmax) {
+        return -1;
+    }
+    return x * ans;
+}
    
 
 
@@ -267,71 +285,109 @@ signed main(int argc, char** argv)
         
         FOR(i,0,n) cin>>inp[i];
 
-        sort(inp.begin(),inp.end());
-        reverse(inp.begin(),inp.end());
-
         if(n==1)
         {
             cout<<power(p,inp[0],MOD)<<endl;
         }
         else if(p==1)
         {
-            cout<<n%2ll<<endl;
+            cout<<n%2<<endl;
         }
         else
         {
-            unordered_map<ll,ll> cnt;
+
+
+            map<ll,ll> strg;
+            ll maxi=0;
             FOR(i,0,n)
             {
-                cnt[inp[i]]++;
+                strg[inp[i]]++;
             }
-            ll v1=0;
-            FOR(i,0,2000001)
+            
+                // cout<<v1<<" "<<v2<<endl;
+            ll ans=0;
+            bool flg=false;
+            vector<ll> arr(strg.size());
+            for(auto it=strg.rbegin() ; it!=strg.rend();it++)
             {
-                if(cnt.find(i)==cnt.end())
+                arr[ans]=it->f;
+                ans++;
+            }
+            // dispvector<ll>(arr);
+            ans=0;
+            ll i=0;
+            while(i<arr.size() && flg==false)
+            {
+                
+                ll it1=arr[i];
+                ll it2=strg[arr[i]];
+
+                if(it2%2==1)
                 {
-                    continue;
-                }
-                if(cnt[i]>p)
-                {
-                    ll v1=cnt[i]/p;
-                    cnt[i]=cnt[i]%p;
-                    cnt[i+1]+=v1;
-                    v1=i+1;
+                    // cout<<it1<<" "<<it2<<endl;    
+                    ll curr_req=1;
+                    ll pos=i;
+                    ll possible=0;
+                    ll curr=it1;
+
+                    FOR(j,i+1,arr.size())
+                    {
+                        ll new_curr_req=do_calc(curr_req,p,curr-arr[j]);
+
+                        if(new_curr_req<0 || new_curr_req>n)
+                        {
+                            flg=true;
+                            break;
+                        }
+                        else if(strg[arr[j]]>=new_curr_req)
+                        {
+                            strg[arr[j]]-=new_curr_req;
+                            possible=1;
+                            pos=j;
+                            break;
+
+                        }
+                        else
+                        {
+                            new_curr_req-=strg[arr[j]];
+                        }
+                        curr_req=new_curr_req;
+                        curr=arr[j];
+                    }
+                    // cout<<possible<<endl;
+                    if(possible)
+                    {
+                        i=pos;
+                    }
+                    else
+                    {
+                        flg=false;
+                        // cout<<it1<<" "<<it2<<endl;    
+
+                        ans=power(p,arr[i],MOD);
+                        FOR(j,i+1,arr.size())
+                        {
+                            ans-=strg[arr[j]]*power(p,arr[j],MOD);
+                            ans%=MOD;
+                            if(ans<0)
+                            {
+                                ans+=MOD;
+                            }
+                        }
+                        break;
+                    }
+
+
                 }
                 else
                 {
-                    v1=i;
+                    i++;
                 }
             }
-            ll idx=v1;
-            FORDE(i,v1-(1-v1%2)%2,0)
-            {
-                if(cnt[i]%2==0)
-                {
-                    idx=i;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            cout<<idx<<" "<<v1<<endl;
-            ll answ=0;
-            FORDE(i,idx-1,0)
-            {
-                if(cnt.find(i)==cnt.end())
-                {
-                    continue;
-                }
-                if(cnt[i]==0)
-                {
-                    continue;
-                }
-                answ+=(power(p,i,MOD));
-                answ%=MOD;
-            }
-            cout<<answ<<endl;
+            cout<<ans<<endl;
+
+           
+        
         }
     }
     return 0;
