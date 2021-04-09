@@ -258,49 +258,21 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        ll n,k;
-        cin>>n>>k;
-        vector<ll> inp(n);
+        vector<ll> val(6);
 
-        FOR(i,0,n) cin>>inp[i];
+        FOR(i,0,6) cin>>val[i];
 
-        ll tmp;
-        FOR(i,0,n) cin>>tmp;
+        ll n;
+        cin>>n;
 
-        sort(inp.begin(),inp.end());
+        vector<ll> arr(n);
+        FOR(i,0,n) cin>>arr[i];
 
-        vector<ll> strg(n+1,0);
-        
-        ll maxi1=0,maxi2=0;
-
-        ll start=inp[0];
-        
-        ll curr=0;
-        ll ans=0;
-        ll j=0;
-        vector<ll> tgh(n,1);
-        FOR(i,0,n)
-        {
-            bool glh=true;
-            while(inp[i]-inp[j]>k)
-            {
-                maxi1=max(tgh[j],maxi1);
-                curr=i-j;
-                j++;
-                glh=false;
-            }
-            if(glh)
-            curr++;
-            // curr=max(1ll,curr);
-            tgh[i]=curr;
-            ans=max(ans,curr+maxi1);
-            // cout<<i<<" "<<j<<" "<<inp[i]<<" "<<curr<<" "<<maxi1<<endl;
-        }
-        cout<<ans<<endl;
-
+        sort(val.begin(),val.end());
+        sort(arr.begin(),arr.end());
 
     }
     return 0;
