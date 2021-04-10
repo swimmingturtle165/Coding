@@ -261,53 +261,68 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        vector<ll> val(6);
-
-        FOR(i,0,6) cin>>val[i];
-
         ll n;
         cin>>n;
 
-        vector<ll> arr(n);
-        FOR(i,0,n) cin>>arr[i];
-
-        vector<pll> strg(6*n);
-
-        FOR(j,0,6)
+        vector<ll> seq(n,INT_MIN);
+        ll dn=0;
+        stack<ll> st;
+        bool flg=true;
+        ll sd=0;
+        // bool consecutive=false; not req
+        FOR(j,0,2*n)
         {
-            FOR(i,0,n)
+            char cj;
+            cin>>cj;
+            if(cj=='+')
+            {   
+                st.push(dn);
+                dn++;
+                sd++;
+            }
+            else
             {
-                strg[j*n+i]={arr[i]-val[j],i};
+                ll tmp;
+                cin>>tmp;
 
-            }
-        }
-        sort(strg.begin(),strg.end());
-        vector<ll> cnt(n,0);
-        ll ans=INT_MAX;
-        ll done=0;
-        ll j=0;
-        
-        FOR(i,0,6*n)
-        {
-            cnt[strg[i].s]++;
-            if(cnt[strg[i].s]==1)
-            {
-                done++;
-            }
-            while(done==n)
-            {
-                ll st=strg[j].f;
-                ll end=strg[i].f;
-                ans=min(ans,end-st);
-                cnt[strg[j].s]--;
-                if(cnt[strg[j].s]==0)
+                if(st.size()==0)
                 {
-                    done--;
+                    flg=false;
+                    break;
                 }
-                j++;
+               
+                else
+                {
+                    ll idx=st.top();
+                    st.pop();
+                    // cout<<idx<<" "<<tmp<<endl;
+                    if(idx<n-1 && tmp<seq[idx+1])
+                    {
+                        flg=false;
+                        break;
+                    }
+                    else
+                    {
+                        seq[idx]=tmp;
+                    }
+
+
+                }
+
+                
+
+
             }
         }
-        cout<<ans<<endl;
+        if(flg)
+        {
+            cout<<"YES"<<endl;
+            dispvector<ll>(seq);
+        }
+        else
+        {
+            cout<<"NO"<<endl;
+        }
     }
     return 0;
 }
