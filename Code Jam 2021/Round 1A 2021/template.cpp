@@ -258,75 +258,11 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
+    ll v=0;
     while(t--)
     {
-        vector<ll> val(6);
-
-        FOR(i,0,6) cin>>val[i];
-
-        ll n;
-        cin>>n;
-
-        vector<ll> arr(n);
-        FOR(i,0,n) cin>>arr[i];
-
-        sort(val.begin(),val.end());
-        sort(arr.begin(),arr.end());
-
-
-        priority_queue<pll> maxi;
-        priority_queue<pll,vector<pll>,greater<pll>> mini;
-
-
-        FOR(i,0,n)
-        {
-            FOR(j,0,6)
-            {
-                maxi.push({arr[i]-val[j],i});
-                mini.push({arr[i]-val[j],i});
-            }
-        }
-
-        ll cnt1=0,cnt2=0;
-
-        vector<bool> vst1(n,false);
-        
-        vector<bool> vst2(n,false);
-
-        ll maxi1=INT_MIN,mini1=INT_MAX,maxi2=INT_MIN,mini2=INT_MAX;
-
-        while (cnt1<n)
-        {
-            pll tmp=maxi.top();
-            maxi.pop();
-
-            if(vst1[tmp.s]==false)
-            {
-                maxi1=max(maxi1,tmp.f);
-                mini1=min(mini1,tmp.f);
-                cnt1++;
-                vst1[tmp.s]=true;
-            }
-        }
-        
-        while (cnt2<n)
-        {
-            pll tmp=mini.top();
-            mini.pop();
-
-            if(vst2[tmp.s]==false)
-            {
-                maxi2=max(maxi2,tmp.f);
-                mini2=min(mini2,tmp.f);
-                cnt2++;
-                vst2[tmp.s]=true;
-            }
-        }
-
-        ll ans=min(maxi1-mini1,maxi2-mini2);
-        cout<<ans<<endl;
-
+        v++;
     }
     return 0;
 }

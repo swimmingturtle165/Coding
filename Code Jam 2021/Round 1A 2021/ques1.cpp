@@ -247,7 +247,8 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
+
+
 
 
 signed main(int argc, char** argv)
@@ -258,74 +259,153 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
+    ll v=0;
     while(t--)
     {
-        vector<ll> val(6);
-
-        FOR(i,0,6) cin>>val[i];
-
+        v++;
+        cout<<"Case #"<<v<<": ";
         ll n;
+
         cin>>n;
 
-        vector<ll> arr(n);
-        FOR(i,0,n) cin>>arr[i];
+        vector<string> inp(n);
 
-        sort(val.begin(),val.end());
-        sort(arr.begin(),arr.end());
+        FOR(i,0,n) cin>>inp[i];
 
+        vector<ll> fst(n);
 
-        priority_queue<pll> maxi;
-        priority_queue<pll,vector<pll>,greater<pll>> mini;
+        vector<ll> strg(n);
 
-
-        FOR(i,0,n)
+        ll ans=0;
+        FOR(i,1,n)
         {
-            FOR(j,0,6)
+            string tmp=inp[i];
+            string tmp1=inp[i-1];
+
+            int cnt=tmp1.size()-tmp.size();
+            cnt=max(0,cnt);
+            ll k2=tmp.size();
+            FOR(j,0,cnt)
             {
-                maxi.push({arr[i]-val[j],i});
-                mini.push({arr[i]-val[j],i});
+                tmp+='0';
             }
-        }
-
-        ll cnt1=0,cnt2=0;
-
-        vector<bool> vst1(n,false);
-        
-        vector<bool> vst2(n,false);
-
-        ll maxi1=INT_MIN,mini1=INT_MAX,maxi2=INT_MIN,mini2=INT_MAX;
-
-        while (cnt1<n)
-        {
-            pll tmp=maxi.top();
-            maxi.pop();
-
-            if(vst1[tmp.s]==false)
+            // cout<<tmp<<" "<<tmp1<<" "<<cnt<<endl;
+            bool flg= tmp.size() <= tmp1.size();
+            if(flg==true)
             {
-                maxi1=max(maxi1,tmp.f);
-                mini1=min(mini1,tmp.f);
-                cnt1++;
-                vst1[tmp.s]=true;
+                flg=tmp<=tmp1;
             }
-        }
-        
-        while (cnt2<n)
-        {
-            pll tmp=mini.top();
-            mini.pop();
-
-            if(vst2[tmp.s]==false)
+            // cout<<flg<<endl;
+            ll prev=-1;
+            if (flg)
             {
-                maxi2=max(maxi2,tmp.f);
-                mini2=min(mini2,tmp.f);
-                cnt2++;
-                vst2[tmp.s]=true;
-            }
-        }
+                FOR(j,inp[i].size(),tmp.size())
+                {
+                    if(tmp[j]<tmp1[j])
+                    {
+                        tmp[j]=tmp1[j];
+                    }
+                   flg=(tmp<=tmp1);
+                    if(!flg)
+                    {
+                        break;
+                    }
+                }
+                if(flg)
+                {
+                    bool fgl=false;
+                    bool flg2=true;
+                    FOR(j,0,inp[i].size())
+                    {
+                        if(inp[i][j]<tmp1[j])
+                        {
+                            flg2=false;
+                        }
+                    }
+                    if(flg2==false)
+                    {
+                         tmp=inp[i];
+                        FOR(j,0,cnt)
+                        {
+                            tmp+='0';
+                        }
+                        tmp+='0'; 
+                    }
+                    else
+                    {
+                        ll k2=inp[i].size(),k3=inp[i].size();
+                        while (k3<tmp.size() && tmp[k3]==tmp1[k3])
+                        {
+                            k3++;
+                        }
+                        
+                         FORDE(j,k3-1,k2)
+                        {
+                            char trt=tmp[j];
+                            
+                            while(tmp[j]!='9')
+                            {
+                                tmp[j]++;
+                                
+                                flg=(tmp<=tmp1);
+                                if(flg==false)
+                                {
+                                    string fdg=tmp;
+                                    FORDE(g,tmp.size()-1,j+1)
+                                    {
+                                        tmp[g]='0';
+                                        flg=(tmp<=tmp1);
+                                        if(flg)
+                                        {
+                                            tmp=fdg;
+                                            flg=false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            fdg=tmp;
+                                        }
+                                    }
 
-        ll ans=min(maxi1-mini1,maxi2-mini2);
-        cout<<ans<<endl;
+                                }
+
+                                if(flg==false)
+                                {
+                                break;
+                                }
+                            }
+                                if(flg==false)
+                                {
+                                break;
+                                } 
+                                else
+                                {
+                                    tmp[j]=trt;
+                                }
+                        }
+                        if(flg)
+                        {
+                                tmp=inp[i];
+                                FOR(j,0,cnt)
+                                {
+                                    tmp+='0';
+                                }
+                                tmp+='0'; 
+                        }
+                    }
+                  
+                   
+                }
+                
+                // break;
+                
+            }
+            ans+=tmp.size()-inp[i].size();
+            inp[i]=tmp;
+        }
+            cout<<ans<<endl;
+
 
     }
     return 0;

@@ -247,7 +247,61 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
+
+#include "bits/stdc++.h"
+using namespace std;
+  
+#define MAXN   100001
+  
+// stores smallest prime factor for every number
+int spf[MAXN];
+  
+// Calculating SPF (Smallest Prime Factor) for every
+// number till MAXN.
+// Time Complexity : O(nloglogn)
+void sieve()
+{
+    spf[1] = 1;
+    for (int i=2; i<MAXN; i++)
+  
+        // marking smallest prime factor for every
+        // number to be itself.
+        spf[i] = i;
+  
+    // separately marking spf for every even
+    // number as 2
+    for (int i=4; i<MAXN; i+=2)
+        spf[i] = 2;
+  
+    for (int i=3; i*i<MAXN; i++)
+    {
+        // checking if i is prime
+        if (spf[i] == i)
+        {
+            // marking SPF for all numbers divisible by i
+            for (int j=i*i; j<MAXN; j+=i)
+  
+                // marking spf[j] if it is not 
+                // previously marked
+                if (spf[j]==j)
+                    spf[j] = i;
+        }
+    }
+}
+  
+// A O(log n) function returning primefactorization
+// by dividing by smallest prime factor at every step
+vector<int> getFactorization(int x)
+{
+    vector<int> ret;
+    while (x != 1)
+    {
+        ret.push_back(spf[x]);
+        x = x / spf[x];
+    }
+    return ret;
+}
+  
 
 
 signed main(int argc, char** argv)
@@ -258,74 +312,87 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
+    ll v=0;
+    sieve();
     while(t--)
     {
-        vector<ll> val(6);
-
-        FOR(i,0,6) cin>>val[i];
-
-        ll n;
-        cin>>n;
-
-        vector<ll> arr(n);
-        FOR(i,0,n) cin>>arr[i];
-
-        sort(val.begin(),val.end());
-        sort(arr.begin(),arr.end());
-
-
-        priority_queue<pll> maxi;
-        priority_queue<pll,vector<pll>,greater<pll>> mini;
-
-
-        FOR(i,0,n)
-        {
-            FOR(j,0,6)
-            {
-                maxi.push({arr[i]-val[j],i});
-                mini.push({arr[i]-val[j],i});
-            }
-        }
-
-        ll cnt1=0,cnt2=0;
-
-        vector<bool> vst1(n,false);
+        v++;
+        cout<<"Case #"<<v<<": ";
         
-        vector<bool> vst2(n,false);
+        ll m;
+        cin>>m;
 
-        ll maxi1=INT_MIN,mini1=INT_MAX,maxi2=INT_MIN,mini2=INT_MAX;
-
-        while (cnt1<n)
-        {
-            pll tmp=maxi.top();
-            maxi.pop();
-
-            if(vst1[tmp.s]==false)
-            {
-                maxi1=max(maxi1,tmp.f);
-                mini1=min(mini1,tmp.f);
-                cnt1++;
-                vst1[tmp.s]=true;
-            }
-        }
+        vector<ll> inp(m);
         
-        while (cnt2<n)
-        {
-            pll tmp=mini.top();
-            mini.pop();
+        unordered_map<ll,ll> strg;
 
-            if(vst2[tmp.s]==false)
+        vector<ll> arr;
+        ll sum=0;
+        FOR(i,0,m)
+        {
+            ll a,b;
+            cin>>a>>b;
+            strg[a]=b;
+            FOR(j,0,b)
             {
-                maxi2=max(maxi2,tmp.f);
-                mini2=min(mini2,tmp.f);
-                cnt2++;
-                vst2[tmp.s]=true;
+                sum+=a;
+                arr.pb(a);
+            }
+             inp[i]=a;
+        }
+        vector<bool> dp(50001,false);
+        vector<bool> dp1(50001,false);
+        dp[0]=true;
+        FOR(i,0,arr.size())
+        {
+            FOR(j,0,50001)
+            {
+                if(dp[j] && j+arr[i]<=50000)
+                {
+                    dp1[j+arr[i]]=true;
+                }
+                if(dp[j]) dp1[j]=true;
+            }
+            swap(dp,dp1);
+        }
+        ll ans=0;
+        FOR(i,1,50001)
+        {
+            if(dp[i])
+            {
+                vector<int> tmp=getFactorization(i);
+                ll ym=sum;
+                FOR(j,0,tmp.size()) ym-=tmp[j];
+
+                if(ym==i)
+                {
+                    // cout<<i<<" "<<sum<<" "<<ym<<endl;
+                    bool flg=true;
+                    unordered_map<ll,ll> strg1;
+                    FOR(j,0,inp.size())
+                    {
+                        strg1[inp[j]]=strg[inp[j]];
+                    }
+                    FOR(j,0,tmp.size()) 
+                    {
+                        strg1[tmp[j]]--;
+                        if(strg1[tmp[j]]<0)
+                        {
+                            flg=false;
+                        }
+                    }
+                    if(flg)
+                    {
+                        ans=i;
+                    }
+                    
+                }
             }
         }
-
-        ll ans=min(maxi1-mini1,maxi2-mini2);
         cout<<ans<<endl;
+        
+
 
     }
     return 0;
