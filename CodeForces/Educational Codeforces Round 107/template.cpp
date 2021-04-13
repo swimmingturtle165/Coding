@@ -247,95 +247,7 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-
-
-#define MAXN   10000001
-  
-// stores smallest prime factor for every number
-ll spf[MAXN];
-ll strg[MAXN];
-ll answ[MAXN];
-
-
-
-  
-// Calculating SPF (Smallest Prime Factor) for every
-// number till MAXN.
-// Time Complexity : O(nloglogn)
-void sieve()
-{
-    spf[1] = 1;
-
-    for (int i=2; i<MAXN; i++)
-    {
-
-        // marking smallest prime factor for every
-        // number to be itself.
-        spf[i] = -1;
-    }
-  
-    // separately marking spf for every even
-    // number as 2
-    for (int i=2; i<MAXN; i+=2)
-        spf[i] = 2;
-  
-    for (int i=3; i*i<MAXN; i++)
-    {
-        // checking if i is prime
-        if (spf[i] == -1)
-        {
-           
-            
-            // marking SPF for all numbers divisible by i
-            for (int j=i*i; j<MAXN; j+=i)
-  
-                // marking spf[j] if it is not 
-                // previously marked
-                if (spf[j]==-1)
-                {
-                    spf[j] = i;
-                }
-        }
-    }
-
-    strg[1]=1;
-
-    strg[0]=1;
-
-
-    FOR(i,2,MAXN)
-    {
-        if(spf[i]==-1)
-        {
-            strg[i]=i+1;
-        }
-        else
-        {
-            ll j=i;
-            strg[i]=1;
-            ll b2=0;
-            while(j%spf[i]==0)
-            {
-                j=j/spf[i];
-                strg[i] = strg[i] * spf[i] + 1;
-                b2++;
-            }
-            
-            strg[i]*=strg[j];
-        }
-    }
-    fill(answ,answ+MAXN,-1);
-    FORDE(i,MAXN-1,1)
-    {
-        if(strg[i]<MAXN)
-        {
-            answ[strg[i]]=i;
-        }
-    }
-}
-  
-// A O(log n) function returning primefactorization
-// by dividing by smallest prime factor at every step
+   
 
 
 signed main(int argc, char** argv)
@@ -347,17 +259,9 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    
-    sieve();
     while(t--)
     {
-        ll n;
-        cin>>n;
-       
-       
-        cout<<answ[n]<<endl;
-       
+        
     }
     return 0;
 }
-        
