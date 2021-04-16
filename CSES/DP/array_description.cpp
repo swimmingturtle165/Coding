@@ -199,43 +199,67 @@ signed main(int argc, char** argv)
     {
         ll n,m;
         cin>>n>>m;
-        ll ans=1;
+        ll ans=0;
         vector<ll> inp(n);
         FOR(i,0,n)
         {
             cin>>inp[i];
         }
+        vector<vector<ll>> dp(n,vector<ll>(m+1,0));
         FOR(i,0,n)
         {
             if(inp[i]==0)
             {
-                ll curr=i;
-                while(curr<n && inp[curr]==0)
+               if(i==0)
+               {
+                   FOR(j,1,m+1)
+                   {
+                       dp[0][j]=1;
+                   }
+               }
+               else
+               {
+                   FOR(j,1,m+1)
+                   {
+                       FOR(k,j-1,j+2)
+                       {
+                           if(k>=1 && k<=m)
+                           {
+                               dp[i][j]+=dp[i-1][k];
+                               dp[i][j]%=MOD;
+                           }
+                       }
+                   }
+               } 
+                
+            }
+            else
+            {
+                if(i==0)
                 {
-                    curr++;
-                }
-                if(curr==n)
-                {
-
-                }
-                else if(i==0)
-                {
-
+                    dp[i][inp[i]]=1;
                 }
                 else
                 {
-                    ll st=inp[i-1];
-                    ll end=inp[curr+1];
-                    if(st==1 || end==1|| st==m ||end==m)
+                    FOR(k,inp[i]-1,inp[i]+2)
                     {
-                        
+                    if(k>=1 && k<=m)
+                        {
+                            ll j=inp[i];
+                            dp[i][j]+=dp[i-1][k];
+                            dp[i][j]%=MOD;
+                        } 
                     }
-
-                    ans*=nCrModpDP(curr-i,3,)
                 }
-                
             }
         }
+        // ll ans=0;
+        FOR(i,1,m+1)
+        {
+            ans+=dp[n-1][i];
+            ans%=MOD;
+        }
+        cout<<ans<<endl;
     }
     return 0;
 }

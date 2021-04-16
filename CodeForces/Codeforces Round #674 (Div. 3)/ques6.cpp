@@ -70,51 +70,51 @@ ll modInverse(ll n, ll p)
 } 
   
  
-ll factorialNumInverse[300000 + 1]; 
+// ll factorialNumInverse[300000 + 1]; 
   
-// array to precompute inverse of 1! to N! 
-ll naturalNumInverse[300000 + 1]; 
+// // array to precompute inverse of 1! to N! 
+// ll naturalNumInverse[300000 + 1]; 
   
-// array to store factorial of first N numbers 
-ll fact[300000 + 1]; 
+// // array to store factorial of first N numbers 
+// ll fact[300000 + 1]; 
   
-// Function to precompute inverse of numbers 
-void InverseofNumber(ll p=MOD) 
-{ 
-    naturalNumInverse[0] = naturalNumInverse[1] = 1; 
-    for (int i = 2; i <= 300000; i++) 
-        naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
-} 
-// Function to precompute inverse of factorials 
-void InverseofFactorial(ll p=MOD) 
-{ 
-    factorialNumInverse[0] = factorialNumInverse[1] = 1; 
+// // Function to precompute inverse of numbers 
+// void InverseofNumber(ll p=MOD) 
+// { 
+//     naturalNumInverse[0] = naturalNumInverse[1] = 1; 
+//     for (int i = 2; i <= 300000; i++) 
+//         naturalNumInverse[i] = naturalNumInverse[p % i] * (p - p / i) % p; 
+// } 
+// // Function to precompute inverse of factorials 
+// void InverseofFactorial(ll p=MOD) 
+// { 
+//     factorialNumInverse[0] = factorialNumInverse[1] = 1; 
   
-    // precompute inverse of natural numbers 
-    for (int i = 2; i <= 300000; i++) 
-        factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
-} 
+//     // precompute inverse of natural numbers 
+//     for (int i = 2; i <= 300000; i++) 
+//         factorialNumInverse[i] = (naturalNumInverse[i] * factorialNumInverse[i - 1]) % p; 
+// } 
   
-// Function to calculate factorial of 1 to N 
-void factorial(ll p=MOD) 
-{ 
-    fact[0] = 1; 
+// // Function to calculate factorial of 1 to N 
+// void factorial(ll p=MOD) 
+// { 
+//     fact[0] = 1; 
   
-    // precompute factorials 
-    for (int i = 1; i <= 300000; i++) { 
-        fact[i] = (fact[i - 1] * i) % p; 
-    } 
-} 
+//     // precompute factorials 
+//     for (int i = 1; i <= 300000; i++) { 
+//         fact[i] = (fact[i - 1] * i) % p; 
+//     } 
+// } 
   
-// Function to return nCr % p in O(1) time 
-ll Binomial(ll N, ll R, ll p=MOD) 
-{ 
-    // n C r = n!*inverse(r!)*inverse((n-r)!) 
-    ll ans = ((fact[N] * factorialNumInverse[R]) 
-              % p * factorialNumInverse[N - R]) 
-             % p; 
-    return ans; 
-} 
+// // Function to return nCr % p in O(1) time 
+// ll Binomial(ll N, ll R, ll p=MOD) 
+// { 
+//     // n C r = n!*inverse(r!)*inverse((n-r)!) 
+//     ll ans = ((fact[N] * factorialNumInverse[R]) 
+//               % p * factorialNumInverse[N - R]) 
+//              % p; 
+//     return ans; 
+// } 
    
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -258,10 +258,52 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
+        ll n;
+        cin>>n;
+        string str;
+        cin>>str;
+
         
+        vector<vector<ll>> dp(n,vector<ll>(3,0));
+        ll cnt=1;
+        
+        FOR(i,0,n)
+        {
+            if(i!=0)
+            {
+                dp[i]=dp[i-1];
+            }
+            if(str[i]=='a')
+            {
+                dp[i][0]+=cnt;
+            }
+            else if(str[i]=='b')
+            {
+                dp[i][1]=dp[i][1]+dp[i][0];
+
+            }
+            else if(str[i]=='c')
+            {
+                dp[i][2]=dp[i][2]+dp[i][1];
+            }
+            else
+            {
+                dp[i][2]=3*dp[i][2]+dp[i][1];
+                dp[i][1]=3*dp[i][1]+dp[i][0];
+                dp[i][0]=3*dp[i][0]+cnt;
+                cnt*=3;
+
+            }
+            dp[i][0]%=MOD;
+            dp[i][1]%=MOD;
+            dp[i][2]%=MOD;
+            cnt%=MOD;
+        }
+        
+        cout<<dp[n-1][2]<<endl;
     }
     return 0;
 }

@@ -247,54 +247,8 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
+   
 
-bool check(vector<vector<ll>>&arr)
-{
-    ll r=0,c=0;
-    while (r+1<arr.size())
-    {
-        c=0;
-
-        while (c+1<arr.size())
-        {
-            ll st_r=r;
-            ll st_c=c;
-            ll cnt=0;
-
-          FOR(i,0,2)
-          {
-              FOR(j,0,2)
-              {
-                  if(arr[st_r+i][st_c+j]==1)
-                  {
-                      cnt++;
-                  }
-              }
-          }
-          if(cnt%2==0)
-          {
-              return false;
-          }
-         c++;
-        }
-        r++;
-        
-    }
-    return true;
-    
-}
-
-ll ans=0;
-
-void solve2(vector<vector<ll>>&arr,ll i)
-{
-    
-}
-
-void solve3(vector<vector<ll>>&arr,ll i)
-{
-    
-}
 
 signed main(int argc, char** argv)
 {
@@ -307,31 +261,16 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n,m;
-        cin>>n>>m;
-        vector<vector<ll>> arr(n,vector<ll>(m));
-        FOR(i,0,n)
-            FOR(j,0,m)
-              cin>>arr[i][j];
-        
-        if(n>=4 )
-        {
-            cout<<-1<<endl;
-        }
-        else if(n==1)
-        {
-            cout<<0<<endl;
-        }
-        else if(n==2)
-        {
-            solve2(arr,0);
-            cout<<ans<<endl;
-        }
-        else if(n==3)
-        {
-            solve3(arr,0);
-            cout<<ans<<endl;
-        }
+        ll n;
+        cin>>n;
+        ll a1,a2,a3;
+        cin>>a1>>a2>>a3;
+        ll b1,b2,b3;
+        cin>>b1>>b2>>b3;
+
+        ll maxi=min(a1,b2)+min(a2,b3)+min(a3,b1);
+        ll mini=max(0ll,a1-(b1+b3))+max(0ll,a2-(b2+b1))+max(0ll,a3-(b2+b3));
+        cout<<mini<<" "<<maxi<<endl;
     }
     return 0;
 }
