@@ -249,6 +249,42 @@ bool find(vector<ll>&Arr,int A,int B)
 }
    
 
+ll solve(ll idx,ll cnt, ll lft, vector<vector<vector<ll>>>& dp,string & str,string & t)
+{
+
+    
+    if(lft<0)
+    {
+        return INT64_MIN;
+    }
+    if(idx==str.size() )
+    {
+        return 0;
+    }
+    if(dp[idx][lft][cnt]!=-1)
+    {
+        return dp[idx][lft][cnt];
+    }
+    ll ans=0;
+
+    ans=max(ans,solve(idx+1,cnt,lft,dp,str,t));
+
+    ll cost=str[idx]==t[0]?0:1;
+
+    if(lft-cost>=0)
+    ans=max(ans,solve(idx+1,cnt+1,lft-cost,dp,str,t));
+
+    cost=str[idx]==t[1]?0:1;
+    
+    if(lft-cost>=0)
+    ans=max(ans,cnt+solve(idx+1,cnt,lft-cost,dp,str,t));
+
+    dp[idx][lft][cnt]=ans;
+
+    return ans;
+
+
+}   
 
 signed main(int argc, char** argv)
 {
@@ -261,54 +297,53 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n,d,m;
-        cin>>n>>d>>m;
+        ll n,k;
+        cin>>n>>k;
+        string a,b;
+        cin>>a>>b;
+        vector<vector<vector<ll>>> dp(n+1,vector<vector<ll>>(k+2,vector<ll>(n+2,INT64_MIN)));
+        dp[0][0][0]=0;
+        
+            FOR(i,0,n)
+            {
+                FOR(j,0,k+1)
+                {
+                    FOR(m,0,n+1)
+                    {
 
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        sort(inp.begin(),inp.end());
-        reverse(inp.begin(),inp.end());
-        vector<ll> smaller,greater;
-        FOR(i,0,n)
-        {
-            if(inp[i]>m)
-            {
-                greater.pb(inp[i]);
-            }
-            else
-            {
-                smaller.pb(inp[i]);
-            }
-        }
-        FOR(i,1,smaller.size())
-        {
-            smaller[i]+=smaller[i-1];
-        }
-        FOR(i,1,greater.size())
-        {
-            greater[i]+=greater[i-1];
-        }
-        ll ans=0;
-        if(smaller.size()!=0)
-        {
-            ans=smaller.back();
-        }
-        FOR(i,0,greater.size())
-        {
-            ll v1=i;
-            ll space=(i*(d+1))+1;
-            if(space>n)
-            {
-                break;
-            }
-            ll lft=n-space;
-            lft=min(lft,(ll)smaller.size());
-            lft--;
-            ll val=greater[i]+(lft>=0?smaller[lft]:0);
-            ans=max(ans,val);
-        }
-        cout<<ans<<endl;
+                       
+                        
+                        ll a1=a[i]==b[0]?1:0;
+                        ll a2=a[i]==b[1]?1:0;
+                        ll a3=b[0]==b[1]?1:0;
 
+                        // Don't change ith character
+                        dp[i+1][j][m+a1]=max(dp[i+1][j][m+a1],dp[i][j][m]+a2*m); 
+
+                        // change a[i] to b[0]
+                        dp[i+1][j+1][m+1]=max(dp[i+1][j+1][m+1],dp[i][j][m]+a3*(m));    
+
+                        // change a[i] t0 b[1]
+                        dp[i+1][j+1][m+a3]=max(dp[i+1][j+1][m+a3],dp[i][j][m]+m); 
+
+                        
+                    }
+
+                }
+            }
+            ll ans=0;
+            FOR(i,0,n+1)
+            {
+                FOR(j,0,k+1)
+                {
+                    FOR(m,0,n+1)
+                    {
+                        ans=max(ans,dp[i][j][m]);
+                    }
+                }
+            }
+            cout<<ans<<endl;
+        
     }
     return 0;
 }

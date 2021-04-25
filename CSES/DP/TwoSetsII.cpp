@@ -261,54 +261,36 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n,d,m;
-        cin>>n>>d>>m;
+        ll n;
+        cin>>n;
+        ll sum=(n*(n+1))/2ll;
+        if(sum%2ll==1ll)
+        {
+            cout<<0<<endl;
+            continue;
+        }
+        vector<vector<ll>> dp(n+1,vector<ll>(sum+1,0));
+        dp[0][0]=1;
+        ll v1=(sum)/2ll;
+        FOR(i,1,n+1)
+        {
+            FOR(j,0,sum+1)
+            {
+                if(dp[i-1][j]!=0 && (j+i)<=sum)
+                {
+                    dp[i][i+j]+=dp[i-1][j];
+                    dp[i][i+j]%=MOD;
+                }
+                if(j!=0)
+                dp[i][j]+=dp[i-1][j];
 
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        sort(inp.begin(),inp.end());
-        reverse(inp.begin(),inp.end());
-        vector<ll> smaller,greater;
-        FOR(i,0,n)
-        {
-            if(inp[i]>m)
-            {
-                greater.pb(inp[i]);
+                dp[i][j]%=MOD;
             }
-            else
-            {
-                smaller.pb(inp[i]);
-            }
+            // dp[i][v1]+=dp[i-1][v1];
         }
-        FOR(i,1,smaller.size())
-        {
-            smaller[i]+=smaller[i-1];
-        }
-        FOR(i,1,greater.size())
-        {
-            greater[i]+=greater[i-1];
-        }
-        ll ans=0;
-        if(smaller.size()!=0)
-        {
-            ans=smaller.back();
-        }
-        FOR(i,0,greater.size())
-        {
-            ll v1=i;
-            ll space=(i*(d+1))+1;
-            if(space>n)
-            {
-                break;
-            }
-            ll lft=n-space;
-            lft=min(lft,(ll)smaller.size());
-            lft--;
-            ll val=greater[i]+(lft>=0?smaller[lft]:0);
-            ans=max(ans,val);
-        }
-        cout<<ans<<endl;
-
+        // cout<<v1<<" "<<sum<<endl;
+        
+        cout<<dp[n][v1]<<endl;
     }
     return 0;
 }

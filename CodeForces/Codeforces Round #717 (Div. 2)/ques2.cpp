@@ -258,57 +258,69 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
     while(t--)
     {
-        ll n,d,m;
-        cin>>n>>d>>m;
-
+        ll n;
+        cin>>n;
+        vector<ll> strg(32,0);
         vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        sort(inp.begin(),inp.end());
-        reverse(inp.begin(),inp.end());
-        vector<ll> smaller,greater;
         FOR(i,0,n)
         {
-            if(inp[i]>m)
+            ll tmp;
+            cin>>tmp;
+            inp[i]=tmp;
+            ll idx=0;
+            while (tmp>0)
             {
-                greater.pb(inp[i]);
+                if(tmp%2ll==1ll)
+                {
+                    strg[idx]++;
+                }
+                idx++;
+                tmp=tmp/2ll;
             }
-            else
+            
+        }
+        bool flg=true;
+        FOR(i,0,n-1)
+        {
+            if(inp[i]!=inp[i+1])
             {
-                smaller.pb(inp[i]);
+                flg=false;
             }
         }
-        FOR(i,1,smaller.size())
-        {
-            smaller[i]+=smaller[i-1];
-        }
-        FOR(i,1,greater.size())
-        {
-            greater[i]+=greater[i-1];
-        }
-        ll ans=0;
-        if(smaller.size()!=0)
-        {
-            ans=smaller.back();
-        }
-        FOR(i,0,greater.size())
-        {
-            ll v1=i;
-            ll space=(i*(d+1))+1;
-            if(space>n)
-            {
-                break;
-            }
-            ll lft=n-space;
-            lft=min(lft,(ll)smaller.size());
-            lft--;
-            ll val=greater[i]+(lft>=0?smaller[lft]:0);
-            ans=max(ans,val);
-        }
-        cout<<ans<<endl;
+        vector<ll> prefix(n,0),suffix(n,0);
+        prefix[0]=inp[0];
+        suffix[n-1]=inp[n-1];
 
+        FOR(i,1,n)
+        {
+            prefix[i]=(prefix[i-1]^inp[i]);
+        }
+        
+        FORDE(i,n-2,0)
+        {
+            suffix[i]=(suffix[i+1]^inp[i]);
+        }
+
+        FOR(i,0,n-1)
+        {
+            if(prefix[i]==suffix[i+1])
+            {
+                flg=true;
+            }   
+        }
+        
+        if(flg)
+        {
+            cout<<"YES"<<endl;
+        }
+        else
+        {
+            cout<<"NO"<<endl;
+        }
+        
     }
     return 0;
 }

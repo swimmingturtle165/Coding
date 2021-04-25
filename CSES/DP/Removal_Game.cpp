@@ -248,14 +248,27 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-ll solve(int lft,int rgt,vector<ll>& arr,bool turn)
+ll solve(int lft,int rgt,vector<ll>& arr,bool turn,vector<vector<ll>>&dp)
 {
-
+    if(rgt==lft)
+    {
+        return arr[lft];
+    }
     if(rgt==lft+1)
     {
         return(max(arr[lft],arr[rgt]));
     }
+    if(dp[lft][rgt]!=-1)
+    {
+        return dp[lft][rgt];
+    }
+
+    ll v1=arr[lft]+min(solve(lft+2,rgt,arr,true,dp),solve(lft+1,rgt-1,arr,true,dp));
+    ll v2=arr[rgt]+min(solve(lft,rgt-2,arr,true,dp),solve(lft+1,rgt-1,arr,true,dp));
+
+    dp[lft][rgt]= max(v1,v2);
     
+    return dp[lft][rgt];
 
 }
 
@@ -267,10 +280,17 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        
+        ll n;
+        cin>>n;
+        vector<ll> arr(n);
+        FOR(i,0,n) cin>>arr[i];
+
+        vector<vector<ll>> dp(n+1,vector<ll>(n+1,-1));
+
+        cout<<solve(0,n-1,arr,true,dp)<<endl;
     }
     return 0;
 }

@@ -261,53 +261,11 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n,d,m;
-        cin>>n>>d>>m;
+        ll n;
+        cin>>n;
 
-        vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        sort(inp.begin(),inp.end());
-        reverse(inp.begin(),inp.end());
-        vector<ll> smaller,greater;
-        FOR(i,0,n)
-        {
-            if(inp[i]>m)
-            {
-                greater.pb(inp[i]);
-            }
-            else
-            {
-                smaller.pb(inp[i]);
-            }
-        }
-        FOR(i,1,smaller.size())
-        {
-            smaller[i]+=smaller[i-1];
-        }
-        FOR(i,1,greater.size())
-        {
-            greater[i]+=greater[i-1];
-        }
-        ll ans=0;
-        if(smaller.size()!=0)
-        {
-            ans=smaller.back();
-        }
-        FOR(i,0,greater.size())
-        {
-            ll v1=i;
-            ll space=(i*(d+1))+1;
-            if(space>n)
-            {
-                break;
-            }
-            ll lft=n-space;
-            lft=min(lft,(ll)smaller.size());
-            lft--;
-            ll val=greater[i]+(lft>=0?smaller[lft]:0);
-            ans=max(ans,val);
-        }
-        cout<<ans<<endl;
+        
+
 
     }
     return 0;
