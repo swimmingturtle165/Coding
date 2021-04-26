@@ -248,6 +248,24 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
+ll solve(int lft,int rgt,vector<ll>& inp,vector<vector<ll>> &dp)
+{
+
+  if(lft>=rgt)
+  {
+      return 0;
+  }
+  if(dp[lft][rgt]!=-1)
+  {
+      return dp[lft][rgt];
+  }
+
+
+  dp[lft][rgt] = min(solve(lft,rgt-1,inp,dp)+inp[rgt]-inp[lft],solve(lft+1,rgt,inp,dp)+inp[rgt]-inp[lft]);
+        return dp[lft][rgt];
+  
+
+}
 
 
 signed main(int argc, char** argv)
@@ -268,58 +286,16 @@ signed main(int argc, char** argv)
         FOR(i,0,n) cin>>inp[i];
 
         sort(inp.begin(),inp.end());
-
+        ll mid=(n-1)/2;
         ll ans=INT64_MAX;
+        // FOR(i,0,n)
+        // {
+        vector<vector<ll>> dp(n+1,vector<ll>(n+1,-1));
+        ans=min(ans,solve(0,n-1,inp,dp));
+        cout<<ans<<endl;
 
-        
-            FOR(i,0,n)
-            {
-                ll lft=i;
-                ll rgt=i;
-                ll curr=0;
-                while (lft>=0 && rgt<=n-1 )
-                {
-                    if(lft==0 && rgt==n-1)
-                    {
-                        ans=min(ans,curr);
-                        break;
-                    }
-                    if(lft==0)
-                    {
-                        ll v2=inp[rgt+1]-inp[lft];
-                        curr+=v2;
-                        rgt++;
-                        
-                    }
-                    else if(rgt==n-1)
-                    {
-                         ll v2=inp[rgt]-inp[lft-1];
-                         curr+=v2;
-                         lft--;
-                    }
-                    else
-                    {
-                         ll v2=inp[rgt+1]-inp[lft];
-                         ll v1=inp[rgt]-inp[lft-1];
-                        
-                        
-                          if(v2*(lft)<=v1*(n-1-rgt))
-                         {
-                              curr+=v2;
-                               rgt++;
-                         }
-                         else
-                         {
-                            curr+=v1;
-                            lft--;
-                         }
-                    }
-                }
-                ans=min(ans,curr);
-
-                
-            }
-            cout<<ans<<endl;
+        // }
+        // cout<<ans<<endl;
         
     }
     return 0;

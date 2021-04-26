@@ -256,7 +256,19 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-
+ll solve(string a,string b)
+{
+    ll cnt=0;
+    
+    FOR(i,0,b.size())
+    {
+        if(b[i]==a[cnt]) 
+        {
+            cnt++;
+        }
+    }
+    return cnt;
+}
 
 signed main(int argc, char** argv)
 {
@@ -288,7 +300,8 @@ signed main(int argc, char** argv)
                     continue;
                 }
 
-                ll v1=prefix_function(strg[i]+'%'+strg[j]);
+                ll v1=solve(strg[i],strg[j]);
+                // cout<<v1<<" $$"<<endl;
 
                 if(v1>=n)
                 {
@@ -296,14 +309,14 @@ signed main(int argc, char** argv)
 
                     ll len=v1-n;
                     cout<<strg[j];
-                    FOR(k,v1,2*n)
+                    FOR(k,n,2*n)
                     {
                         cout<<strg[i][k];
                     }
-                    FOR(i,0,len)
-                    {
-                        cout<<'1';
-                    }
+                    // FOR(i,0,len)
+                    // {
+                    //     cout<<'1';
+                    // }
                     cout<<endl;
                     // cout<<v1<<" "<<len<<endl;
                     
@@ -318,9 +331,61 @@ signed main(int argc, char** argv)
                 break;
             }
         }
+        if(!flg)
+        {
+            FOR(i,0,3)
+            {
+                reverse(strg[i].begin(),strg[i].end());
+            }
+            FOR(i,0,3)
+            {
+                FOR(j,0,3)
+                {
+                    if(i==j)
+                    {
+                        continue;
+                    }
+
+                    ll v1=solve(strg[i],strg[j]);
+                    // cout<<v1<<" $$"<<endl;
+
+                    if(v1>=n)
+                    {
+                        flg=true;
+
+                        ll len=v1-n;
+                        FOR(r,0,3)
+                        {
+                            reverse(strg[r].begin(),strg[r].end());
+                        }
+                        FOR(k,0,len)
+                        {
+                            cout<<strg[i][k];
+                        }
+                        cout<<strg[j];
+                        // FOR(i,0,len)
+                        // {
+                        //     cout<<'1';
+                        // }
+                        cout<<endl;
+                        // cout<<v1<<" "<<len<<endl;
+                        
+                    }
+                    if(flg)
+                    {
+                        break;
+                    }
+                }
+                if(flg)
+                {
+                    break;
+                }
+            }
+        
        
 
 
+    }
     }
     return 0;
 }
