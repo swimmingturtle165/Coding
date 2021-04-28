@@ -248,53 +248,7 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-bool get_path(pll curr,pll trgt,vector<pll>& path,vector<vector<ll>>& time,ll n,ll m)
-{
-    if(curr==trgt)
-    {
-        path.pb(curr);
-        return true;
-    }
-     vector<ll> x_cord,y_cord;
-     ll x=curr.f;
-     ll y=curr.s;
-     ll time1=time[x][y];
-    x_cord={-1,+1};
-    y_cord={-1,+1};
-        FOR(i,0,2)
-        {
-            ll x_tmp=x+x_cord[i];
-            ll y_tmp=y;
 
-            if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && time1+1==time[x_tmp][y_tmp])
-            {
-               bool tmp=get_path({x_tmp,y_tmp},trgt,path,time,n,m);
-               if(tmp==true)
-               {
-                   path.pb(curr);
-                   return true;
-               }
-            }
-        }
-        FOR(i,0,2)
-        {
-            ll x_tmp=x;
-            ll y_tmp=y+y_cord[i];
-
-            if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && time1+1==time[x_tmp][y_tmp])
-            {
-               bool tmp=get_path({x_tmp,y_tmp},trgt,path,time,n,m);
-               if(tmp==true)
-               {
-                   path.pb(curr);
-                   return true;
-               }
-            }
-        }
-        return false;
-
-
-}
 
 signed main(int argc, char** argv)
 {
@@ -307,160 +261,48 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n,m;
-        cin>>n>>m;
-        vector<string> inp(n);
-        FOR(i,0,n)
+        ll n,m,q;
+        cin>>n>>m>>q;
+        ll INF = 1e15;
+
+        vector<vector<ll>> strg(n+1,vector<ll>(n+1,INF));
+        FOR(i,0,n+1)
         {
-            cin>>inp[i];
+            strg[i][i]=0;
         }
-        vector<vector<ll>> vst(n,vector<ll>(m,0));
-        vector<vector<ll>> time(n,vector<ll>(m,0));
 
-        queue<vector<ll>> q;
-        vector<ll> start,end;
-        bool flg=false;        
-        FOR(i,0,n)
+        FOR(i,0,m)
         {
-            FOR(j,0,m)
-            {
-                if(inp[i][j]=='M')
-                {
-                    vector<ll> tmp(1,1);
-                    tmp.pb(i);
-                    tmp.pb(j);
-                    q.push(tmp);
-                }
-                else if(inp[i][j]=='A')
-                {
-                    vector<ll> tmp(1,2);
-                    tmp.pb(i);
-                    tmp.pb(j);
-                    start=tmp;
-                    start.pb(0);
+            ll a,b,c;
+            cin>>a>>b>>c;
+            strg[a][b]=min(c,strg[a][b]);
+            strg[b][a]=min(c,strg[b][a]);
 
-                }
-            }
         }
-        q.push(start);
-        while (q.size()>0)
-        {
-            vector<ll> curr= q.front();
-            q.pop();
-            ll x=curr[1];
-            ll y=curr[2];
-
-            if(vst[x][y]==1)
-            {
-                continue;
-            }
-
-            if(curr[0]==1)
-            {
-                vst[x][y]=1;
-            }
-            else if(vst[x][y]==0)
-            {
-                vst[x][y]=2;
-                time[x][y]=curr[3];
-            }
-            if(curr[0]==2 && (x==0 || y==0 || x==n-1 || y==m-1) )
-            {
-                // cout<<"**"<<endl;
-                end=curr;
-                flg=true;
-                break;
-            }
-            vector<ll> x_cord,y_cord;
-            x_cord={-1,+1};
-            y_cord={-1,+1};
-            FOR(i,0,2)
-            {
-                ll x_tmp=x+x_cord[i];
-                ll y_tmp=y;
-
-                if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && inp[x_tmp][y_tmp]!='#' && vst[x_tmp][y_tmp]!=1)
-                {
-                    vector<ll> tmp=curr;
-                    tmp[1]=x_tmp;
-                    tmp[2]=y_tmp;
-                    if(tmp.size()==4)
-                    {
-                        tmp[3]++;
-                    }
-                    q.push(tmp);
-                }
-            }
-            FOR(i,0,2)
-            {
-                ll x_tmp=x;
-                ll y_tmp=y+y_cord[i];
-                if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && inp[x_tmp][y_tmp]!='#'  && vst[x_tmp][y_tmp]!=1)
-                {
-                    vector<ll> tmp=curr;
-                    tmp[1]=x_tmp;
-                    tmp[2]=y_tmp;
-                    if(tmp.size()==4)
-                    {
-                        tmp[3]++;
-                    }
-                    q.push(tmp);
-                }
-            }
-            
         
-        }
-        // cout<<flg<<endl;
-        // dispvector<ll>(start);
-        // dispvector<ll>(end);
-        // FOR(i,0,n)
-        // {
-        //     FOR(j,0,m)
-        //     {
-        //         cout<<time[i][j]<<" ";
-        //     }
-        //     cout<<endl;
-        // }
-        if(flg)
+
+        FOR(k,1,n+1)
         {
-            cout<<"YES"<<endl;
-            vector<pll> path;
-            get_path({start[1],start[2]},{end[1],end[2]},path,time,n,m);
-            reverse(path.begin(),path.end());
-            string answ="";
-            FOR(i,0,path.size()-1)
+            FOR(i,1,n+1)
             {
-                if(path[i+1].f==path[i].f+1)
+                FOR(j,1,n+1)
                 {
-                    answ+='D';
-                }
-                if(path[i+1].f==path[i].f-1)
-                {
-                    answ+='U';
-                    
-                }
-                if(path[i+1].s==path[i].s+1)
-                {
-                    answ+='R';
-                    
-                }
-                if(path[i+1].s==path[i].s-1)
-                {
-                    answ+='L';
-                    
-                }
+                        strg[i][j]=min(min(strg[i][j],strg[j][i]),strg[i][k]+strg[k][j]);
+                        strg[j][i]=strg[i][j];
 
+                }
             }
-            cout<<answ.size()<<endl;
-            cout<<answ<<endl;
-
         }
-        else
+        
+        while(q--)
         {
-            cout<<"NO"<<endl;
+            ll a,b;
+            cin>>a>>b;
+            if(min(strg[a][b],strg[b][a])!=INF)
+            cout<<min(strg[a][b],strg[b][a])<<endl;
+            else
+            cout<<-1<<endl;
         }
-
-
     }
     return 0;
 }

@@ -247,53 +247,27 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
-bool get_path(pll curr,pll trgt,vector<pll>& path,vector<vector<ll>>& time,ll n,ll m)
+priority_queue<ll,vector<ll>,greater<ll>> strg; 
+
+void dfs(ll curr,ll parent,ll trgt,ll cst,vector<bool> &vst,vector<vector<pll>>graph)
 {
     if(curr==trgt)
     {
-        path.pb(curr);
-        return true;
+        strg.push(cst);
+        return;
     }
-     vector<ll> x_cord,y_cord;
-     ll x=curr.f;
-     ll y=curr.s;
-     ll time1=time[x][y];
-    x_cord={-1,+1};
-    y_cord={-1,+1};
-        FOR(i,0,2)
+    vst[curr]=true;
+
+    for(auto u:graph[curr])
+    {
+        if(vst[u.f]==false)
         {
-            ll x_tmp=x+x_cord[i];
-            ll y_tmp=y;
-
-            if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && time1+1==time[x_tmp][y_tmp])
-            {
-               bool tmp=get_path({x_tmp,y_tmp},trgt,path,time,n,m);
-               if(tmp==true)
-               {
-                   path.pb(curr);
-                   return true;
-               }
-            }
+            dfs(u.f,curr,trgt,cst+u.s,vst,graph);
         }
-        FOR(i,0,2)
-        {
-            ll x_tmp=x;
-            ll y_tmp=y+y_cord[i];
-
-            if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && time1+1==time[x_tmp][y_tmp])
-            {
-               bool tmp=get_path({x_tmp,y_tmp},trgt,path,time,n,m);
-               if(tmp==true)
-               {
-                   path.pb(curr);
-                   return true;
-               }
-            }
-        }
-        return false;
+    }
 
 
+    vst[curr]=false;
 }
 
 signed main(int argc, char** argv)
@@ -307,159 +281,26 @@ signed main(int argc, char** argv)
     // cin>>t;
     while(t--)
     {
-        ll n,m;
-        cin>>n>>m;
-        vector<string> inp(n);
-        FOR(i,0,n)
+        ll n,m,k;
+        cin>>n>>m>>k;
+
+        vector<vector<pll>> graph(n+1,vector<pll>());
+        vector<bool> vst(n+1,false);
+
+        FOR(i,0,m)
         {
-            cin>>inp[i];
-        }
-        vector<vector<ll>> vst(n,vector<ll>(m,0));
-        vector<vector<ll>> time(n,vector<ll>(m,0));
-
-        queue<vector<ll>> q;
-        vector<ll> start,end;
-        bool flg=false;        
-        FOR(i,0,n)
-        {
-            FOR(j,0,m)
-            {
-                if(inp[i][j]=='M')
-                {
-                    vector<ll> tmp(1,1);
-                    tmp.pb(i);
-                    tmp.pb(j);
-                    q.push(tmp);
-                }
-                else if(inp[i][j]=='A')
-                {
-                    vector<ll> tmp(1,2);
-                    tmp.pb(i);
-                    tmp.pb(j);
-                    start=tmp;
-                    start.pb(0);
-
-                }
-            }
-        }
-        q.push(start);
-        while (q.size()>0)
-        {
-            vector<ll> curr= q.front();
-            q.pop();
-            ll x=curr[1];
-            ll y=curr[2];
-
-            if(vst[x][y]==1)
-            {
-                continue;
-            }
-
-            if(curr[0]==1)
-            {
-                vst[x][y]=1;
-            }
-            else if(vst[x][y]==0)
-            {
-                vst[x][y]=2;
-                time[x][y]=curr[3];
-            }
-            if(curr[0]==2 && (x==0 || y==0 || x==n-1 || y==m-1) )
-            {
-                // cout<<"**"<<endl;
-                end=curr;
-                flg=true;
-                break;
-            }
-            vector<ll> x_cord,y_cord;
-            x_cord={-1,+1};
-            y_cord={-1,+1};
-            FOR(i,0,2)
-            {
-                ll x_tmp=x+x_cord[i];
-                ll y_tmp=y;
-
-                if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && inp[x_tmp][y_tmp]!='#' && vst[x_tmp][y_tmp]!=1)
-                {
-                    vector<ll> tmp=curr;
-                    tmp[1]=x_tmp;
-                    tmp[2]=y_tmp;
-                    if(tmp.size()==4)
-                    {
-                        tmp[3]++;
-                    }
-                    q.push(tmp);
-                }
-            }
-            FOR(i,0,2)
-            {
-                ll x_tmp=x;
-                ll y_tmp=y+y_cord[i];
-                if(x_tmp>=0 && y_tmp>=0 && x_tmp<n && y_tmp<m && inp[x_tmp][y_tmp]!='#'  && vst[x_tmp][y_tmp]!=1)
-                {
-                    vector<ll> tmp=curr;
-                    tmp[1]=x_tmp;
-                    tmp[2]=y_tmp;
-                    if(tmp.size()==4)
-                    {
-                        tmp[3]++;
-                    }
-                    q.push(tmp);
-                }
-            }
-            
-        
-        }
-        // cout<<flg<<endl;
-        // dispvector<ll>(start);
-        // dispvector<ll>(end);
-        // FOR(i,0,n)
-        // {
-        //     FOR(j,0,m)
-        //     {
-        //         cout<<time[i][j]<<" ";
-        //     }
-        //     cout<<endl;
-        // }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-            vector<pll> path;
-            get_path({start[1],start[2]},{end[1],end[2]},path,time,n,m);
-            reverse(path.begin(),path.end());
-            string answ="";
-            FOR(i,0,path.size()-1)
-            {
-                if(path[i+1].f==path[i].f+1)
-                {
-                    answ+='D';
-                }
-                if(path[i+1].f==path[i].f-1)
-                {
-                    answ+='U';
-                    
-                }
-                if(path[i+1].s==path[i].s+1)
-                {
-                    answ+='R';
-                    
-                }
-                if(path[i+1].s==path[i].s-1)
-                {
-                    answ+='L';
-                    
-                }
-
-            }
-            cout<<answ.size()<<endl;
-            cout<<answ<<endl;
+            ll a,b,c;
+            cin>>a>>b>>c;
+            graph[a].pb({b,c});
+            graph[b].pb({a,c});
 
         }
-        else
+        dfs(1,-1,n,0,vst,graph);
+        FOR(i,0,k)
         {
-            cout<<"NO"<<endl;
+            cout<<strg.top()<<" ";
+            strg.pop();
         }
-
 
     }
     return 0;
