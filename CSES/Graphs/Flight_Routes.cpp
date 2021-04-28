@@ -247,28 +247,8 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-priority_queue<ll,vector<ll>,greater<ll>> strg; 
-
-void dfs(ll curr,ll parent,ll trgt,ll cst,vector<bool> &vst,vector<vector<pll>>graph)
-{
-    if(curr==trgt)
-    {
-        strg.push(cst);
-        return;
-    }
-    vst[curr]=true;
-
-    for(auto u:graph[curr])
-    {
-        if(vst[u.f]==false)
-        {
-            dfs(u.f,curr,trgt,cst+u.s,vst,graph);
-        }
-    }
 
 
-    vst[curr]=false;
-}
 
 signed main(int argc, char** argv)
 {
@@ -283,24 +263,46 @@ signed main(int argc, char** argv)
     {
         ll n,m,k;
         cin>>n>>m>>k;
-
+        
         vector<vector<pll>> graph(n+1,vector<pll>());
-        vector<bool> vst(n+1,false);
 
         FOR(i,0,m)
         {
             ll a,b,c;
             cin>>a>>b>>c;
             graph[a].pb({b,c});
-            graph[b].pb({a,c});
+        }
 
-        }
-        dfs(1,-1,n,0,vst,graph);
-        FOR(i,0,k)
+        priority_queue<pll,vector<pll>,greater<pll>> strg;
+
+        strg.push({0,1});
+
+        ll cnt=0;
+        vector<ll> answ;
+        vector<ll> vst(n+1,0);
+        while (cnt<k)
         {
-            cout<<strg.top()<<" ";
+            pll curr=strg.top();
             strg.pop();
+            ll cst=curr.f;
+            ll node=curr.s;
+            if(node==n)
+            {
+                answ.pb(cst);
+                cnt++;
+            }
+            vst[node]++;
+            if(vst[node]>k)
+            {
+                continue;
+            }
+            for(auto u:graph[node])
+            {
+                strg.push({cst+u.s,u.f});
+            }
         }
+        dispvector<ll>(answ);        
+                
 
     }
     return 0;
