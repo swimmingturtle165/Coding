@@ -256,18 +256,57 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-ll solve(string a,string b)
+string solve(string a,string b,char ch)
 {
-    ll cnt=0;
-    
-    FOR(i,0,b.size())
+
+    string ans="";
+    vector<ll> tmp1,tmp2;
+    tmp1.pb(-1);
+    tmp2.pb(-1);
+
+    FOR(i,0,a.size())
     {
-        if(b[i]==a[cnt]) 
+        if(a[i]==ch)
         {
-            cnt++;
+            tmp1.pb(i);
         }
     }
-    return cnt;
+
+    FOR(i,0,b.size())
+    {
+        if(b[i]==ch)
+        {
+            tmp2.pb(i);
+        }
+    }
+    
+
+    ll n=a.size()/2;
+
+    FOR(i,0,n)
+    {
+        FOR(j,tmp1[i]+1,tmp1[i+1])
+        {
+            ans+=a[j];
+        }
+        FOR(j,tmp2[i]+1,tmp2[i+1])
+        {
+            ans+=b[j];
+        }
+        ans+=ch;
+    }
+    FOR(j,tmp1[n]+1,2*n)
+    {
+        ans+=a[j];
+    }
+    FOR(j,tmp2[n]+1,2*n)
+    {
+        ans+=b[j];
+    }
+    return ans;
+
+
+    
 }
 
 signed main(int argc, char** argv)
@@ -283,109 +322,40 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        string a,b,c;
-        cin>>a>>b>>c;
-        vector<string> strg;
-        strg.push_back(a);
-        strg.push_back(b);
-        strg.push_back(c);
-      
-        bool flg=false;
+        vector<string> one,zero;
         FOR(i,0,3)
         {
-            FOR(j,0,3)
+            string tmp;
+            cin>>tmp;
+
+            ll cnt_0=0;
+            FOR(j,0,2*n)
             {
-                if(i==j)
+                if(tmp[j]=='0')
                 {
-                    continue;
+                    cnt_0++;
                 }
 
-                ll v1=solve(strg[i],strg[j]);
-                // cout<<v1<<" $$"<<endl;
-
-                if(v1>=n)
-                {
-                    flg=true;
-
-                    ll len=v1-n;
-                    cout<<strg[j];
-                    FOR(k,n,2*n)
-                    {
-                        cout<<strg[i][k];
-                    }
-                    // FOR(i,0,len)
-                    // {
-                    //     cout<<'1';
-                    // }
-                    cout<<endl;
-                    // cout<<v1<<" "<<len<<endl;
-                    
-                }
-                if(flg)
-                {
-                    break;
-                }
             }
-            if(flg)
+            if(cnt_0>=n)
             {
-                break;
+                zero.pb(tmp);
+            }
+            else
+            {
+                one.pb(tmp);
             }
         }
-        if(!flg)
+        if(zero.size()>1)
         {
-            FOR(i,0,3)
-            {
-                reverse(strg[i].begin(),strg[i].end());
-            }
-            FOR(i,0,3)
-            {
-                FOR(j,0,3)
-                {
-                    if(i==j)
-                    {
-                        continue;
-                    }
-
-                    ll v1=solve(strg[i],strg[j]);
-                    // cout<<v1<<" $$"<<endl;
-
-                    if(v1>=n)
-                    {
-                        flg=true;
-
-                        ll len=v1-n;
-                        FOR(r,0,3)
-                        {
-                            reverse(strg[r].begin(),strg[r].end());
-                        }
-                        FOR(k,0,len)
-                        {
-                            cout<<strg[i][k];
-                        }
-                        cout<<strg[j];
-                        // FOR(i,0,len)
-                        // {
-                        //     cout<<'1';
-                        // }
-                        cout<<endl;
-                        // cout<<v1<<" "<<len<<endl;
-                        
-                    }
-                    if(flg)
-                    {
-                        break;
-                    }
-                }
-                if(flg)
-                {
-                    break;
-                }
-            }
+            cout<<solve(zero[0],zero[1],'0')<<endl;
+        }
+        else
+        {
+            cout<<solve(one[0],one[1],'1')<<endl;
+        }
         
-       
-
-
-    }
+    
     }
     return 0;
 }

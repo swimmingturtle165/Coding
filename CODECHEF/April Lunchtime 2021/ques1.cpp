@@ -247,28 +247,8 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
+   
 
-vector<vector<ll>> dp;
-
-
-
-ll solve(ll left,ll right,vector<ll>&a1,vector<ll>&a2)
-{
-    if(left>right)
-    {
-        return 0;
-    }
-    if(left==right)
-    {
-        return a1[left]*a2[left];
-    }
-
-    if(dp[left][right]==-1)
-    {
-    dp[left][right]= a1[left]*a2[right]+a1[right]*a2[left]+solve(left+1,right-1,a1,a2);
-    }
-    return dp[left][right];
-}
 
 signed main(int argc, char** argv)
 {
@@ -278,55 +258,32 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    // cin>>t;
+    cin>>t;
     while(t--)
     {
         ll n;
         cin>>n;
-        vector<ll> inp1(n),inp2(n);
-        vector<ll> prefix(n),suffix(n);
-
-        dp.assign(n,vector<ll>(n,-1));
-
+        string str;
+        cin>>str;
+        bool flg=false;
+        ll v1=0,v2=0;
         FOR(i,0,n)
         {
-            cin>>inp1[i];
-        }
-
-        FOR(i,0,n)
-        {
-            cin>>inp2[i];
-        }
-        FOR(i,0,n)
-        {
-            prefix[i]=inp1[i]*inp2[i];
-            if(i!=0)
-            prefix[i]+=prefix[i-1];
-        }
-
-        FORDE(i,n-1,0)
-        {
-            suffix[i]=inp1[i]*inp2[i];
-            if(i!=n-1)
-            suffix[i]+=suffix[i+1];
-        }
-       
-        ll ans=0;
-        FOR(i,0,n)
-        {
-            FOR(j,i,n)
+            if(str[i]=='1') v1++;
+            v2++;
+            if(2*v1>=v2)
             {
-                ll prev=i==0?0:prefix[i-1];
-                ll later=j==n-1?0:suffix[j+1];
-
-                ll tmp=solve(i,j,inp1,inp2);
-                // cout<<i<<" "<<j<<" "<<prev<<" "<<later<<" "<<tmp<<endl;
-                ans=max(ans,tmp+prev+later);
+                flg=true;
             }
         }
-        cout<<ans<<endl;
-
-
+        if(flg)
+        {
+            cout<<"YES"<<endl;
+        }
+        else
+        {
+            cout<<"NO"<<endl;
+        }
     }
     return 0;
 }

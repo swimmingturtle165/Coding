@@ -30,7 +30,7 @@ typedef     pair<ll,ll>      pll;
 #define     gcd(a,b)         __gcd(a,b)
 #define     maxv             INT_MAX
 #define     minv             INT_MIN
-#define     MOD              1000000007
+#define     MOD              1000000007ll
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
 #define     flush            fflush(stdout);
@@ -247,28 +247,8 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
+   
 
-vector<vector<ll>> dp;
-
-
-
-ll solve(ll left,ll right,vector<ll>&a1,vector<ll>&a2)
-{
-    if(left>right)
-    {
-        return 0;
-    }
-    if(left==right)
-    {
-        return a1[left]*a2[left];
-    }
-
-    if(dp[left][right]==-1)
-    {
-    dp[left][right]= a1[left]*a2[right]+a1[right]*a2[left]+solve(left+1,right-1,a1,a2);
-    }
-    return dp[left][right];
-}
 
 signed main(int argc, char** argv)
 {
@@ -283,49 +263,44 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        vector<ll> inp1(n),inp2(n);
-        vector<ll> prefix(n),suffix(n);
-
-        dp.assign(n,vector<ll>(n,-1));
-
+        ll sum=0;
         FOR(i,0,n)
         {
-            cin>>inp1[i];
+            ll tmp;
+            cin>>tmp;
+            sum+=tmp;
         }
+        ll q;
+        cin>>q;
+        ll v2=0;
+        // if(sum<0)
+        // {
+        //     v2=1;
+        //     sum=abs(sum);
+        // }
 
-        FOR(i,0,n)
+        sum%=MOD; 
+              
+        while (q--)
         {
-            cin>>inp2[i];
-        }
-        FOR(i,0,n)
-        {
-            prefix[i]=inp1[i]*inp2[i];
-            if(i!=0)
-            prefix[i]+=prefix[i-1];
-        }
-
-        FORDE(i,n-1,0)
-        {
-            suffix[i]=inp1[i]*inp2[i];
-            if(i!=n-1)
-            suffix[i]+=suffix[i+1];
-        }
-       
-        ll ans=0;
-        FOR(i,0,n)
-        {
-            FOR(j,i,n)
+            ll tmp;
+            cin>>tmp;
+            sum+=sum;
+            sum%=MOD;
+            if(sum<0)
             {
-                ll prev=i==0?0:prefix[i-1];
-                ll later=j==n-1?0:suffix[j+1];
-
-                ll tmp=solve(i,j,inp1,inp2);
-                // cout<<i<<" "<<j<<" "<<prev<<" "<<later<<" "<<tmp<<endl;
-                ans=max(ans,tmp+prev+later);
+                sum+=MOD;
+            }
+            if(v2==0)
+            {
+            cout<<sum<<endl;
+            }
+            else
+            {
+                cout<<0ll-sum<<endl;
             }
         }
-        cout<<ans<<endl;
-
+        
 
     }
     return 0;
