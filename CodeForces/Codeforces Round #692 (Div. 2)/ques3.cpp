@@ -264,7 +264,7 @@ signed main(int argc, char** argv)
         ll n,m;
         cin>>n>>m;
         set<pll> pts;
-        unordered_set<ll> strg;
+        unordered_map<ll,ll> x_to_y,y_to_x;
         vector<pll> arr(m);
         FOR(i,0,m)
         {
@@ -273,23 +273,32 @@ signed main(int argc, char** argv)
            {
             continue;
            }
+           x_to_y[arr[i].f]=i;
+           y_to_x[arr[i].s]=i;
             
         }
         ll ans=0;
         bool flg=false;
+        vector<ll> parent(n),size(n);
+        initialize(parent,size,n);
         FOR(i,0,m)
         {
-        //    if(pts.count({arr[i].s,arr[i].f})==1 )
-        //    {
-        //        ans++;
-        //    }
-           ans++;
-           pts.erase(arr[i]);
-        }
-        // cout<<ans<<endl;
-        if(strg.size()==m && flg==false)
-        {
+            if(arr[i].f==arr[i].s)
+            {
+                continue;
+            }
             ans++;
+            if(y_to_x.find(arr[i].f)!=y_to_x.end())
+            {
+                if(find(parent,i,y_to_x[arr[i].f]))
+                {
+                    ans++;
+                }
+                else
+                {
+                    weighted_union(parent,size,i,y_to_x[arr[i].f]);
+                }
+            }
         }
         cout<<ans<<endl;
 

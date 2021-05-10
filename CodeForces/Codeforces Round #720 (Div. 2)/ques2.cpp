@@ -259,10 +259,9 @@ signed main(int argc, char** argv)
     long t=1;
     cin>>t;
     vector<ll> primes;
-    primes.pb(5770931);
-    primes.pb(6101429);
-    primes.pb(7946369);
-    primes.pb(7259689);
+    primes.pb(MOD);
+    primes.pb(3);
+    primes.pb(5);
     // primes.pb(MOD);
 
     while(t--)
@@ -271,29 +270,31 @@ signed main(int argc, char** argv)
         cin>>n;
         vector<ll> arr(n);
         FOR(i,0,n) cin>>arr[i];
-        vector<ll> strg;
-        vector<ll> extra;
-        cout<<n-1<<endl;
-        ll v=0;
-        FOR(i,0,n-1)
+        ll mini=INT_MAX;
+        ll idx=0;
+        FOR(i,0,n)
         {
-           cout<<i+1<<" "<<i+2<<" "<<min(arr[i+1],arr[i])<<" "<<primes[v%primes.size()]<<endl;
-        //    if(arr[i+1]>arr[i])
-        //    {
-               arr[i+1]=primes[v%primes.size()];
-        //    }
-        //    else
-        //    {
-        //        arr[i]=primes[v%primes.size()];
-        //    }
-           v++;
-
+            if(mini>arr[i])
+            {
+                mini=arr[i];
+                idx=i+1;
+            }
         }
-        // dispvector<ll>(arr);
-        // FOR(i,0,n-1)
-        // {
-        //     cout<<gcd(arr[i],arr[i+1])<<endl;
-        // }
+        ll v=0;
+        cout<<n-1<<endl;
+        FOR(i,0,n)
+        {
+            if(i==idx-1)
+            {
+                continue;
+            }
+            else
+            {
+                cout<<i+1<<" "<<idx<<" "<<mini+abs(i+1-idx)<<" "<<mini<<endl;
+                v++;
+            }
+        }
+
 
     }
     return 0;

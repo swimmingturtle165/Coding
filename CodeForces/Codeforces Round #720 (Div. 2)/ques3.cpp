@@ -33,7 +33,7 @@ typedef     pair<ll,ll>      pll;
 #define     MOD              1000000007
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
-#define     flush            fflush(stdout);
+#define     flush            cout.flush();
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
@@ -252,10 +252,10 @@ bool find(vector<ll>&Arr,int A,int B)
 
 signed main(int argc, char** argv)
 {
-    #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-    #endif
+    // #ifndef ONLINE_JUDGE
+    // freopen("input.txt", "r", stdin);
+    // freopen("output.txt", "w", stdout);
+    // #endif
     FastIO;
     long t=1;
     cin>>t;
@@ -263,70 +263,76 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        vector<ll> inp(n);
-        FOR(i,0,n)
+
+        vector<bool> vst(n+1,false);
+        vector<ll> arr(n+1,false);
+
+
+        FORE(i,1,n/2)
         {
-            ll tmp;
-            cin>>tmp;
-            inp[i]=tmp;
-        }
-        bool flg=true;
-        FOR(i,0,n-1)
-        {
-            if(inp[i]!=inp[i+1])
+            ll idx1=2*i-1;
+            ll idx2=2*i;
+
+            cout<<"? "<<1<<" "<<idx1<<" "<<idx2<<" "<<n-1<<endl;
+            flush
+            ll mx;
+            cin>>mx;
+            if(mx==n-1)
             {
-                flg=false;
-            }
-        }
-        vector<ll> prefix(n,0),suffix(n,0);
-        prefix[0]=inp[0];
-        suffix[n-1]=inp[n-1];
-
-        FOR(i,1,n)
-        {
-            prefix[i]=(prefix[i-1]^inp[i]);
-        }
-        
-        FORDE(i,n-2,0)
-        {
-            suffix[i]=(suffix[i+1]^inp[i]);
-        }
-
-        if(suffix[0]==0)
-        {
-            flg=true;
-
-        }
-        else
-        {
-            ll v1=suffix[0];
-            ll v2=0;
-            ll cnt=0;
-            FOR(i,0,n)
-            {
-                v2=(v2^inp[i]);
-                if(v2==v1)
+                cout<<"? "<<1<<" "<<idx2<<" "<<idx1<<" "<<n-1<<endl;
+                flush
+                ll val;
+                cin>>val;
+                if(val==n)
                 {
-                    v2=0;
-                    cnt++;
+                    arr[idx1]=n;
+                    cout<<"? "<<2<<" "<<idx2<<" "<<idx1<<" "<<1<<endl;
+                    flush
+                    cin>>arr[idx2];
+                    continue;
+                    
                 }
             }
-            if(cnt>2 && v2==0)
+            ll v1;
+            cout<<"? "<<1<<" "<<idx1<<" "<<idx2<<" "<<mx-1<<endl;
+            flush
+            cin>>v1;
+            if(v1==mx-1)
             {
-                flg=true;
+                arr[idx1]=mx;
+                cout<<"? "<<2<<" "<<idx2<<" "<<idx1<<" "<<1<<endl;
+                flush
+                cin>>arr[idx2]; 
             }
-            
+            else
+            {
+                arr[idx2]=mx;
+                cout<<"? "<<2<<" "<<idx1<<" "<<idx2<<" "<<1<<endl;
+                flush
+                cin>>arr[idx1]; 
+            }
         }
-        
-        if(flg)
+        if(n%2==1)
         {
-            cout<<"YES"<<endl;
+            FOR(i,0,n+1)
+            {
+                vst[arr[i]]=true;
+            }
+            ll v2;
+            FOR(i,1,n+1)
+            {
+                if(vst[i]==false)
+                {
+                    v2=i;
+                }
+            }
+            arr[n]=v2;
         }
-        else
-        {
-            cout<<"NO"<<endl;
-        }
-        
+        cout<<"! ";
+        FOR(i,1,n+1) cout<<arr[i]<<" ";
+        cout<<endl;
+        flush
+
     }
     return 0;
 }

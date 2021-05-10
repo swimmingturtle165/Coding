@@ -263,15 +263,52 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        vector<ll> dp1(200001,0);
-        vector<ll> dp2(200001,0);
-
+        vector<bool> dp(200001,false);
+        dp[0]=true;
         vector<ll> inp(n);
-        FOR(i,0,n) cin>>inp[i];
-        FOR(i,0,200001)
-        {
-            if(inp[i])
+        ll sum=0;
+        FOR(i,0,n) {
+            cin>>inp[i];
+            sum+=inp[i];
         }
+        if(sum%2==1)
+        {
+            cout<<0<<endl;
+            continue;
+        }
+        FOR(i,0,n)
+        {
+            FORDE(j,200000,0)
+            {
+                if(j>=inp[i] && dp[j-inp[i]])
+                {
+                    dp[j]=true;
+                }
+            }
+        }
+        if(dp[sum/2]==false)
+        {
+            cout<<0<<endl;
+            continue;
+        }
+        cout<<1<<endl;
+        ll idx=0;
+        while (true)
+        {
+            FOR(i,0,n)
+            {
+                if(inp[i]%2==1)
+                {
+                    idx=i+1;
+                    cout<<idx<<endl;
+                    break;
+                }
+                inp[i]=inp[i]/2;
+            }
+            if(idx!=0)
+            break;
+        }
+        
 
     }
     return 0;
