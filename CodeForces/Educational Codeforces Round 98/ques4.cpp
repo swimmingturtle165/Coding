@@ -30,10 +30,10 @@ typedef     pair<ll,ll>      pll;
 #define     gcd(a,b)         __gcd(a,b)
 #define     maxv             INT_MAX
 #define     minv             INT_MIN
-#define     MOD              1000000007
+#define     MOD              998244353
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
-#define     flush            fflush(stdout);
+#define     flush            cout.flush();
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
@@ -258,49 +258,40 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        ll n,k;
+        ll n;
+        cin>>n;
 
-        cin>>n>>k;
-
-        vector<ll> h(n);
-        
-        FOR(i,0,n) cin>>h[i];
-
-        vector<pll> dp(n);
-        
-        dp[0]={h[0],h[0]+k};
-
-        dp[n-1]={h[n-1],h[n-1]+k};
-        bool flg=true;
-        FOR(i,1,n-1)
+        vector<ll> dp(n+1,1);
+        ll cnt=0;
+        ll val=1;
+        ll odd=1;
+        ll even=1;
+        FOR(i,2,n+1)
         {
-            dp[i].f=max(h[i],dp[i-1].f-k+1);
-            
-            dp[i].s=min(h[i]+2*k-1,dp[i-1].s+k-1);
-
-            // cout<<dp[i].f<<" "<<dp[i].s<<" "<<dp[i-1].f<<" "<<dp[i-1].s<<endl;
-            if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+            ll limit=(i+1)/2;
+            dp[i]=0;
+            if(i%2==0)
             {
-                // cout<<i<<endl;
-                flg=false;
+                dp[i]=even;
+                odd+=dp[i];
+                odd%=MOD;
             }
+            else
+            {
+                dp[i]=odd;
+                even+=dp[i];
+                even%=MOD;
+            }
+            
+            // dispvector<ll>(dp);
         }
-        ll i=n-1;
-        if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
-        {
-            flg=false;
-        }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else
-        {
-            cout<<"NO"<<endl;
-        }
+        ll v2=modInverse(power(2,n,MOD),MOD);
+        dp[n]=(dp[n]*v2)%MOD;
+        cout<<dp[n]<<endl;
+
     }
     return 0;
 }

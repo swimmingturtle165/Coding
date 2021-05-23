@@ -33,7 +33,7 @@ typedef     pair<ll,ll>      pll;
 #define     MOD              1000000007
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
-#define     flush            fflush(stdout);
+#define     flush            cout.flush();
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
@@ -258,49 +258,114 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        ll n,k;
+        ll n,m,k;
+        cin>>n>>m>>k;
 
-        cin>>n>>k;
-
-        vector<ll> h(n);
-        
-        FOR(i,0,n) cin>>h[i];
-
-        vector<pll> dp(n);
-        
-        dp[0]={h[0],h[0]+k};
-
-        dp[n-1]={h[n-1],h[n-1]+k};
-        bool flg=true;
-        FOR(i,1,n-1)
+        if(k%2==1)
         {
-            dp[i].f=max(h[i],dp[i-1].f-k+1);
-            
-            dp[i].s=min(h[i]+2*k-1,dp[i-1].s+k-1);
-
-            // cout<<dp[i].f<<" "<<dp[i].s<<" "<<dp[i-1].f<<" "<<dp[i-1].s<<endl;
-            if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+            FOR(i,0,n)
             {
-                // cout<<i<<endl;
-                flg=false;
+                FOR(j,0,m)
+                {
+                    cout<<-1<<" ";
+                }
+                cout<<endl;
+            }
+            continue;
+        }
+
+       vector<vector<ll>> dp(n,vector<ll>(m,0));
+       vector<vector<ll>> dp1(n,vector<ll>(m,0));
+       vector<vector<vector<ll>>> edges(n,vector<vector<ll>>(m,vector<ll>(4,INT_MAX)));   
+
+    //  i,j => i-1 ,j   
+    //  i,j => i,j-1
+    //  i,j => i+1,j
+    //  i,j => i,j+1
+
+        FOR(i,0,n)
+        {
+            FOR(j,0,m-1)
+            {
+                ll v1=i;
+                ll v2=j+1;
+                ll tmp;
+                cin>>tmp;
+                edges[i][j][3]=tmp;
+                edges[v1][v2][1]=tmp;
+
             }
         }
-        ll i=n-1;
-        if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+        
+    //  i,j => i-1 ,j   
+    //  i,j => i,j-1
+    //  i,j => i+1,j
+    //  i,j => i,j+1
+
+        vector<ll> x{-1,0,1,0};
+        vector<ll> y{0,-1,0,1};
+
+
+         FOR(i,0,n-1)
         {
-            flg=false;
+            FOR(j,0,m)
+            {
+                ll v1=i+1;
+                ll v2=j;
+                ll tmp;
+                cin>>tmp;
+                edges[i][j][2]=tmp;
+                edges[v1][v2][0]=tmp;
+
+            }
         }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else
-        {
-            cout<<"NO"<<endl;
-        }
+         
+         FOR(v,0,k/2)
+         {
+            FOR(i,0,n)
+            {
+                FOR(j,0,m)
+                {
+                    dp1[i][j]=INT_MAX;
+                }
+            }
+             FOR(i,0,n)
+            {
+                FOR(j,0,m)
+                {
+                     //  i,j => i-1 ,j   
+                    //  i,j => i,j-1
+                    //  i,j => i+1,j
+                    //  i,j => i,j+1
+                    FOR(v1,0,4)
+                    {
+                        ll v4=i+x[v1];
+                        ll v5=j+y[v1];
+                        if(v4>=0 && v4<n && v5>=0 && v5<m)
+                        {
+                         dp1[v4][v5]=min(dp1[v4][v5],dp[i][j]+2*edges[i][j][v1]);
+
+                        }
+                    }
+                }
+            }
+            swap(dp,dp1);
+         }
+         FOR(i,0,n)
+         {
+             FOR(j,0,m)
+             {
+                 cout<<dp[i][j]<<" ";
+             }
+             cout<<endl;
+         }
+
+
+
+
     }
     return 0;
 }

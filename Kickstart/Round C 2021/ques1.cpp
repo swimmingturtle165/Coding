@@ -33,7 +33,7 @@ typedef     pair<ll,ll>      pll;
 #define     MOD              1000000007
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
-#define     flush            fflush(stdout);
+#define     flush            cout.flush();
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
@@ -259,48 +259,42 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
+    int v=0;
     while(t--)
     {
+        v++;
+        cout<<"Case #"<<v<<": ";
+        ll ans=0;
         ll n,k;
-
         cin>>n>>k;
-
-        vector<ll> h(n);
-        
-        FOR(i,0,n) cin>>h[i];
-
-        vector<pll> dp(n);
-        
-        dp[0]={h[0],h[0]+k};
-
-        dp[n-1]={h[n-1],h[n-1]+k};
-        bool flg=true;
-        FOR(i,1,n-1)
+        string str;
+        cin>>str;
+        ll len=(n+1)/2;
+        for(int i = 0 ; i <len;i++)
         {
-            dp[i].f=max(h[i],dp[i-1].f-k+1);
-            
-            dp[i].s=min(h[i]+2*k-1,dp[i-1].s+k-1);
-
-            // cout<<dp[i].f<<" "<<dp[i].s<<" "<<dp[i-1].f<<" "<<dp[i-1].s<<endl;
-            if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+            ans+=(str[i]-'a')*power(k,len-1-i,MOD);
+            ans%=MOD;
+        }
+        int b2=0;
+        for(int i = len;i<n;i++)
+        {
+            if(str[i]>str[len-1])
             {
-                // cout<<i<<endl;
-                flg=false;
+                b2++;
+                break;
+            }
+            if(str[i]<str[len-1])
+            {
+                b2--;
+                break;
             }
         }
-        ll i=n-1;
-        if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+        if(b2>0)
         {
-            flg=false;
+            ans++;
         }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else
-        {
-            cout<<"NO"<<endl;
-        }
+        cout<<ans<<endl;
+
     }
     return 0;
 }

@@ -33,7 +33,7 @@ typedef     pair<ll,ll>      pll;
 #define     MOD              1000000007
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
-#define     flush            fflush(stdout);
+#define     flush            cout.flush();
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
@@ -261,45 +261,31 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n,k;
-
-        cin>>n>>k;
-
-        vector<ll> h(n);
+        ll n;
+        cin>>n;
+        string str;
+        cin>>str;
+        ll cnt_0=0;
         
-        FOR(i,0,n) cin>>h[i];
-
-        vector<pll> dp(n);
-        
-        dp[0]={h[0],h[0]+k};
-
-        dp[n-1]={h[n-1],h[n-1]+k};
-        bool flg=true;
-        FOR(i,1,n-1)
+        for(int i = 0 ; i <n;i++)
         {
-            dp[i].f=max(h[i],dp[i-1].f-k+1);
-            
-            dp[i].s=min(h[i]+2*k-1,dp[i-1].s+k-1);
-
-            // cout<<dp[i].f<<" "<<dp[i].s<<" "<<dp[i-1].f<<" "<<dp[i-1].s<<endl;
-            if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+            if(str[i]=='0') 
             {
-                // cout<<i<<endl;
-                flg=false;
+                cnt_0++;
             }
         }
-        ll i=n-1;
-        if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+        
+        if(cnt_0==2 || cnt_0==1)
         {
-            flg=false;
+            cout<<"BOB"<<endl;
         }
-        if(flg)
+        else if(cnt_0%2==1)
         {
-            cout<<"YES"<<endl;
+            cout<<"ALICE"<<endl;
         }
         else
         {
-            cout<<"NO"<<endl;
+            cout<<"BOB"<<endl;
         }
     }
     return 0;

@@ -33,7 +33,7 @@ typedef     pair<ll,ll>      pll;
 #define     MOD              1000000007
 #define     FastIO           ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
-#define     flush            fflush(stdout);
+#define     flush            cout.flush();
 #define endl '\n'         
 #define ordered_set_single tree<ll,null_type,less<ll>,rb_tree_tag,tree_order_statistics_node_update>
 
@@ -258,48 +258,44 @@ signed main(int argc, char** argv)
     #endif
     FastIO;
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        ll n,k;
+        ll n;
+        cin>>n;
+        vector<ll> arr(n);
 
-        cin>>n>>k;
+        FOR(i,0,n) cin>>arr[i];
 
-        vector<ll> h(n);
-        
-        FOR(i,0,n) cin>>h[i];
+        vector<vector<ll>> dp(n,vector<ll>(n,-1));
 
-        vector<pll> dp(n);
-        
-        dp[0]={h[0],h[0]+k};
-
-        dp[n-1]={h[n-1],h[n-1]+k};
-        bool flg=true;
-        FOR(i,1,n-1)
+        FORDE(i,n-1,0)
         {
-            dp[i].f=max(h[i],dp[i-1].f-k+1);
-            
-            dp[i].s=min(h[i]+2*k-1,dp[i-1].s+k-1);
-
-            // cout<<dp[i].f<<" "<<dp[i].s<<" "<<dp[i-1].f<<" "<<dp[i-1].s<<endl;
-            if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+            dp[i][i]=arr[i];
+            ll cnt=1;
+            ll x=i;
+            ll y=i;
+            while(cnt<arr[i])
             {
-                // cout<<i<<endl;
-                flg=false;
+                if(x<n-1 && dp[x+1][y]==-1)
+                {
+                    x++;
+                }
+                else
+                {
+                    y--;
+                }
+                dp[x][y]=arr[i];
+                cnt++;
             }
         }
-        ll i=n-1;
-        if(dp[i].s <= dp[i-1].f || dp[i].f >= dp[i-1].s)
+        FOR(i,0,n)
         {
-            flg=false;
-        }
-        if(flg)
-        {
-            cout<<"YES"<<endl;
-        }
-        else
-        {
-            cout<<"NO"<<endl;
+            FOR(j,0,i+1)
+            {
+                cout<<dp[i][j]<<" ";
+            }
+            cout<<endl;
         }
     }
     return 0;
