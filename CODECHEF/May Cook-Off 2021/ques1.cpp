@@ -248,7 +248,11 @@ bool find(vector<ll>&Arr,int A,int B)
     return false;
 }
    
-
+ll get_val(ll x,ll y)
+{
+    x++;
+    return (((x+y)*(x+y+1))/2ll )-y;
+}
 
 signed main(int argc, char** argv)
 {
@@ -259,43 +263,46 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    int v=0;
     while(t--)
     {
-        v++;
-        cout<<"Case #"<<v<<": ";
+        ll x1,x2,y1,y2;
+        cin>>x1>>y1>>x2>>y2;
+        set<pair<ll,pll>> strg;
+        x1--;
+        x2--;
+        y1--;
+        y2--;
+        set<pll> vst;
         ll ans=0;
-        ll n,k;
-        cin>>n>>k;
-        string str;
-        cin>>str;
-        ll len=(n-1)/2;
+        strg.insert({get_val(x1,y1),{x1,y1}});
 
-        for(int i = 0 ; i <=len;i++)
+        while(strg.size()>0)
         {
-            ll x=(len+1-i);
-            ans+=((ll)(str[i]-'a'))*power(k,(x-1),MOD);
-            ans%=MOD;
-        }
-        int b2=0;
-        // cout<<len <<" "<<b2<<" "<<ans<<endl;
-        for(int i = (n-1)/2;i>=0;i--)
-        {
-            if(str[n-1-i]>str[i])
+            pair<ll,pll> tmp=*(strg.rbegin());
+            strg.erase(tmp);
+            ll val=tmp.f;
+            ll x=tmp.s.f;
+            ll y=tmp.s.s;
+            // cout<<val<<" "<<x<<" "<<y<<endl;
+            if(x==x2 && y==y2)
             {
-                ans++;
-                ans%=MOD;
-                break;
-
-            }
-            if(str[n-1-i]<str[i])
-            {
+                ans=val;
                 break;
             }
+
+            if(vst.count(tmp.s)==1 || x>x2 || y>y2)
+            {
+                continue;
+            }
+            else
+            {
+                vst.insert(tmp.s);
+                strg.insert({val+get_val(x+1,y),{x+1,y}});
+                strg.insert({val+get_val(x,y+1),{x,y+1}});
+
+            }
         }
-         ans%=MOD;
         cout<<ans<<endl;
-
     }
     return 0;
 }

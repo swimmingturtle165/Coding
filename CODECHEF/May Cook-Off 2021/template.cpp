@@ -259,43 +259,9 @@ signed main(int argc, char** argv)
     FastIO;
     long t=1;
     cin>>t;
-    int v=0;
     while(t--)
     {
-        v++;
-        cout<<"Case #"<<v<<": ";
-        ll ans=0;
-        ll n,k;
-        cin>>n>>k;
-        string str;
-        cin>>str;
-        ll len=(n-1)/2;
-
-        for(int i = 0 ; i <=len;i++)
-        {
-            ll x=(len+1-i);
-            ans+=((ll)(str[i]-'a'))*power(k,(x-1),MOD);
-            ans%=MOD;
-        }
-        int b2=0;
-        // cout<<len <<" "<<b2<<" "<<ans<<endl;
-        for(int i = (n-1)/2;i>=0;i--)
-        {
-            if(str[n-1-i]>str[i])
-            {
-                ans++;
-                ans%=MOD;
-                break;
-
-            }
-            if(str[n-1-i]<str[i])
-            {
-                break;
-            }
-        }
-         ans%=MOD;
-        cout<<ans<<endl;
-
+        
     }
     return 0;
 }
