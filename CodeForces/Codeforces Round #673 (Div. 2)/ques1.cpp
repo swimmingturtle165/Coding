@@ -91,7 +91,19 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        
+        ll n,k;
+        cin>>n>>k;
+        ll ans=0;
+        vector<ll> arr(n);
+        FOR(i,0,n) cin>>arr[i];
+
+        sort(arr.begin(),arr.end());
+        ll v1=arr[0];
+        for(int i =1 ;i <n ;i++)
+        {
+            ans+=(k-arr[i])/v1;
+        }
+        cout<<ans<<endl;
     }
     return 0;
 }

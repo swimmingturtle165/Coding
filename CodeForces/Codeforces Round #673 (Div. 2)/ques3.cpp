@@ -91,7 +91,52 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
+        ll n;
+        cin>>n;
         
+        vector<ll> arr(n);
+        
+        FOR(i,0,n) cin>>arr[i];
+        
+        vector<ll> lst(n+1,-1);
+        
+        vector<ll> max_dis(n+1,0);
+
+        FOR(i,0,n)
+        {
+            max_dis[arr[i]]=max(max_dis[arr[i]],i-lst[arr[i]]);
+            lst[arr[i]]=i;
+        }
+        FOR(i,0,n)
+        {
+            max_dis[arr[i]]=max(max_dis[arr[i]],n-lst[arr[i]]);
+        }
+        // dispvector<ll>(max_dis);
+        vector<ll> answ(n,-1);
+        FOR(i,0,n)
+        {
+            if(answ[max_dis[arr[i]]-1]==-1 || answ[max_dis[arr[i]]-1]>arr[i])
+            {
+                answ[max_dis[arr[i]]-1]=arr[i];
+            }
+        }
+        ll i=0;
+        while(i<n && answ[i]==-1)
+        {
+            i++;
+        }
+        while(i<n)
+        {
+            if(i>0 && answ[i-1]!=-1)
+            {
+                if(answ[i]==-1 || answ[i]>answ[i-1])
+                {
+                    answ[i]=answ[i-1];
+                }
+            }
+            i++;
+        }    
+        dispvector<ll>(answ);
     }
     return 0;
 }

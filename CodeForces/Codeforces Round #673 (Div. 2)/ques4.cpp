@@ -91,7 +91,44 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        
+        ll n;
+        cin>>n;
+        vector<ll> arr(n);
+        FOR(i,0,n) cin>>arr[i];
+
+        ll sum=0;
+        FOR(i,0,n) sum+=arr[i];
+
+        if(sum%n!=0)
+        {
+            cout<<-1<<endl;
+        }
+        else
+        {
+            vector<vector<ll>> answ;
+            ll val=sum/n;
+            FOR(i,1,n)
+            {
+                ll v1=arr[i]%(i+1);
+                if(v1!=0)
+                {
+                    answ.pb({1,i+1,i+1-v1});
+                    arr[i]+=(i+1-v1);
+                }
+                
+                answ.pb({i+1,1,(arr[i])/(i+1)}); 
+                
+            }
+            FOR(i,1,n)
+            {
+                answ.pb({1,i+1,val});
+            }
+            cout<<answ.size()<<endl;
+            for(auto u:answ)
+            {
+                dispvector<ll>(u);
+            }
+        }
     }
     return 0;
 }

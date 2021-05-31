@@ -91,7 +91,63 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
+        ll n,m;
+        cin>>n>>m;
+        string str;
+        cin>>str;
+        vector<ll> strg;
+        for(int i = 0;i<n;i++)
+        {
+            if(str[i]=='1')
+            {
+                strg.pb(i);
+            }
+        }
+        if(strg.size()==0)
+        {
+            cout<<str<<endl;
+            continue;
+        }
+        ll idx1=strg[0];
+        ll lft=m;
+        ll idx2=strg.back();
+
+        while (idx1>=0 && lft>=0)
+        {
+            str[idx1]='1';
+            idx1--;
+            lft--;
+        }
+        lft=m;
+        while (idx2<n && lft>=0)
+        {
+            str[idx2]='1';
+            idx2++;
+            lft--;
+
+        }
+        for(int i = 0;i<strg.size()-1;i++)
+        {
+                //  ll dist=strg[i+1]-strg[i];
+                lft=m;
+                ll lft1=strg[i];
+                ll rgt=strg[i+1];
+                while(lft1<rgt && lft>=0 )
+                {
+                    str[lft1]='1';
+                    str[rgt]='1';
+                    lft1++;
+                    rgt--;
+                    lft--;
+
+                }
+        }
         
+        
+      
+
+
+        cout<<str<<endl;
     }
     return 0;
 }

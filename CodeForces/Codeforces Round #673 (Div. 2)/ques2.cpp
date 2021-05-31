@@ -91,7 +91,30 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        
+        ll n,k;
+        cin>>n>>k;
+
+        vector<ll> arr(n);
+        FOR(i,0,n) cin>>arr[i];
+        ll v2=0;
+        FOR(i,0,n)
+        {
+            if(k%2==0 && arr[i]==k/2)
+            {
+                cout<<v2<<" ";
+                v2++;
+                v2%=2;
+            }
+            else if(arr[i]<=k/2)
+            {
+                cout<<1<<" ";
+            }
+            else
+            {
+                cout<<0<<" ";
+            }
+        }
+        cout<<endl;
     }
     return 0;
 }

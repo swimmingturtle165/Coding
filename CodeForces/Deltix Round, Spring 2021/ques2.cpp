@@ -91,7 +91,25 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
+        ll n;
+        cin>>n;
+        vector<ll> arr(n);
         
+        FOR(i,0,n) cin>>arr[i];
+        cout<<3*n<<endl;
+        FOR(i,0,n)
+        {
+            ll x=i+1;
+            ll y=i+2;
+            cout<<1<<" "<<x<<" "<<y<<endl; 
+            cout<<2<<" "<<x<<" "<<y<<endl;
+            cout<<2<<" "<<x<<" "<<y<<endl;
+            cout<<1<<" "<<x<<" "<<y<<endl;
+            cout<<2<<" "<<x<<" "<<y<<endl;
+            cout<<2<<" "<<x<<" "<<y<<endl;
+
+            i++;
+        }
     }
     return 0;
 }
