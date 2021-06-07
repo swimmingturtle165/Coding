@@ -97,13 +97,13 @@ class sgmt{
 
 };
 
-ll v1;
+unordered_map<ll,ll> strg;
 
 void build(ll curr,ll idx,string& str,vector<sgmt>& arr)
 {
 
-
     ll lft=2*curr+1;
+
     ll rgt=2*curr+2;
 
     if(idx>=str.size())
@@ -131,39 +131,28 @@ void build(ll curr,ll idx,string& str,vector<sgmt>& arr)
     {
         arr[curr].winners=arr[lft].winners+arr[rgt].winners;
     }
+
+    strg[idx]=curr;
+    // cout<<idx<<" "<<curr<<endl;
+
     return;
 
 }
 
-void update(ll curr,ll idx,ll upd_idx,char val,string& str,vector<sgmt>& arr)
+void update(ll curr,ll idx,char val,bool upd,string& str,vector<sgmt>& arr)
 {
-
-
+    if(curr<0)
+    {
+        return;
+    }
+    if(upd==true)
+    {
+        str[idx]=val;
+    }
     ll lft=2*curr+1;
+
     ll rgt=2*curr+2;
 
-   
-
-    if(upd_idx==idx)
-    {
-        // cout<<idx<<" && "<<upd_idx<<" ^^ "<<curr<<endl;
-        // cout<<str<<" ";
-        str[idx]=val;
-
-        // cout<<str<<endl;
-    }
-    else
-    {
-
-        if(idx>upd_idx)
-        {
-            return;
-        }
-        update(rgt,2*idx+1,upd_idx,val,str,arr);
-
-        update(lft,2*idx+2,upd_idx,val,str,arr);
-    }
-        
     if(str[idx]=='0')
     {
         arr[curr].winners=arr[lft].winners;
@@ -176,9 +165,60 @@ void update(ll curr,ll idx,ll upd_idx,char val,string& str,vector<sgmt>& arr)
     {
         arr[curr].winners=arr[lft].winners+arr[rgt].winners;
     }
+    ll parent=(curr-1)/2;
+    ll p2=(idx-1)/2;
+    if(curr==0 || parent<0 || p2<0)
+    {
+        return;
+    }
+    // cout<<parent<<" ^^ "<<endl;
+    update(parent,p2,val,false,str,arr);
     return;
-
+    
 }
+// void update(ll curr,ll idx,ll upd_idx,char val,string& str,vector<sgmt>& arr)
+// {
+
+
+//     ll lft=2*curr+1;
+
+//     ll rgt=2*curr+2;
+
+   
+
+//     if(upd_idx==idx)
+//     {
+//         str[idx]=val;
+//     }
+//     else
+//     {
+
+//         if(idx>upd_idx)
+//         {
+//             return;
+//         }
+
+//         update(rgt,2*idx+1,upd_idx,val,str,arr);
+
+//         update(lft,2*idx+2,upd_idx,val,str,arr);
+
+//     }
+        
+//     if(str[idx]=='0')
+//     {
+//         arr[curr].winners=arr[lft].winners;
+//     }
+//     else if(str[idx]=='1')
+//     {
+//         arr[curr].winners=arr[rgt].winners;
+//     }
+//     else
+//     {
+//         arr[curr].winners=arr[lft].winners+arr[rgt].winners;
+//     }
+//     return;
+
+// }
 
 
 signed main(int argc, char** argv)
@@ -206,27 +246,19 @@ signed main(int argc, char** argv)
         ll v2=2ll*pow(2ll,k)-1ll;
         ll prev=0;
         ll curr=0;
-        // FOR(i,0,k)
-        // {
-        //     curr=0;
-        //     while(prev+curr<pow(2,i+1)-1)
-        //     {
-        //         cout<<arr[prev+curr].winners<<" ";
-        //         curr++;
-        //     }
-        //     cout<<endl;
-        //     prev=curr;
-        // }
+        
         while (q--)
         {
             ll idx;
             char ch;
             cin>>idx>>ch;
+
             // idx--;
             // cout<<idx<<" &&  "<<str.size()-idx<<endl;
-            update(0,0,str.size()-idx,ch,str,arr);
+            // cout<<strg[str.size()-idx]<<" "<<str.size()-idx<<endl;
+            update(strg[str.size()-idx],str.size()-idx,ch,true,str,arr);
             cout<<arr[0].winners<<endl;
-            // prev=0;
+            // ll prev=0;
             // FOR(i,0,k)
             //  {
             //     curr=0;

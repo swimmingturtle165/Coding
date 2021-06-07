@@ -78,8 +78,6 @@ ll modInverse(ll n, ll p)
 } 
   
 
-
-
 signed main(int argc, char** argv)
 {
     #ifndef ONLINE_JUDGE
@@ -88,10 +86,10 @@ signed main(int argc, char** argv)
     #endif
     SACHITJAGGI
     long t=1;
-    cin>>t;
+    // cin>>t;
     while(t--)
     {
-        
+                
     }
     return 0;
 }
