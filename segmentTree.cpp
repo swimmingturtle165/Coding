@@ -161,10 +161,7 @@ struct segmentTree{
             return ;
         }
 
-        if(idx<lx && rx>=idx)
-        {
-            return;
-        }
+        
 
         ll mid=(lx+rx)/2;
         
@@ -178,58 +175,3 @@ struct segmentTree{
 
 
 };
-
-signed main(int argc, char** argv)
-{
-    #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-    #endif
-    SACHITJAGGI
-    long t=1;
-    cin>>t;
-    while(t--)
-    {
-        ll n;
-        cin>>n;
-        vector<ll> arr(2*n);
-        ll g=0;
-        FOR(i,0,n)
-        {
-            cin>>arr[i];
-            g=gcd(g,arr[i]);
-            arr[i+n]=arr[i];
-        }
-        segmentTree strg;
-
-        strg.initialize(arr);
-
-        ll lft=0,rgt=n;
-        while(lft<rgt)
-        {
-            ll mid=(lft+rgt)/2;
-
-            ll v=0;
-            FOR(i,0,n)
-            {
-                if(strg.getVal(i,i+mid,0,0,strg.sz)==g)
-                {
-                    v++;
-                }
-            }
-            if(v!=n)
-            {
-                lft=mid+1;
-            }
-            else
-            {
-                rgt=mid;
-            }
-        }
-        cout<<rgt-1<<endl;
-
-
-
-    }
-    return 0;
-}

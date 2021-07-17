@@ -6,7 +6,7 @@ using namespace std;
 using namespace __gnu_pbds; 
 
 typedef     unsigned long long int ull;
-typedef      int    ll;
+typedef     long long int    ll;
 typedef     long double      ld;
 typedef     pair<ll,ll>      pll;
 #define     FOR(i,a,b)       for(ll i=a;i<b;i++)
@@ -30,7 +30,7 @@ typedef     pair<ll,ll>      pll;
 #define     gcd(a,b)         __gcd(a,b)
 #define     maxv             INT_MAX
 #define     minv             INT_MIN
-#define     MOD              1000000007
+#define     MOD              998244353
 #define     SACHITJAGGI      ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(0);
 #define     here             cout<<"I'm here\n";
 #define     flush            cout.flush();
@@ -76,108 +76,40 @@ ll modInverse(ll n, ll p)
 { 
     return power(n, p-2, p); 
 } 
-  
-struct segmentTree{
+#define MAXN 100010
 
-    ll sz=1;
-    ll neutralElement=0;
-    vector<ll> sgmt;
 
-    ll operation(ll a1,ll a2)
+ll fact[MAXN], invf[MAXN];
+ 
+ll binpow(ll a, ll b, ll m)
+{
+    ll res = 1;
+    while (b)
     {
-        return gcd(a1,a2);
+        if (b & 1)
+            res = res * a % m;
+        a = a * a % m;
+        b >>= 1;
     }
-
-    void build(int left,int right,int x,vector<ll> &arr)
+    return res;
+}
+ 
+void precompute()
+{
+    fact[0] = invf[0] = 1;
+    for (int i = 1; i < MAXN; i++)
     {
-        if(right-left==1)
-        {
-            // leaf node
-            if(left<arr.size())
-            {
-                sgmt[x]=arr[left];
-            }
-            return;
-        }
-        ll mid=(left+right)/2;
-        build(left,mid,2*x+1,arr);
-        build(mid,right,2*x+2,arr);
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-        return;
-
+        fact[i] = fact[i - 1] * i % MOD;
+        invf[i] = binpow(fact[i], MOD - 2, MOD);
     }
-    
-    void initialize(vector<ll> &arr)
-    {
-        ll n=arr.size();
-        while(sz<n)
-        {
-            sz=(2ll*sz);
-        }
-        // cout<<sz<<endl;
-        sgmt.assign(2*sz,neutralElement);
-
-        build(0,sz,0,arr);
-
-    }   
-
-    ll getVal(int left,int right,int x,int lx,int rx)
-    {
-        // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(lx>=right || rx<=left)
-        {
-            // out of bounds
-            return neutralElement;
-        }
-        if(lx>=left && right>=rx)
-        {
-            // complete intersection
-            return sgmt[x];
-        }
-        ll mid=(lx+rx)/2;
-        ll lftAns=getVal(left,right,2*x+1,lx,mid);
-        ll rgtAns=getVal(left,right,2*x+2,mid,rx);
-        return operation(lftAns,rgtAns);
-
-
-    }
-
-    void update(int val,int idx,int x,int lx,int rx)
-    {
-         // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(rx-lx==1)
-        {
-            sgmt[x]=val;
-            return ;
-        }
-
-        if(idx<lx && rx>=idx)
-        {
-            return;
-        }
-
-        ll mid=(lx+rx)/2;
-        
-        if(idx<mid)
-        update(val,idx,2*x+1,lx,mid);
-        else
-        update(val,idx,2*x+2,mid,rx);
-
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-    }
-
-
-};
+}
+ 
+ll nCk(int n, int k)
+{
+    if (k < 0 || k > n)
+        return 0;
+    return fact[n] * invf[k] % MOD * invf[n - k] % MOD;
+}
 
 signed main(int argc, char** argv)
 {
@@ -186,49 +118,40 @@ signed main(int argc, char** argv)
     freopen("output.txt", "w", stdout);
     #endif
     SACHITJAGGI
+    precompute();
+
     long t=1;
     cin>>t;
     while(t--)
     {
         ll n;
-        cin>>n;
-        vector<ll> arr(2*n);
-        ll g=0;
-        FOR(i,0,n)
+        cin >> n;
+ 
+        string s;
+        cin >> s;
+ 
+        ll ng = 0;
+        ll g = 0;
+        ll i = 0;
+        while (i < n)
         {
-            cin>>arr[i];
-            g=gcd(g,arr[i]);
-            arr[i+n]=arr[i];
-        }
-        segmentTree strg;
-
-        strg.initialize(arr);
-
-        ll lft=0,rgt=n;
-        while(lft<rgt)
-        {
-            ll mid=(lft+rgt)/2;
-
-            ll v=0;
-            FOR(i,0,n)
+            if (s[i] == '0')
             {
-                if(strg.getVal(i,i+mid,0,0,strg.sz)==g)
-                {
-                    v++;
-                }
+                ng++;
+                i++;
             }
-            if(v!=n)
+            else if (i + 1 < n && s[i + 1] == '1')
             {
-                lft=mid+1;
+                g++;
+                i += 2;
             }
             else
             {
-                rgt=mid;
+                i++;
             }
         }
-        cout<<rgt-1<<endl;
-
-
+ 
+        cout << nCk(g + ng, g) << "\n";
 
     }
     return 0;

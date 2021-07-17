@@ -6,7 +6,7 @@ using namespace std;
 using namespace __gnu_pbds; 
 
 typedef     unsigned long long int ull;
-typedef      int    ll;
+typedef     long long int    ll;
 typedef     long double      ld;
 typedef     pair<ll,ll>      pll;
 #define     FOR(i,a,b)       for(ll i=a;i<b;i++)
@@ -77,107 +77,8 @@ ll modInverse(ll n, ll p)
     return power(n, p-2, p); 
 } 
   
-struct segmentTree{
-
-    ll sz=1;
-    ll neutralElement=0;
-    vector<ll> sgmt;
-
-    ll operation(ll a1,ll a2)
-    {
-        return gcd(a1,a2);
-    }
-
-    void build(int left,int right,int x,vector<ll> &arr)
-    {
-        if(right-left==1)
-        {
-            // leaf node
-            if(left<arr.size())
-            {
-                sgmt[x]=arr[left];
-            }
-            return;
-        }
-        ll mid=(left+right)/2;
-        build(left,mid,2*x+1,arr);
-        build(mid,right,2*x+2,arr);
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-        return;
-
-    }
-    
-    void initialize(vector<ll> &arr)
-    {
-        ll n=arr.size();
-        while(sz<n)
-        {
-            sz=(2ll*sz);
-        }
-        // cout<<sz<<endl;
-        sgmt.assign(2*sz,neutralElement);
-
-        build(0,sz,0,arr);
-
-    }   
-
-    ll getVal(int left,int right,int x,int lx,int rx)
-    {
-        // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(lx>=right || rx<=left)
-        {
-            // out of bounds
-            return neutralElement;
-        }
-        if(lx>=left && right>=rx)
-        {
-            // complete intersection
-            return sgmt[x];
-        }
-        ll mid=(lx+rx)/2;
-        ll lftAns=getVal(left,right,2*x+1,lx,mid);
-        ll rgtAns=getVal(left,right,2*x+2,mid,rx);
-        return operation(lftAns,rgtAns);
 
 
-    }
-
-    void update(int val,int idx,int x,int lx,int rx)
-    {
-         // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(rx-lx==1)
-        {
-            sgmt[x]=val;
-            return ;
-        }
-
-        if(idx<lx && rx>=idx)
-        {
-            return;
-        }
-
-        ll mid=(lx+rx)/2;
-        
-        if(idx<mid)
-        update(val,idx,2*x+1,lx,mid);
-        else
-        update(val,idx,2*x+2,mid,rx);
-
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-    }
-
-
-};
 
 signed main(int argc, char** argv)
 {
@@ -192,44 +93,50 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        vector<ll> arr(2*n);
-        ll g=0;
-        FOR(i,0,n)
-        {
-            cin>>arr[i];
-            g=gcd(g,arr[i]);
-            arr[i+n]=arr[i];
-        }
-        segmentTree strg;
 
-        strg.initialize(arr);
+        vector<ll> arr1(n);
+        vector<ll> arr2(n);
 
-        ll lft=0,rgt=n;
-        while(lft<rgt)
-        {
-            ll mid=(lft+rgt)/2;
+        ll sum1=0;
+        ll sum2=0;
 
-            ll v=0;
-            FOR(i,0,n)
-            {
-                if(strg.getVal(i,i+mid,0,0,strg.sz)==g)
-                {
-                    v++;
+        FOR(i,0,n) cin>>arr1[i];
+        FOR(i,0,n) cin>>arr2[i];
+
+        FOR(i,0,n) sum1+=arr1[i];
+        FOR(i,0,n) sum2+=arr2[i];
+
+        if(sum1==sum2){
+            vector<ll> strg;
+            vector<ll> strg1;
+
+            int i = 0 ;
+            
+            while(i<n ){
+                if(arr1[i]>arr2[i]){
+                    ll val=arr1[i]-arr2[i];
+                    FOR(j,0,val) strg.pb(i);
+                    arr1[i]=arr2[i];
                 }
+                i++;
             }
-            if(v!=n)
-            {
-                lft=mid+1;
+            i=0;
+            while(i<n ){
+                if(arr1[i]<arr2[i]){
+                    ll val=arr2[i]-arr1[i];
+                    FOR(j,0,val) strg1.pb(i);
+                    arr1[i]=arr2[i];
+                }
+                i++;
             }
-            else
-            {
-                rgt=mid;
-            }
+            cout<<strg.size()<<endl;
+            FOR(i,0,strg.size()) cout<<strg[i]+1<<" "<<strg1[i]+1<<endl;
         }
-        cout<<rgt-1<<endl;
+        else{
+            cout<<-1<<endl;
+        }
 
-
-
+        
     }
     return 0;
 }

@@ -6,7 +6,7 @@ using namespace std;
 using namespace __gnu_pbds; 
 
 typedef     unsigned long long int ull;
-typedef      int    ll;
+typedef     long long int    ll;
 typedef     long double      ld;
 typedef     pair<ll,ll>      pll;
 #define     FOR(i,a,b)       for(ll i=a;i<b;i++)
@@ -77,107 +77,98 @@ ll modInverse(ll n, ll p)
     return power(n, p-2, p); 
 } 
   
-struct segmentTree{
+bool solve(vector<int>& arr)
+{
+    int n=arr.size();
+    // unordered_map<int,int> strg;
+    // FOR(i,0,n) strg[arr[i]]++;
+    vector<pll> arr1;
+    FOR(i,0,n) arr1.pb({arr[i],i});
 
-    ll sz=1;
-    ll neutralElement=0;
-    vector<ll> sgmt;
+    vector<pll> arr2=arr1;
 
-    ll operation(ll a1,ll a2)
-    {
-        return gcd(a1,a2);
-    }
+    sort(arr1.begin(),arr1.end());
 
-    void build(int left,int right,int x,vector<ll> &arr)
-    {
-        if(right-left==1)
-        {
-            // leaf node
-            if(left<arr.size())
-            {
-                sgmt[x]=arr[left];
-            }
-            return;
-        }
-        ll mid=(left+right)/2;
-        build(left,mid,2*x+1,arr);
-        build(mid,right,2*x+2,arr);
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-        return;
+    unordered_map<ll,vector<ll>> strg;
+    unordered_map<ll,vector<ll>> strg1;
 
-    }
+
+   
+    int cnt=0;
     
-    void initialize(vector<ll> &arr)
+
+    FOR(i,0,n)
     {
-        ll n=arr.size();
-        while(sz<n)
-        {
-            sz=(2ll*sz);
-        }
-        // cout<<sz<<endl;
-        sgmt.assign(2*sz,neutralElement);
-
-        build(0,sz,0,arr);
-
-    }   
-
-    ll getVal(int left,int right,int x,int lx,int rx)
-    {
-        // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(lx>=right || rx<=left)
-        {
-            // out of bounds
-            return neutralElement;
-        }
-        if(lx>=left && right>=rx)
-        {
-            // complete intersection
-            return sgmt[x];
-        }
-        ll mid=(lx+rx)/2;
-        ll lftAns=getVal(left,right,2*x+1,lx,mid);
-        ll rgtAns=getVal(left,right,2*x+2,mid,rx);
-        return operation(lftAns,rgtAns);
-
-
+        strg[arr1[i].f].pb((i)%2);
+        strg1[arr1[i].f].pb((arr1[i].s)%2);
     }
 
-    void update(int val,int idx,int x,int lx,int rx)
+    for(auto &it:strg)
     {
-         // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
+        vector<ll> a1=it.s;
+        vector<ll> a2=strg1[it.first];
 
-        if(rx-lx==1)
-        {
-            sgmt[x]=val;
-            return ;
-        }
+        ll sum1=0;
+        ll sum2=0;
 
-        if(idx<lx && rx>=idx)
-        {
-            return;
-        }
+        for(auto it1:a1) sum1+=it1;
+        for(auto it1:a2) sum2+=it1;
 
-        ll mid=(lx+rx)/2;
-        
-        if(idx<mid)
-        update(val,idx,2*x+1,lx,mid);
-        else
-        update(val,idx,2*x+2,mid,rx);
+        if(sum1!=sum2) return false;
 
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
     }
+    return true;
+    
+    
 
+    // multiset<int> s;
+    // int lftmaxi=0;
+    // int rgtmini=INT_MAX;
+    // int cnt=0;
+    // vector<int> count(n,0);
+    // for (int i = n - 1; i >= 0; i--) {
+    //     if(arr[i]>rgtmini)
+    //     {
+    //         break;
+    //     }
+    //     else
+    //     {
+    //         rgtmini=arr[i];
+    //         cnt++;
+    //     }
+    // }
+    // cout<<cnt<<" ";
 
-};
+    // for (int i = 0; i < n; i++) 
+    // {
+    //     if(arr[i]<lftmaxi)
+    //     {
+    //         break;
+    //     }
+    //     else
+    //     {
+    //         lftmaxi=arr[i];
+    //         cnt++;
+    //     }
+    // }
+    // cout<<cnt<<" ";
+    // cout<<endl;
+    // dispvector<int>(count);
+
+    // multiset<int> s1;
+    // for (int i =0; i<n; i++) {
+    //     auto it = s1.upper_bound(arr[i]);
+    //     count[i]+= i-distance(s1.begin(), it);
+    //     s1.insert(arr[i]);
+    // }
+    // // dispvector<int>(count);
+    
+    // for (int i = 0; i < n; i++)
+    //     if(count[i]%2==1) return false;
+    
+   
+}
+
 
 signed main(int argc, char** argv)
 {
@@ -192,44 +183,14 @@ signed main(int argc, char** argv)
     {
         ll n;
         cin>>n;
-        vector<ll> arr(2*n);
-        ll g=0;
-        FOR(i,0,n)
-        {
-            cin>>arr[i];
-            g=gcd(g,arr[i]);
-            arr[i+n]=arr[i];
+        vector<int> arr(n);
+        FOR(i,0,n) cin>>arr[i];
+        if(solve(arr)){
+            cout<<"YES"<<endl;
         }
-        segmentTree strg;
-
-        strg.initialize(arr);
-
-        ll lft=0,rgt=n;
-        while(lft<rgt)
-        {
-            ll mid=(lft+rgt)/2;
-
-            ll v=0;
-            FOR(i,0,n)
-            {
-                if(strg.getVal(i,i+mid,0,0,strg.sz)==g)
-                {
-                    v++;
-                }
-            }
-            if(v!=n)
-            {
-                lft=mid+1;
-            }
-            else
-            {
-                rgt=mid;
-            }
+        else{
+            cout<<"NO"<<endl;
         }
-        cout<<rgt-1<<endl;
-
-
-
     }
     return 0;
 }

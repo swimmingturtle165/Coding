@@ -6,7 +6,7 @@ using namespace std;
 using namespace __gnu_pbds; 
 
 typedef     unsigned long long int ull;
-typedef      int    ll;
+typedef     long long int    ll;
 typedef     long double      ld;
 typedef     pair<ll,ll>      pll;
 #define     FOR(i,a,b)       for(ll i=a;i<b;i++)
@@ -77,107 +77,8 @@ ll modInverse(ll n, ll p)
     return power(n, p-2, p); 
 } 
   
-struct segmentTree{
-
-    ll sz=1;
-    ll neutralElement=0;
-    vector<ll> sgmt;
-
-    ll operation(ll a1,ll a2)
-    {
-        return gcd(a1,a2);
-    }
-
-    void build(int left,int right,int x,vector<ll> &arr)
-    {
-        if(right-left==1)
-        {
-            // leaf node
-            if(left<arr.size())
-            {
-                sgmt[x]=arr[left];
-            }
-            return;
-        }
-        ll mid=(left+right)/2;
-        build(left,mid,2*x+1,arr);
-        build(mid,right,2*x+2,arr);
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-        return;
-
-    }
-    
-    void initialize(vector<ll> &arr)
-    {
-        ll n=arr.size();
-        while(sz<n)
-        {
-            sz=(2ll*sz);
-        }
-        // cout<<sz<<endl;
-        sgmt.assign(2*sz,neutralElement);
-
-        build(0,sz,0,arr);
-
-    }   
-
-    ll getVal(int left,int right,int x,int lx,int rx)
-    {
-        // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(lx>=right || rx<=left)
-        {
-            // out of bounds
-            return neutralElement;
-        }
-        if(lx>=left && right>=rx)
-        {
-            // complete intersection
-            return sgmt[x];
-        }
-        ll mid=(lx+rx)/2;
-        ll lftAns=getVal(left,right,2*x+1,lx,mid);
-        ll rgtAns=getVal(left,right,2*x+2,mid,rx);
-        return operation(lftAns,rgtAns);
 
 
-    }
-
-    void update(int val,int idx,int x,int lx,int rx)
-    {
-         // sgmt[x] has value to answer from [lx,rx)
-        // we need to find from [left,right)
-        // ll mid=(lx+rx)/2
-        // 2*x+1 stores value from [left,mid)
-        // 2*x+2 stores value from [mid,right) 
-
-        if(rx-lx==1)
-        {
-            sgmt[x]=val;
-            return ;
-        }
-
-        if(idx<lx && rx>=idx)
-        {
-            return;
-        }
-
-        ll mid=(lx+rx)/2;
-        
-        if(idx<mid)
-        update(val,idx,2*x+1,lx,mid);
-        else
-        update(val,idx,2*x+2,mid,rx);
-
-        sgmt[x]=operation(sgmt[2*x+1],sgmt[2*x+2]);
-    }
-
-
-};
 
 signed main(int argc, char** argv)
 {
@@ -190,44 +91,68 @@ signed main(int argc, char** argv)
     cin>>t;
     while(t--)
     {
-        ll n;
-        cin>>n;
-        vector<ll> arr(2*n);
-        ll g=0;
+        ll n,m;
+        cin>>n>>m;
+        
+        ll r=max(n,m);
+        ll c=min(n,m);
+
+        
+        
+        bool flg=true;
+       
+        vector<vector<int>> matrix(n,vector<int>(m,0));
+        
+        vector<vector<int>> vst(n,vector<int>(m,0));
+        
+        queue<pair<int,int>> q;
+        FOR(i,0,m)
+        {
+            q.push({0,i});
+            q.push({n-1,i});
+
+        }
         FOR(i,0,n)
         {
-            cin>>arr[i];
-            g=gcd(g,arr[i]);
-            arr[i+n]=arr[i];
+            q.push({i,0});
+            q.push({i,m-1});
         }
-        segmentTree strg;
 
-        strg.initialize(arr);
+        vector<int> navx{0,0,1,-1,+1,+1,-1,-1};
+        vector<int> navy{1,-1,0,0,+1,-1,+1,-1};
 
-        ll lft=0,rgt=n;
-        while(lft<rgt)
+        while(q.size()>0)
         {
-            ll mid=(lft+rgt)/2;
-
-            ll v=0;
-            FOR(i,0,n)
+            pair<int,int> curr=q.front();
+            q.pop();
+            int x=curr.f;
+            int y=curr.s;
+            if(vst[x][y]==1)
             {
-                if(strg.getVal(i,i+mid,0,0,strg.sz)==g)
+                continue;
+            }
+            matrix[x][y]=1;
+            for(int i =0 ; i < 8 ;i++)
+            {
+                int tmpx=x+navx[i];
+                int tmpy=y+navy[i];
+
+                if(tmpx>=0 && tmpy>=0 && tmpx<n && tmpy<m)
                 {
-                    v++;
+                    vst[tmpx][tmpy]=1;
                 }
-            }
-            if(v!=n)
-            {
-                lft=mid+1;
-            }
-            else
-            {
-                rgt=mid;
-            }
-        }
-        cout<<rgt-1<<endl;
 
+            }
+
+        }
+
+
+        FOR(i,0,n)
+        {
+           FOR(j,0,m) cout<<matrix[i][j];
+           cout<<endl;
+        }
+        cout<<endl;
 
 
     }

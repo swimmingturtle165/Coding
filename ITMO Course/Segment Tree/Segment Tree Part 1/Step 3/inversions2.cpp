@@ -167,8 +167,6 @@ signed main(int argc, char** argv)
         FORDE(i, n - 1, 0)
         {
             ans[i]=arr.set(inp[i]);
-           
-
         }
         FOR(i, 0, n)
             cout << ans[i] << " ";
