@@ -247,8 +247,16 @@ bool find(vector<ll>&Arr,int A,int B)
     else
     return false;
 }
-   
 
+bool chk1(vector<ll> &a, vector<ll> &b ,ll v )
+{
+      
+}
+
+bool chk2(vector<ll> &a, vector<ll> &b , ll v)
+{
+        
+}
 
 signed main(int argc, char** argv)
 {
@@ -265,7 +273,32 @@ signed main(int argc, char** argv)
         cin>>n;
         vector<ll> inp(n);
         FOR(i,0,n) cin>>inp[i];
-        
+        vector<ll> lft;
+        ll j = 0;
+        FOR(i,0,2*n)
+        {
+            if(inp[j]==i+1)
+            {
+                j++;
+            }
+            else
+            {
+                lft.pb(i + 1);
+            }
+        }
+
+        // 1 4 5 9 10
+        // 2 3 6 7 8
+
+        // b1 b2  b3 .....  bn
+        // c1 c2  c3 .....  cn
+
+        // for checking x we match
+        // ({b1,cn},{b2,cn-1}, {bi,cn+1-i} ..  {bx,cn+1-x},  <===>  {bx+1,c1},{bx+2,c2} , {bx+i,ci} , {bn,cn-x} )
+
+
+
+
     }
     return 0;
 }
